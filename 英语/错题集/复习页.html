@@ -1524,7 +1524,7 @@ window.__TIKU_SIMPLE__ = [
       +'</div>';
     box.innerHTML=
       '<div class="card">'
-      +'<div class="meta">'+meta+'</div>'
+      +'<div class="meta">'+meta+(String(it.id||"").indexOf("L-")===0?'<button id="btnDel" style="margin-left:auto;background:#EA6668;color:#fff;border:none;border-radius:6px;padding:2px 10px;font-size:12px;cursor:pointer;">删除此题</button>':'')+'</div>'
       +'<div class="qtext">'+renderMath(it["题目"])+'</div>'
       +optsHtml
       +'<div class="btns">'
@@ -1622,6 +1622,17 @@ window.__TIKU_SIMPLE__ = [
     var rs=$("reasonSave"); if(rs) rs.onclick=function(){ var reason=$("reasonPick").value; if(!reason){return;} recordReason(list[idx],reason,false); save(); renderFactor(); renderWeak(); show(); };
     var p=$("btnPrev"); if(p) p.onclick=function(){ if(idx>0){idx--;revealed=false;show();} };
     var n=$("btnNext"); if(n) n.onclick=function(){ if(idx<list.length-1){idx++;revealed=false;show();} };
+    var del=$("btnDel"); if(del) del.onclick=function(){
+      if(!confirm("确定删除这道错题？删除后需重新做题存入。")) return;
+      try{
+        var cur=list[idx];
+        var lkey="英语_errorbook_local";
+        var arr=JSON.parse(localStorage.getItem(lkey)||"[]");
+        arr=arr.filter(function(x){ return x.id!==cur.id; });
+        localStorage.setItem(lkey,JSON.stringify(arr));
+      }catch(e){}
+      location.reload();
+    };
   }
   function reload(){ list=filtered(); idx=0; revealed=false; show(); renderStats(); }
   function setMode(btn){
