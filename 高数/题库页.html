@@ -1274,6 +1274,8 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
         html+='<li data-i="'+i+'"><span class="opt-letter">'+letters[i]+'</span>'+renderMath(String(o).replace(/^[A-Z][\.、]\s*/, ''))+'</li>';
       });
       html+='</ul>';
+    } else if(it["题型"]==="单选"||it["题型"]==="多选"){
+      html+='<div style="background:#FFF1F0;border:1px solid #FFCCC7;border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13px;color:#CF1322;">⚠ 本题选项数据缺失（可能是早期存入时未保存选项）。建议删除此题后重新做题存入。</div>';
     }
     html+='<div class="feedback" id="fb"></div>';
     html+='<div class="answer" id="ans"></div>';

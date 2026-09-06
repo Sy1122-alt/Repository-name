@@ -41,7 +41,6 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
 .quality-list .warning{color:#8A5B00;}
 /* 移动端适配 */
 @media (max-width:480px){
-  #btnSync{min-height:40px;font-size:13px;padding:6px 14px;}
   .sc{min-height:80px;}
   .sc-name{font-size:15px;}
   .sc-stat{font-size:13px;}
@@ -50,7 +49,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
 </head>
 <body>
 <div class="wrap">
-  <h1>专升本错题本 · 总入口 <button id="btnSync" style="font-size:12px;padding:4px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card);cursor:pointer;margin-left:8px;vertical-align:middle;">☁ 同步更新</button></h1>
+  <h1>专升本错题本 · 总入口</h1>
   <div class="sub">三科错题统一管理 · 数据在各自学科《错题集》目录 · 由 SCGSstudy/build.py 生成</div>
   <div class="h2">错题复习</div>
   <div class="grid">
@@ -240,45 +239,6 @@ window.__QUALITY__ = {
   var box=document.getElementById("qualityIssues");
   if(!total){ box.textContent="构建时间："+(report.generatedAt||""); return; }
   box.innerHTML=(report.issues||[]).slice(0,80).map(function(x){return '<div class="'+x.level+'">['+x.subject+'] '+x.source+' '+(x.item||"")+'：'+x.message+'</div>';}).join("");
-})();
-(function(){
-  var btn=document.getElementById("btnSync");
-  if(!btn) return;
-  function toast(msg){
-    var t=document.createElement("div");
-    t.style.cssText="position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#22304A;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.2);";
-    t.textContent=msg; document.body.appendChild(t);
-    setTimeout(function(){ t.remove(); }, 3000);
-  }
-  btn.addEventListener("click", function(){
-    var lastIp=localStorage.getItem("errorbook_sync_ip")||"127.0.0.1";
-    var ip=prompt("请输入电脑的局域网IP（启动错题本.bat窗口里有显示）：", lastIp);
-    if(!ip) return;
-    ip=ip.trim();
-    localStorage.setItem("errorbook_sync_ip", ip);
-    btn.textContent="同步中…"; btn.disabled=true;
-    fetch("http://"+ip+":8765/api/sync")
-      .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
-      .then(function(data){
-        localStorage.setItem("errorbook_sync", JSON.stringify(data));
-        var counts=[];
-        ["计算机","高数","英语"].forEach(function(s){ if(data[s]&&data[s].count) counts.push(s+data[s].count+"题"); });
-        if(data.英语&&data.英语.word_count) counts.push("单词"+data.英语.word_count);
-        toast("同步成功："+counts.join("，"));
-      })
-      .catch(function(e){
-        toast("同步失败："+e.message+"（检查IP和WiFi）");
-      })
-      .finally(function(){ btn.textContent="☁ 同步更新"; btn.disabled=false; });
-  });
-  // 显示上次同步时间
-  var last=localStorage.getItem("errorbook_sync");
-  if(last){
-    try{
-      var d=JSON.parse(last);
-      if(d.synced_at) btn.title="上次同步："+d.synced_at;
-    }catch(e){}
-  }
 })();
 </script>
 </body>
