@@ -1344,6 +1344,12 @@ window.__TIKU_SIMPLE__ = [
   try{
     var _lkey="英语_errorbook_local";
     var _local=JSON.parse(localStorage.getItem(_lkey)||"[]");
+    // 题目规范化：去掉LaTeX标记和命令，统一纯文本后再匹配
+    function normQ(s){
+      return (s||"").replace(/\$([^$]*)\$/g, function(_,m){
+        return m.replace(/\\to/g,"→").replace(/\\frac/g,"").replace(/\\[a-zA-Z]+/g,"").replace(/[{}]/g,"");
+      }).replace(/\$/g,"").replace(/\\[a-zA-Z]+/g,"").replace(/[{}]/g,"").replace(/\s/g,"").slice(0,20);
+    }
     if(_local.length){
       _local.forEach(function(le){
         // 按答案+章节+题型去重（题目文本可能因阅读材料长短不同而不完全一致）
@@ -1353,10 +1359,10 @@ window.__TIKU_SIMPLE__ = [
         if(dup) return; // 匹配到内嵌错题（有选项），跳过本地错题
         // 本地错题无选项时，从题库数据按题目内容相似度补全选项
         if(!le["选项"] || !le["选项"].length){
-          var qShort=(le["题目"]||"").replace(/\s/g,"").slice(0,25);
+          var qNorm=normQ(le["题目"]);
           var match=TIKU.find(function(it){
-            var itShort=(it["题目"]||"").replace(/\s/g,"").slice(0,25);
-            return itShort&&qShort&&(itShort.indexOf(qShort)>=0||qShort.indexOf(itShort)>=0);
+            var itNorm=normQ(it["题目"]);
+            return itNorm&&qNorm&&(itNorm.indexOf(qNorm)>=0||qNorm.indexOf(itNorm)>=0);
           });
           if(match&&match["选项"]&&match["选项"].length) le["选项"]=match["选项"].slice();
         }
