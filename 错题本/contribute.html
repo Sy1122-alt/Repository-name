@@ -6,216 +6,149 @@
 <title>贡献题目 · 专升本错题本</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-:root{--bg:#F4F3EE;--card:#FFFFFF;--border:#E4E3DD;--text:#1A1B1C;--sub:#6B7280;--accent:#9BBBF4;--accent-d:#33475C;--ok:#52C41A;--err:#EA6668;}
-body{background:var(--bg);color:var(--text);font-family:'PingFang SC','Microsoft YaHei',sans-serif;padding:16px;max-width:720px;margin:0 auto;line-height:1.6;}
+:root{--bg:#F4F3EE;--card:#FFFFFF;--border:#E4E3DD;--text:#1A1B1C;--sub:#6B7280;--accent:#9BBBF4;--accent-d:#33475C;--ok:#52C41A;}
+body{background:var(--bg);color:var(--text);font-family:'PingFang SC','Microsoft YaHei',sans-serif;padding:16px;max-width:640px;margin:0 auto;line-height:1.6;}
 h1{font-size:20px;margin-bottom:4px;}
 .sub{color:var(--sub);font-size:13px;margin-bottom:20px;}
 .back{display:inline-block;color:var(--accent-d);text-decoration:none;font-size:13px;margin-bottom:16px;}
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px;}
-label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text);}
-.row{margin-bottom:14px;}
-select,input,textarea{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;background:#FBFBF8;transition:border-color .2s;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px;}
+label{display:block;font-size:14px;font-weight:600;margin-bottom:8px;color:var(--text);}
+.row{margin-bottom:18px;}
+select,input,textarea{width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;font-family:inherit;background:#FBFBF8;transition:border-color .2s;}
 select:focus,input:focus,textarea:focus{outline:none;border-color:var(--accent-d);}
-textarea{min-height:80px;resize:vertical;}
-.opts-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.opt-row{display:flex;gap:8px;align-items:center;}
-.opt-row .letter{width:28px;height:28px;border-radius:6px;background:rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;}
-.opt-row input{flex:1;}
-.btn{display:inline-block;padding:12px 24px;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:all .15s;}
+.subject-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:8px;}
+.subject-btn{padding:16px 8px;border:2px solid var(--border);border-radius:12px;background:#FBFBF8;cursor:pointer;text-align:center;transition:all .15s;font-size:14px;font-weight:600;}
+.subject-btn.active{border-color:var(--accent-d);background:rgba(155,187,244,0.15);color:var(--accent-d);}
+.subject-btn .icon{font-size:24px;display:block;margin-bottom:4px;}
+.type-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.type-tag{padding:8px 14px;border:1.5px solid var(--border);border-radius:20px;background:#FBFBF8;cursor:pointer;font-size:13px;transition:all .15s;}
+.type-tag.active{border-color:var(--accent-d);background:rgba(155,187,244,0.15);color:var(--accent-d);font-weight:600;}
+.btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;transition:all .15s;text-align:center;text-decoration:none;}
 .btn-primary{background:var(--accent-d);color:#fff;}
-.btn-primary:active{transform:scale(0.97);}
-.btn-copy{background:var(--ok);color:#fff;margin-left:8px;}
-.btn-copy:active{transform:scale(0.97);}
-.output{background:#1A1B1C;color:#E4E3DD;padding:16px;border-radius:10px;font-family:'Consolas','Monaco',monospace;font-size:13px;white-space:pre-wrap;word-break:break-all;max-height:300px;overflow-y:auto;line-height:1.7;}
-.hint{background:rgba(155,187,244,0.12);border-left:3px solid var(--accent-d);padding:12px 14px;border-radius:0 8px 8px 0;font-size:13px;color:var(--text);margin-bottom:16px;}
-.hint strong{color:var(--accent-d);}
-.hidden{display:none;}
-.tip{font-size:12px;color:var(--sub);margin-top:4px;}
+.btn-primary:active{transform:scale(0.98);}
+.btn-primary:disabled{background:#ccc;cursor:not-allowed;}
+.steps{background:rgba(155,187,244,0.1);border-left:3px solid var(--accent-d);padding:14px 16px;border-radius:0 10px 10px 0;margin-bottom:16px;font-size:13px;}
+.steps strong{color:var(--accent-d);}
+.steps ol{margin:8px 0 0 18px;}
+.steps li{margin-bottom:6px;}
+.tip{font-size:12px;color:var(--sub);margin-top:6px;}
+.upload-hint{background:#FFF9E6;border:1px solid #FFE58F;border-radius:10px;padding:12px 14px;font-size:13px;color:#874D00;margin-bottom:16px;}
+.upload-hint strong{color:#613400;}
 @media(max-width:480px){
-  .opts-grid{grid-template-columns:1fr;}
-  .btn{width:100%;margin:4px 0;}
-  .btn-copy{margin-left:0;}
+  .subject-grid{grid-template-columns:1fr 1fr 1fr;}
+  .subject-btn{padding:12px 4px;font-size:13px;}
+  .subject-btn .icon{font-size:20px;}
 }
 </style>
 </head>
 <body>
 <a href="index.html" class="back">← 返回错题本总入口</a>
 <h1>贡献题目</h1>
-<div class="sub">填写题目信息 → 生成标准格式 → 复制发给站长 → 审核后加入题库</div>
+<div class="sub">上传题目图片/文件 → 站长收到后提取并加入题库</div>
 
-<div class="hint">
-<strong>贡献流程：</strong>① 填写下面的表单 → ② 点「生成题目」→ ③ 点「一键复制」→ ④ 通过微信/QQ发给站长 → ⑤ 站长审核后加入题库并更新网站。<br>
-<strong>格式要求：</strong>题目内容真实可靠，答案准确，解析清晰。标注真题必须有真实来源。
+<div class="steps">
+<strong>贡献流程（30秒完成）：</strong>
+<ol>
+<li>选择学科和题型</li>
+<li>点「上传题目」按钮，会跳转到GitHub</li>
+<li>在GitHub页面把题目图片/文件<strong>拖拽到输入框</strong>（支持截图、拍照、PDF、Word）</li>
+<li>点「Submit new issue」提交即可</li>
+</ol>
+</div>
+
+<div class="upload-hint">
+<strong>💡 小提示：</strong>第一次使用需要登录/注册GitHub账号（免费，1分钟完成）。支持多张图片同时上传，手机拍照直接上传也可以。
 </div>
 
 <div class="card">
   <div class="row">
-    <label>学科 *</label>
-    <select id="subject">
-      <option value="计算机">计算机</option>
-      <option value="高数">高等数学</option>
-      <option value="英语">英语</option>
-    </select>
-  </div>
-
-  <div class="row">
-    <label>题型 *</label>
-    <select id="qtype">
-      <option value="单选">单选题</option>
-      <option value="多选">多选题</option>
-      <option value="判断">判断题</option>
-      <option value="填空">填空题</option>
-      <option value="简答">简答题</option>
-    </select>
-  </div>
-
-  <div class="row">
-    <label>题干 *</label>
-    <textarea id="qtext" placeholder="请输入题目内容。高数题可用 $公式$ 标注LaTeX，如 $\lim_{x\to0}\frac{\sin x}{x}=1$"></textarea>
-  </div>
-
-  <div class="row" id="optsRow">
-    <label>选项 *</label>
-    <div class="opts-grid">
-      <div class="opt-row"><span class="letter">A</span><input type="text" id="optA" placeholder="选项A"></div>
-      <div class="opt-row"><span class="letter">B</span><input type="text" id="optB" placeholder="选项B"></div>
-      <div class="opt-row"><span class="letter">C</span><input type="text" id="optC" placeholder="选项C"></div>
-      <div class="opt-row"><span class="letter">D</span><input type="text" id="optD" placeholder="选项D"></div>
+    <label>选择学科 *</label>
+    <div class="subject-grid">
+      <div class="subject-btn active" data-subject="计算机" onclick="selectSubject(this)">
+        <span class="icon">💻</span>计算机
+      </div>
+      <div class="subject-btn" data-subject="高数" onclick="selectSubject(this)">
+        <span class="icon">📐</span>高等数学
+      </div>
+      <div class="subject-btn" data-subject="英语" onclick="selectSubject(this)">
+        <span class="icon">📖</span>英语
+      </div>
     </div>
   </div>
 
-  <div class="row" id="judgeRow" style="display:none;">
-    <label>答案 *</label>
-    <select id="judgeAns">
-      <option value="对">对</option>
-      <option value="错">错</option>
-    </select>
-  </div>
-
-  <div class="row" id="ansRow">
-    <label>答案 *</label>
-    <input type="text" id="answer" placeholder="单选题填字母如 A；多选题填 ABC；填空题填答案内容">
-    <div class="tip">单选/多选：填字母（如 A 或 ABC）；填空/简答：填答案内容</div>
+  <div class="row">
+    <label>选择题型（可选）</label>
+    <div class="type-tags">
+      <span class="type-tag" data-type="单选" onclick="selectType(this)">单选题</span>
+      <span class="type-tag" data-type="多选" onclick="selectType(this)">多选题</span>
+      <span class="type-tag" data-type="判断" onclick="selectType(this)">判断题</span>
+      <span class="type-tag" data-type="填空" onclick="selectType(this)">填空题</span>
+      <span class="type-tag" data-type="简答" onclick="selectType(this)">简答题</span>
+      <span class="type-tag" data-type="其他" onclick="selectType(this)">其他</span>
+    </div>
   </div>
 
   <div class="row">
-    <label>解析</label>
-    <textarea id="analysis" placeholder="请输入答案解析，说明为什么选这个答案"></textarea>
+    <label>备注（可选）</label>
+    <input type="text" id="remark" placeholder="如：2024年真题、某教材第3章、自编题等">
   </div>
 
-  <div class="row">
-    <label>来源</label>
-    <input type="text" id="source" placeholder="如：2024年真题 / 专升本计算机考纲 / 自编自测">
-    <div class="tip">标注真题必须有真实来源；自编题请填「自编自测」</div>
-  </div>
-
-  <div style="display:flex;flex-wrap:wrap;gap:8px;">
-    <button class="btn btn-primary" onclick="generate()">生成题目</button>
-    <button class="btn btn-copy" id="copyBtn" onclick="copyOutput()" style="display:none;">一键复制</button>
-  </div>
+  <button class="btn btn-primary" onclick="goUpload()">📤 上传题目</button>
+  <div class="tip" style="text-align:center;margin-top:10px;">点击后跳转到GitHub，在那里上传图片/文件</div>
 </div>
 
-<div class="card" id="resultCard" style="display:none;">
-  <label>生成结果（标准Markdown格式，可直接加入题库.md）</label>
-  <div class="output" id="output"></div>
-  <div class="tip" style="margin-top:10px;">↑ 复制以上内容，通过微信/QQ发给站长即可</div>
+<div class="card" style="background:rgba(82,196,26,0.06);border-color:rgba(82,196,26,0.3);">
+  <label style="color:#3E8C13;">提交后会发生什么？</label>
+  <div style="font-size:13px;color:var(--text);margin-top:8px;">
+    1. 站长会收到GitHub通知<br>
+    2. 站长从图片/文件中提取题目内容<br>
+    3. 审核后加入对应学科的题库<br>
+    4. 网站自动更新，所有人都能看到新题
+  </div>
 </div>
 
 <script>
-var qtype = document.getElementById('qtype');
-var optsRow = document.getElementById('optsRow');
-var judgeRow = document.getElementById('judgeRow');
-var ansRow = document.getElementById('ansRow');
+var selectedSubject = '计算机';
+var selectedType = '';
 
-qtype.addEventListener('change', function(){
-  var t = qtype.value;
-  if(t === '判断'){
-    optsRow.style.display = 'none';
-    judgeRow.style.display = 'block';
-    ansRow.style.display = 'none';
-  } else if(t === '单选' || t === '多选'){
-    optsRow.style.display = 'block';
-    judgeRow.style.display = 'none';
-    ansRow.style.display = 'block';
-  } else {
-    optsRow.style.display = 'none';
-    judgeRow.style.display = 'none';
-    ansRow.style.display = 'block';
-  }
-});
-
-function generate(){
-  var subject = document.getElementById('subject').value;
-  var type = qtype.value;
-  var qtext = document.getElementById('qtext').value.trim();
-  var analysis = document.getElementById('analysis').value.trim();
-  var source = document.getElementById('source').value.trim();
-
-  if(!qtext){ alert('请填写题干'); return; }
-
-  var lines = [];
-  var typePrefix = type === '多选' ? '多选' : '练习';
-  lines.push('**' + typePrefix + ' N.** ' + qtext);
-
-  if(type === '单选' || type === '多选'){
-    var opts = [];
-    ['A','B','C','D'].forEach(function(L){
-      var v = document.getElementById('opt'+L).value.trim();
-      if(v) opts.push(L + '. ' + v);
-    });
-    if(opts.length < 2){ alert('请至少填写2个选项'); return; }
-    lines.push('- ' + opts.join('　'));
-    var ans = document.getElementById('answer').value.trim().toUpperCase();
-    if(!ans){ alert('请填写答案'); return; }
-    lines.push('- **答案：' + ans + '**　解析：' + (analysis || '略'));
-  } else if(type === '判断'){
-    var jAns = document.getElementById('judgeAns').value;
-    lines.push('- **答案：' + jAns + '**　解析：' + (analysis || '略'));
-  } else {
-    var ans = document.getElementById('answer').value.trim();
-    if(!ans){ alert('请填写答案'); return; }
-    lines.push('- **答案：** ' + ans);
-    if(analysis) lines.push('- **解析：** ' + analysis);
-  }
-
-  if(source) lines.push('- 来源：' + source);
-  lines.push(''); // 空行分隔
-
-  var output = lines.join('\n');
-  document.getElementById('output').textContent = output;
-  document.getElementById('resultCard').style.display = 'block';
-  document.getElementById('copyBtn').style.display = 'inline-block';
-
-  // 自动加上学科提示
-  var header = '【' + subject + '·' + type + '】\n';
-  document.getElementById('output').textContent = header + output;
+function selectSubject(el){
+  document.querySelectorAll('.subject-btn').forEach(function(b){b.classList.remove('active');});
+  el.classList.add('active');
+  selectedSubject = el.dataset.subject;
 }
 
-function copyOutput(){
-  var text = document.getElementById('output').textContent;
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).then(function(){
-      var btn = document.getElementById('copyBtn');
-      btn.textContent = '✓ 已复制';
-      setTimeout(function(){ btn.textContent = '一键复制'; }, 2000);
-    }).catch(function(){ fallbackCopy(text); });
+function selectType(el){
+  if(el.classList.contains('active')){
+    el.classList.remove('active');
+    selectedType = '';
   } else {
-    fallbackCopy(text);
+    document.querySelectorAll('.type-tag').forEach(function(t){t.classList.remove('active');});
+    el.classList.add('active');
+    selectedType = el.dataset.type;
   }
 }
 
-function fallbackCopy(text){
-  var ta = document.createElement('textarea');
-  ta.value = text;
-  ta.style.position = 'fixed';
-  ta.style.opacity = '0';
-  document.body.appendChild(ta);
-  ta.select();
-  try{ document.execCommand('copy'); }catch(e){}
-  document.body.removeChild(ta);
-  var btn = document.getElementById('copyBtn');
-  btn.textContent = '✓ 已复制';
-  setTimeout(function(){ btn.textContent = '一键复制'; }, 2000);
+function goUpload(){
+  var remark = document.getElementById('remark').value.trim();
+  var title = '[' + selectedSubject + ']';
+  if(selectedType) title += '[' + selectedType + ']';
+  title += ' 贡献题目';
+
+  var body = '## 题目内容\n\n';
+  body += '**请在此处上传题目图片或文件**（拖拽到这里即可，支持多张图片、PDF、Word、截图、拍照）\n\n';
+  body += '---\n\n';
+  body += '## 信息\n\n';
+  body += '- 学科：' + selectedSubject + '\n';
+  if(selectedType) body += '- 题型：' + selectedType + '\n';
+  if(remark) body += '- 备注：' + remark + '\n';
+  body += '\n---\n\n';
+  body += '> 站长收到后会提取题目内容，审核后加入题库并更新网站。';
+
+  var url = 'https://github.com/fanenyu7536-sudo/Repository-name/issues/new'
+    + '?title=' + encodeURIComponent(title)
+    + '&body=' + encodeURIComponent(body);
+
+  window.open(url, '_blank');
 }
 </script>
 </body>
