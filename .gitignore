@@ -9,3 +9,7 @@ official/
 __pycache__/
 .DS_Store
 Thumbs.db
+
+_backup_errorbook/
+*.bak
+*.backup
