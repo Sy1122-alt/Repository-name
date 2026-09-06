@@ -199,10 +199,8 @@ window.__QUALITY__ = {
       if(_local.length){
         var _added=0;
         _local.forEach(function(le){
-          // 按答案+章节+题型去重（题目文本可能因阅读材料长短不同而不完全一致）
-          var dup=subject.items.find(function(it){
-            return it["答案"]===le["答案"] && it["章节"]===le["章节"] && it["题型"]===le["题型"];
-          });
+          // 按id去重：不同题目即使答案相同也保留
+          var dup=subject.items.find(function(it){ return it.id===le.id; });
           if(dup) return;
           // 本地错题无选项时，从题库按题目内容相似度补全选项
           if(!le["选项"] || !le["选项"].length){

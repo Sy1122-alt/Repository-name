@@ -623,13 +623,23 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
         return m.replace(/\\to/g,"→").replace(/\\frac/g,"").replace(/\\[a-zA-Z]+/g,"").replace(/[{}]/g,"");
       }).replace(/\$/g,"").replace(/\\[a-zA-Z]+/g,"").replace(/[{}]/g,"").replace(/\s/g,"").slice(0,20);
     }
+    // 本地错题先按id去重：同一id只保留一条，错误次数累计
+    var _localMap={};
+    _local.forEach(function(le){
+      var id=le.id||("L-"+(le["题目"]||"").slice(0,20));
+      if(_localMap[id]){
+        _localMap[id]["错误次数"]=(_localMap[id]["错误次数"]||1)+(le["错误次数"]||1);
+      }else{
+        _localMap[id]=le;
+        if(!_localMap[id]["错误次数"]) _localMap[id]["错误次数"]=1;
+      }
+    });
+    _local=Object.values(_localMap);
     if(_local.length){
       _local.forEach(function(le){
-        // 按答案+章节+题型去重（题目文本可能因阅读材料长短不同而不完全一致）
-        var dup=ALL.find(function(it){
-          return it["答案"]===le["答案"] && it["章节"]===le["章节"] && it["题型"]===le["题型"];
-        });
-        if(dup) return; // 匹配到内嵌错题（有选项），跳过本地错题
+        // 按id去重（不同题目即使答案相同也保留）
+        var dup=ALL.find(function(it){ return it.id===le.id; });
+        if(dup) return;
         // 本地错题无选项时，从题库数据按题目内容相似度补全选项
         if(!le["选项"] || !le["选项"].length){
           var qNorm=normQ(le["题目"]);
@@ -1736,8 +1746,8 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
       }else{
         var existing=JSON.parse(localStorage.getItem(lkey)||"[]");
         localErrors.forEach(function(ne){
-          // 按答案+章节+题型去重（题目文本可能因阅读材料长短不同而不完全一致）
-          var found=existing.find(function(e){return e.答案===ne.答案 && e.章节===ne.章节 && e.题型===ne.题型;});
+          // 按id去重：同一题累计错误次数，不同题即使答案相同也新增
+          var found=existing.find(function(e){return e.id===ne.id;});
           if(found){ found.错误次数=(found.错误次数||1)+1; }
           else{ existing.push(ne); }
         });
@@ -1957,10 +1967,8 @@ window.__QUALITY__ = __QUALITY_JSON__;
       if(_local.length){
         var _added=0;
         _local.forEach(function(le){
-          // 按答案+章节+题型去重（题目文本可能因阅读材料长短不同而不完全一致）
-          var dup=subject.items.find(function(it){
-            return it["答案"]===le["答案"] && it["章节"]===le["章节"] && it["题型"]===le["题型"];
-          });
+          // 按id去重：不同题目即使答案相同也保留
+          var dup=subject.items.find(function(it){ return it.id===le.id; });
           if(dup) return;
           // 本地错题无选项时，从题库按题目内容相似度补全选项
           if(!le["选项"] || !le["选项"].length){
