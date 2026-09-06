@@ -607,10 +607,12 @@ __KATEX_CSS__
 <script src="__KATEX_JS__"></script>
 <script>
 window.__DATA__ = __DATA_JSON__;
+window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
 (function(){
   "use strict";
   var MATH = __MATH_MODE__;
   var ALL = (window.__DATA__||[]).slice();
+  var TIKU = (window.__TIKU_SIMPLE__||[]).slice();
   // 合并本地存储的错题（手机APK/离线环境自动存入的）
   try{
     var _lkey="__SUBJECT___errorbook_local";
@@ -621,11 +623,11 @@ window.__DATA__ = __DATA_JSON__;
         var dup=ALL.find(function(it){
           return it["答案"]===le["答案"] && it["章节"]===le["章节"] && it["题型"]===le["题型"];
         });
-        if(dup) return; // 匹配到题库里的题（有选项），跳过本地错题
-        // 本地错题无选项时，从题库按题目内容相似度补全选项
+        if(dup) return; // 匹配到内嵌错题（有选项），跳过本地错题
+        // 本地错题无选项时，从题库数据按题目内容相似度补全选项
         if(!le["选项"] || !le["选项"].length){
           var qShort=(le["题目"]||"").replace(/\s/g,"").slice(0,25);
-          var match=ALL.find(function(it){
+          var match=TIKU.find(function(it){
             var itShort=(it["题目"]||"").replace(/\s/g,"").slice(0,25);
             return itShort&&qShort&&(itShort.indexOf(qShort)>=0||qShort.indexOf(itShort)>=0);
           });
@@ -1130,11 +1132,14 @@ def build_review(sub):
     if mode == "math":
         katex_css = '<link rel="stylesheet" href="../../SCGSstudy/katex/katex.min.css">'
         katex_js = "../../SCGSstudy/katex/katex.min.js"
+    # 题库精简数据（仅id+题目+选项），用于补全本地错题缺失的选项
+    tiku_simple = [{"id": t["id"], "题目": t["题目"], "选项": t["选项"]} for t in tiku_items]
     html = (REVIEW_HTML
             .replace("__LABEL__", sub["label"])
             .replace("__COLOR__", sub["color"])
             .replace("__MODE__", mode)
             .replace("__DATA_JSON__", js_safe(items))
+            .replace("__TIKU_SIMPLE_JSON__", js_safe(tiku_simple))
             .replace("__SUBJECT___cuowuji", name + "_cuowuji")
             .replace("__SUBJECT__", name)
             .replace("__KATEX_CSS__", katex_css)
