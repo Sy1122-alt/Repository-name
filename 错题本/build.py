@@ -892,7 +892,19 @@ window.__DATA__ = __DATA_JSON__;
     idx=0; revealed=false; show(); renderStats(); };
   $("btnKey").onclick=function(){ setMode("btnKey"); list=filtered().filter(function(it){return (it["错误次数"]||0)>=2;}); idx=0; revealed=false; show(); renderStats(); };
   $("btnDue").onclick=function(){ setMode("btnDue"); list=filtered().filter(isDue); idx=0; revealed=false; show(); renderStats(); };
-  $("btnReset").onclick=function(){ if(confirm("确定清空本学科所有标记与复习进度吗？")){ statusMap={}; revMap={}; planMap={}; save(); reload(); } };
+  $("btnReset").onclick=function(){
+    if(this._arm){
+      statusMap={}; revMap={}; planMap={}; save();
+      this._arm=false; this.textContent="重置进度";
+      this.style.background=""; this.style.color="";
+      reload();
+    }else{
+      this._arm=true; this.textContent="再点一次确认重置";
+      this.style.background="#EA6668"; this.style.color="#fff";
+      var self=this;
+      setTimeout(function(){ self._arm=false; self.textContent="重置进度"; self.style.background=""; self.style.color=""; }, 3000);
+    }
+  };
   $("btnExportLocal").onclick=function(){
     try{
       var _lkey="__SUBJECT___errorbook_local";
@@ -1588,12 +1600,14 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     if(this._arm){
       done={}; basket=[]; nextId=BASE_QID; save();
       this._arm=false; this.textContent="重置进度";
+      this.style.background=""; this.style.color="";
       showToast("已重置本学科刷题进度。");
       reload();
     }else{
       this._arm=true; this.textContent="再点一次确认重置";
+      this.style.background="#EA6668"; this.style.color="#fff";
       var self=this;
-      setTimeout(function(){ self._arm=false; self.textContent="重置进度"; }, 3000);
+      setTimeout(function(){ self._arm=false; self.textContent="重置进度"; self.style.background=""; self.style.color=""; }, 3000);
     }
   });
   $("btnClearBasket").addEventListener("click",function(){
