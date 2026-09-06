@@ -1791,9 +1791,9 @@ window.__TIKU_SIMPLE__ = [
     if(it["日期"]) meta+='<span class="tag qid">'+escHtml(it["日期"])+'</span>';
     if(nextRev(it)) meta+='<span class="tag qid">下次 '+escHtml(nextRev(it))+'</span>';
     var optsHtml="";
-    if(it.options && it.options.length){
+    if(it["选项"] && it["选项"].length){
       // 错题本选项自带字母前缀（A. xxx / B. xxx），不再重复加
-      optsHtml='<ul class="opts">'+it.options.map(function(o,i){return '<li data-i="'+i+'"><span class="opt-letter">'+String.fromCharCode(65+i)+'</span>'+renderMath(String(o).replace(/^[A-Z][\.、]\s*/, ''))+'</li>';}).join("")+'</ul>';
+      optsHtml='<ul class="opts">'+it["选项"].map(function(o,i){return '<li data-i="'+i+'"><span class="opt-letter">'+String.fromCharCode(65+i)+'</span>'+renderMath(String(o).replace(/^[A-Z][\.、]\s*/, ''))+'</li>';}).join("")+'</ul>';
     }
     var ansHtml='<div class="feedback" id="fb"></div>'
       +'<div class="answer" id="ans">'
@@ -1830,17 +1830,17 @@ window.__TIKU_SIMPLE__ = [
     function answerIndex(q){
       var ans=String(q["答案"]||"").trim();
       if(/^[A-H]$/.test(ans)) return ans.charCodeAt(0)-65;
-      if(q.options&&q.options.length){
-        var i=q.options.indexOf(ans);
+      if(q["选项"]&&q["选项"].length){
+        var i=q["选项"].indexOf(ans);
         if(i>=0) return i;
         // 判断题：答案为"对/错"等文字时，映射到含对应文字的选项
         var isJudge=String(q["题型"]||"").indexOf("判断")>=0;
         if(isJudge){
-          if(/^(对|正确|是|T|True|√|真)$/i.test(ans)){ for(var j=0;j<q.options.length;j++) if(/对|正确|是|√|真/.test(q.options[j])) return j; }
-          if(/^(错|错误|否|F|False|×|假)$/i.test(ans)){ for(var j=0;j<q.options.length;j++) if(/错|错误|否|×|假/.test(q.options[j])) return j; }
+          if(/^(对|正确|是|T|True|√|真)$/i.test(ans)){ for(var j=0;j<q["选项"].length;j++) if(/对|正确|是|√|真/.test(q["选项"][j])) return j; }
+          if(/^(错|错误|否|F|False|×|假)$/i.test(ans)){ for(var j=0;j<q["选项"].length;j++) if(/错|错误|否|×|假/.test(q["选项"][j])) return j; }
         }
         // 通用子串匹配（答案是选项文本的一部分）
-        for(var j=0;j<q.options.length;j++) if(q.options[j].indexOf(ans)>=0) return j;
+        for(var j=0;j<q["选项"].length;j++) if(q["选项"][j].indexOf(ans)>=0) return j;
       }
       return -1;
     }
