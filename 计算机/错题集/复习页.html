@@ -1192,7 +1192,7 @@ window.__DATA__ = [
       statusMap={}; revMap={}; planMap={}; save();
       this._arm=false; this.textContent="重置进度";
       this.style.background=""; this.style.color="";
-      reload();
+      setTimeout(function(){ location.reload(); }, 300);
     }else{
       this._arm=true; this.textContent="再点一次确认重置";
       this.style.background="#EA6668"; this.style.color="#fff";

@@ -2487,8 +2487,8 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
       done={}; basket=[]; nextId=BASE_QID; save();
       this._arm=false; this.textContent="重置进度";
       this.style.background=""; this.style.color="";
-      showToast("已重置本学科刷题进度。");
-      reload();
+      showToast("已重置本学科刷题进度，正在刷新...");
+      setTimeout(function(){ location.reload(); }, 500);
     }else{
       this._arm=true; this.textContent="再点一次确认重置";
       this.style.background="#EA6668"; this.style.color="#fff";

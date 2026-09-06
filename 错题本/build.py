@@ -897,7 +897,7 @@ window.__DATA__ = __DATA_JSON__;
       statusMap={}; revMap={}; planMap={}; save();
       this._arm=false; this.textContent="重置进度";
       this.style.background=""; this.style.color="";
-      reload();
+      setTimeout(function(){ location.reload(); }, 300);
     }else{
       this._arm=true; this.textContent="再点一次确认重置";
       this.style.background="#EA6668"; this.style.color="#fff";
@@ -1076,7 +1076,19 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     idx=0; flipped=false; show(); };
   $("btnOrder").onclick=function(){ $("btnFuzzy").classList.remove("on"); reload(); };
   $("btnFuzzy").onclick=function(){ $("btnFuzzy").classList.toggle("on"); reload(); };
-  $("btnReset").onclick=function(){ if(confirm("确定清空单词卡所有记忆状态吗？")){ stMap={}; save(); reload(); } };
+  $("btnReset").onclick=function(){
+    if(this._arm){
+      stMap={}; save();
+      this._arm=false; this.textContent="重置";
+      this.style.background=""; this.style.color="";
+      setTimeout(function(){ location.reload(); }, 300);
+    }else{
+      this._arm=true; this.textContent="再点一次确认重置";
+      this.style.background="#EA6668"; this.style.color="#fff";
+      var self=this;
+      setTimeout(function(){ self._arm=false; self.textContent="重置"; self.style.background=""; self.style.color=""; }, 3000);
+    }
+  };
   reload();
 })();
 </script>
@@ -1601,8 +1613,8 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
       done={}; basket=[]; nextId=BASE_QID; save();
       this._arm=false; this.textContent="重置进度";
       this.style.background=""; this.style.color="";
-      showToast("已重置本学科刷题进度。");
-      reload();
+      showToast("已重置本学科刷题进度，正在刷新...");
+      setTimeout(function(){ location.reload(); }, 500);
     }else{
       this._arm=true; this.textContent="再点一次确认重置";
       this.style.background="#EA6668"; this.style.color="#fff";
