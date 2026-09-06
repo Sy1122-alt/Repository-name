@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """本机错题本服务：提供页面，并把题库导出的错题直接写入 Markdown。"""
 import json
@@ -250,7 +250,7 @@ def main():
         s.close()
     except Exception:
         lan_ip = "<电脑IP>"
-    print("局域网访问：http://%s:8765/错题本/index.html" % lan_ip)
+    print("局域网访问：http://%s:8765/SCGSstudy/index.html" % lan_ip)
     print("手机连同一WiFi后，浏览器打开上面的地址")
     print("此窗口保持打开即可；关闭窗口会停止自动入库。")
     try:
@@ -263,3 +263,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

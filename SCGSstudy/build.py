@@ -1,11 +1,11 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 通用错题本构建工具
 ==================
 一次运行，为三个学科生成各自的复习页（含英语单词卡）、题库刷题页，并生成统一入口 index.html。
 
 用法：
-    python "D:\\专升本学习\\错题本\\build.py"
+    python "D:\\专升本学习\\SCGSstudy\\build.py"
 
 数据源约定（各学科错题集目录内）：
     错题本.md  —— 错题记录（三科通用格式，见各科文件顶部说明）
@@ -16,7 +16,7 @@
     各学科错题集/复习页.html
     英语错题集/单词卡.html
     各学科/题库页.html
-    错题本/index.html
+    SCGSstudy/index.html
 """
 import json
 import re
@@ -564,7 +564,7 @@ __KATEX_CSS__
 <div class="wrap">
   <a class="back" href="__INDEX__">‹ 返回错题本总入口</a>
   <h1>__LABEL__ · 错题复习页</h1>
-  <div class="sub">数据源：同目录《错题本.md》 · 由 错题本/build.py 生成 · 本地双击打开</div>
+  <div class="sub">数据源：同目录《错题本.md》 · 由 SCGSstudy/build.py 生成 · 本地双击打开</div>
 
   <div class="stats">
     <div class="stat"><div class="n" id="nTotal">0</div><div class="l">总题数</div></div>
@@ -600,7 +600,7 @@ __KATEX_CSS__
   <div class="hint">
     翻卡后选择「没记住 / 有点模糊 / 掌握」，系统会分别安排明天、3 天后或递进间隔后的复习。<br>
     重点题 = 错误次数 ≥ 2；「今日应复习」只显示今天到期的题目。<br>
-    更新：往《错题本.md》追加错题后，运行 错题本/build.py 重新生成。
+    更新：往《错题本.md》追加错题后，运行 SCGSstudy/build.py 重新生成。
   </div>
 </div>
 
@@ -980,7 +980,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
 <div class="wrap">
   <a class="back" href="__INDEX__">‹ 返回错题本总入口</a>
   <h1>英语 · 单词卡</h1>
-  <div class="sub">数据源：同目录《单词卡.md》 · 由 错题本/build.py 生成 · 翻卡记忆</div>
+  <div class="sub">数据源：同目录《单词卡.md》 · 由 SCGSstudy/build.py 生成 · 翻卡记忆</div>
 
   <div class="stats">
     <div class="stat"><div class="n" id="nTotal">0</div><div class="l">总词数</div></div>
@@ -1008,7 +1008,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
 
   <div class="hint">
     看到单词 → 心里默念释义 → 点「翻看释义」核对 → 按掌握程度点「认识 / 模糊 / 不认识」（状态自动保存）。<br>
-    更新：往《单词卡.md》按格式追加生词，运行 错题本/build.py 重新生成。
+    更新：往《单词卡.md》按格式追加生词，运行 SCGSstudy/build.py 重新生成。
   </div>
 </div>
 
@@ -1118,8 +1118,8 @@ def build_review(sub):
     katex_css = ""
     katex_js = ""
     if mode == "math":
-        katex_css = '<link rel="stylesheet" href="../../错题本/katex/katex.min.css">'
-        katex_js = "../../错题本/katex/katex.min.js"
+        katex_css = '<link rel="stylesheet" href="../../SCGSstudy/katex/katex.min.css">'
+        katex_js = "../../SCGSstudy/katex/katex.min.js"
     html = (REVIEW_HTML
             .replace("__LABEL__", sub["label"])
             .replace("__COLOR__", sub["color"])
@@ -1129,7 +1129,7 @@ def build_review(sub):
             .replace("__SUBJECT__", name)
             .replace("__KATEX_CSS__", katex_css)
             .replace("__KATEX_JS__", katex_js)
-            .replace("__INDEX__", "../../错题本/index.html"))
+            .replace("__INDEX__", "../../SCGSstudy/index.html"))
     html = html.replace("var MATH = __MATH_MODE__;",
                         "var MATH = %s;" % ("true" if mode == "math" else "false"))
     out = d / "复习页.html"
@@ -1144,7 +1144,7 @@ def build_wordcard(sub):
     items = parse_md(md, prefix="W")
     html = (WORD_HTML
             .replace("__WORDS_JSON__", js_safe(items))
-            .replace("__INDEX__", "../../错题本/index.html"))
+            .replace("__INDEX__", "../../SCGSstudy/index.html"))
     out = d / "单词卡.html"
     out.write_text(html, encoding="utf-8")
     return items
@@ -1190,7 +1190,7 @@ def build_wordbook(sub):
     tpl = (BASE / "wordbook_tpl.html").read_text(encoding="utf-8")
     html = (tpl
             .replace("__WORDS_JSON__", js_safe(words))
-            .replace("__INDEX__", "../../错题本/index.html"))
+            .replace("__INDEX__", "../../SCGSstudy/index.html"))
     out = d / "单词本.html"
     out.write_text(html, encoding="utf-8")
     return words
@@ -1205,7 +1205,7 @@ def build_shengci(sub):
     html = (tpl
             .replace("__WORDS_JSON__", js_safe(words))
             .replace("__MANUAL_JSON__", js_safe(manual))
-            .replace("__INDEX__", "../../错题本/index.html"))
+            .replace("__INDEX__", "../../SCGSstudy/index.html"))
     out = d / "生词本.html"
     out.write_text(html, encoding="utf-8")
     return len(manual)
@@ -1330,7 +1330,7 @@ __KATEX_CSS__
   </div>
 
   <div class="expout" id="expBox" style="display:none;">
-    <div class="sub" style="margin-bottom:6px;">当前页面不是从“启动错题本”打开，无法直接写入文件。请复制以下内容，粘贴到本学科《错题集\错题本.md》末尾：</div>
+    <div class="sub" style="margin-bottom:6px;">当前页面不是从“启动错题本”打开，无法直接写入文件。请复制以下内容，粘贴到本学科《错题集\SCGSstudy.md》末尾：</div>
     <textarea id="expText" readonly></textarea>
   </div>
 
@@ -1737,8 +1737,8 @@ def build_tiku(sub, base_qid):
     katex_css = ""
     katex_js = ""
     if mode == "math":
-        katex_css = '<link rel="stylesheet" href="../错题本/katex/katex.min.css">'
-        katex_js = "../错题本/katex/katex.min.js"
+        katex_css = '<link rel="stylesheet" href="../SCGSstudy/katex/katex.min.css">'
+        katex_js = "../SCGSstudy/katex/katex.min.js"
     html = (TIKU_HTML
             .replace("__LABEL__", sub["label"])
             .replace("__COLOR__", sub["color"])
@@ -1748,7 +1748,7 @@ def build_tiku(sub, base_qid):
             .replace("__SUBJECT___tiku", sub["name"] + "_tiku")
             .replace("__KATEX_CSS__", katex_css)
             .replace("__KATEX_JS__", katex_js)
-            .replace("__INDEX__", "../错题本/index.html"))
+            .replace("__INDEX__", "../SCGSstudy/index.html"))
     html = html.replace("var MATH = __MATH_MODE__;",
                         "var MATH = %s;" % ("true" if mode == "math" else "false"))
     out = d / "题库页.html"
@@ -1874,7 +1874,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
 <body>
 <div class="wrap">
   <h1>专升本错题本 · 总入口 <button id="btnSync" style="font-size:12px;padding:4px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card);cursor:pointer;margin-left:8px;vertical-align:middle;">☁ 同步更新</button></h1>
-  <div class="sub">三科错题统一管理 · 数据在各自学科《错题集》目录 · 由 错题本/build.py 生成</div>
+  <div class="sub">三科错题统一管理 · 数据在各自学科《错题集》目录 · 由 SCGSstudy/build.py 生成</div>
   <div class="h2">错题复习</div>
   <div class="grid">__CARDS__
   </div>
@@ -2042,3 +2042,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

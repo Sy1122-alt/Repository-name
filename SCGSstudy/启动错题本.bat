@@ -1,6 +1,6 @@
 @echo off
 setlocal
-set "APP_URL=http://127.0.0.1:8765/%%E9%%94%%99%%E9%%A2%%98%%E6%%9C%%AC/index.html"
+set "APP_URL=http://127.0.0.1:8765/SCGSstudy/index.html"
 set "APP_DIR=%~dp0"
 
 rem 1) If the service is already running, just open the page.
@@ -44,7 +44,7 @@ echo ============================================
 echo  Phone access (same WiFi):
 for /f "tokens=2 delims=:" %%a in ('ipconfig ^| findstr /c:"IPv4"') do (
   for /f "tokens=* delims= " %%b in ("%%a") do (
-    echo    http://%%b:8765/%%E9%%94%%99%%E9%%A2%%98%%E6%%9C%%AC/index.html
+    echo    http://%%b:8765/SCGSstudy/index.html
   )
 )
 echo.
