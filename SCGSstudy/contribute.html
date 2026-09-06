@@ -89,18 +89,41 @@ select:focus,input:focus,textarea:focus{outline:none;border-color:var(--accent-d
   </div>
 
   <div class="row">
+    <label>选择贡献方式 *</label>
+    <div class="subject-grid" style="grid-template-columns:1fr 1fr;">
+      <div class="subject-btn active" data-method="email" onclick="selectMethod(this)">
+        <span class="icon">📧</span>邮箱发送
+      </div>
+      <div class="subject-btn" data-method="qq" onclick="selectMethod(this)">
+        <span class="icon">💬</span>QQ群发送
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
     <label>备注（可选）</label>
     <input type="text" id="remark" placeholder="如：2024年真题、某教材第3章、自编题等">
   </div>
 
-  <button class="btn btn-primary" onclick="goUpload()">📤 上传题目（发邮件）</button>
-  <div class="tip" style="text-align:center;margin-top:10px;">点击后自动打开邮件APP，添加附件后发送到 1301115062@qq.com</div>
+  <div id="emailSection">
+    <button class="btn btn-primary" onclick="goUpload()">📤 上传题目（发邮件）</button>
+    <div class="tip" style="text-align:center;margin-top:10px;">点击后自动打开邮件APP，添加附件后发送到 1301115062@qq.com</div>
+  </div>
+
+  <div id="qqSection" style="display:none;">
+    <div style="background:rgba(155,187,244,0.1);border:1.5px solid var(--accent);border-radius:12px;padding:20px;text-align:center;margin-bottom:12px;">
+      <div style="font-size:14px;color:var(--sub);margin-bottom:8px;">QQ群号</div>
+      <div style="font-size:32px;font-weight:700;color:var(--accent-d);letter-spacing:2px;margin-bottom:12px;">290697057</div>
+      <button class="btn btn-primary" onclick="copyQQ()" style="width:auto;display:inline-block;padding:10px 24px;">📋 复制群号</button>
+    </div>
+    <div class="tip" style="text-align:center;">加群后直接把题目图片/文件发到群里即可</div>
+  </div>
 </div>
 
 <div class="card" style="background:rgba(82,196,26,0.06);border-color:rgba(82,196,26,0.3);">
   <label style="color:#3E8C13;">提交后会发生什么？</label>
   <div style="font-size:13px;color:var(--text);margin-top:8px;">
-    1. 站长收到邮件（1301115062@qq.com）<br>
+    1. 站长收到题目（邮件 1301115062@qq.com / QQ群 290697057）<br>
     2. 站长从图片/文件中提取题目内容<br>
     3. 审核后加入对应学科的题库<br>
     4. 网站自动更新，所有人都能看到新题
@@ -110,11 +133,37 @@ select:focus,input:focus,textarea:focus{outline:none;border-color:var(--accent-d
 <script>
 var selectedSubject = '计算机';
 var selectedType = '';
+var selectedMethod = 'email';
 
 function selectSubject(el){
   document.querySelectorAll('.subject-btn').forEach(function(b){b.classList.remove('active');});
   el.classList.add('active');
   selectedSubject = el.dataset.subject;
+}
+
+function selectMethod(el){
+  document.querySelectorAll('[data-method]').forEach(function(b){b.classList.remove('active');});
+  el.classList.add('active');
+  selectedMethod = el.dataset.method;
+  document.getElementById('emailSection').style.display = selectedMethod==='email' ? 'block' : 'none';
+  document.getElementById('qqSection').style.display = selectedMethod==='qq' ? 'block' : 'none';
+}
+
+function copyQQ(){
+  var text = '290697057';
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){
+      alert('群号已复制：290697057\n打开QQ搜索群号加群即可');
+    });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    alert('群号已复制：290697057\n打开QQ搜索群号加群即可');
+  }
 }
 
 function selectType(el){
