@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>计算机错题复习页</title>
+<style>
+:root{--accent:#9BBBF4;--accent-d:#33475C;--text:#1A1B1C;--sub:#6B7280;--bg:#F4F3EE;--card:#FFFFFF;--border:#E4E3DD;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Roboto','PingFang SC','Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);padding:16px;line-height:1.6;}
+.wrap{max-width:760px;margin:0 auto;}
+h1{font-size:20px;font-weight:700;margin-bottom:2px;}
+.back{font-size:12px;color:var(--sub);text-decoration:none;display:inline-block;margin-bottom:6px;}
+.sub{font-size:12px;color:var(--sub);margin-bottom:12px;}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.stat{flex:1 1 100px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:9px 12px;}
+.stat .n{font-size:18px;font-weight:700;}
+.stat .l{font-size:11px;color:var(--sub);}
+.stat.hot{border-color:var(--accent);}
+.factor{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:12px;}
+.factor .t{font-size:11px;color:var(--sub);margin-bottom:6px;}
+.frow{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.frow .nm{flex:0 0 56px;color:var(--sub);}
+.fbar{flex:1;height:10px;background:rgba(0,0,0,0.06);border-radius:5px;overflow:hidden;}
+.fbar i{display:block;height:100%;background:var(--accent);}
+.frow .ct{flex:0 0 34px;text-align:right;font-weight:600;}
+.reason-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0;font-size:12px;color:var(--sub);}
+.reason-tools select,.reason-tools button{font-size:12px;padding:6px 8px;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--text);}
+.reason-tools button{cursor:pointer;background:rgba(155,187,244,0.16);border-color:var(--accent);font-weight:600;}
+.similar{border-top:1px solid var(--border);margin-top:10px;padding-top:10px;font-size:12px;color:var(--sub);}
+.similar a{display:block;color:var(--accent-d);text-decoration:none;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.toolbar select,.toolbar button{font-size:13px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);cursor:pointer;}
+.toolbar button.primary{background:var(--accent-d);color:#fff;border-color:var(--accent-d);font-weight:600;}
+.toolbar button.on{background:var(--accent);border-color:var(--accent);color:#1A1B1C;font-weight:600;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;}
+.meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px;}
+.tag{font-size:11px;padding:2px 8px;border-radius:10px;background:var(--accent);color:#22304A;}
+.tag.qid{background:rgba(0,0,0,0.06);color:var(--sub);}
+.tag.review{background:rgba(234,102,104,0.14);color:#B44244;}
+.tag.mastered{background:rgba(82,196,26,0.14);color:#3E8C13;}
+.tag.err{background:rgba(250,173,20,0.18);color:#8A5B00;}
+.tag.reason{background:rgba(155,187,244,0.18);color:#33509E;}
+.qtext{font-size:15px;font-weight:600;margin-bottom:10px;white-space:pre-wrap;}
+.opts{list-style:none;margin-bottom:10px;}
+.opts li{font-size:13.5px;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;margin-bottom:8px;background:#FBFBF8;cursor:pointer;transition:all .18s ease;position:relative;user-select:none;-webkit-tap-highlight-color:transparent;}
+.opts li:active{transform:scale(0.97);}
+.opts li:hover{border-color:var(--accent);background:rgba(155,187,244,0.06);}
+.opts li .ol{color:var(--sub);font-weight:600;}
+.opts li .opt-letter{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:rgba(0,0,0,0.06);font-weight:700;font-size:12px;margin-right:8px;flex:0 0 auto;}
+.opts li.sel{border-color:var(--accent-d);background:rgba(0,0,0,0.04);}
+.opts li.sel .opt-letter{background:var(--accent-d);color:#fff;}
+.opts li.right{border-color:#52C41A;background:rgba(82,196,26,0.12);animation:pulse .5s ease;}
+.opts li.right .opt-letter{background:#52C41A;color:#fff;}
+.opts li.wrong{border-color:#EA6668;background:rgba(234,102,104,0.12);animation:shake .4s ease;}
+.opts li.wrong .opt-letter{background:#EA6668;color:#fff;}
+@keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-6px);}40%{transform:translateX(6px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(82,196,26,0.4);}70%{box-shadow:0 0 0 10px rgba(82,196,26,0);}100%{box-shadow:0 0 0 0 rgba(82,196,26,0);}}
+.feedback{font-size:13px;font-weight:600;margin-bottom:8px;display:none;}
+.feedback.ok{color:#3E8C13;}
+.feedback.no{color:#B44244;}
+.answer{display:none;border-left:3px solid var(--accent-d);background:rgba(155,187,244,0.10);padding:10px 12px;border-radius:0 8px 8px 0;margin-bottom:12px;font-size:13.5px;white-space:pre-wrap;}
+.answer .k{font-weight:700;color:var(--accent-d);}
+.btns{display:flex;gap:8px;flex-wrap:wrap;}
+.btns button{font-size:13px;padding:8px 14px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--text);cursor:pointer;}
+.btns button.m{background:rgba(82,196,26,0.14);border-color:#52C41A;color:#3E8C13;font-weight:600;}
+.btns button.u{background:rgba(234,102,104,0.12);border-color:#EA6668;color:#B44244;font-weight:600;}
+.btns button.h{background:rgba(250,173,20,0.14);border-color:#FAAD14;color:#8A5B00;font-weight:600;}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:12px;}
+.nav button{font-size:13px;padding:8px 14px;border:1px solid var(--border);border-radius:8px;background:var(--card);cursor:pointer;}
+.empty{text-align:center;color:var(--sub);font-size:13px;padding:30px 10px;background:var(--card);border:1px dashed var(--border);border-radius:14px;}
+.progress{height:6px;background:rgba(0,0,0,0.07);border-radius:3px;overflow:hidden;margin-bottom:10px;}
+.progress i{display:block;height:100%;background:var(--accent-d);border-radius:3px;transition:width .2s;}
+.hint{font-size:11.5px;color:var(--sub);margin-top:12px;line-height:1.7;}
+.math-inline{display:inline-block;vertical-align:middle;}
+/* 移动端适配 */
+@media (max-width:480px){
+  .toolbar select,.toolbar button{min-height:44px;font-size:14px;}
+  .opts li{min-height:44px;display:flex;align-items:center;font-size:14px;padding:10px 12px;}
+  .btns button{min-height:44px;font-size:14px;}
+  .nav button{min-height:44px;font-size:14px;}
+  .reason-tools select,.reason-tools button{min-height:40px;font-size:13px;}
+  .similar a{min-height:40px;display:inline-flex;align-items:center;padding:8px 10px;}
+  .qtext{font-size:16px;}
+}
+</style>
+<link rel="stylesheet" href="../../错题本/katex/katex.min.css">
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../../错题本/index.html">‹ 返回错题本总入口</a>
+  <h1>计算机 · 错题复习页</h1>
+  <div class="sub">数据源：同目录《错题本.md》 · 由 错题本/build.py 生成 · 本地双击打开</div>
+
+  <div class="stats">
+    <div class="stat"><div class="n" id="nTotal">0</div><div class="l">总题数</div></div>
+    <div class="stat"><div class="n" id="nReview">0</div><div class="l">待复习</div></div>
+    <div class="stat"><div class="n" id="nMastered">0</div><div class="l">已掌握</div></div>
+    <div class="stat"><div class="n" id="nRate">0%</div><div class="l">掌握率</div></div>
+    <div class="stat hot"><div class="n" id="nDue">0</div><div class="l">今日到期</div></div>
+  </div>
+  <div class="progress"><i id="bar" style="width:0%"></i></div>
+
+  <div class="factor" id="factorBox">
+    <div class="t">错因分布（按错误次数统计）</div>
+    <div id="factorList"></div>
+  </div>
+  <div class="factor" id="weakBox">
+    <div class="t">薄弱点闭环</div>
+    <div id="weakList">按错因记录后，这里会显示最需要回炉的章节。</div>
+  </div>
+
+  <div class="toolbar">
+    <select id="selChapter"><option value="">全部章节</option></select>
+    <select id="selStatus"><option value="">全部状态</option><option value="待复习">待复习</option><option value="已掌握">已掌握</option></select>
+    <select id="selReason"><option value="">全部错因</option></select>
+    <button id="btnShuffle" class="primary">随机抽题</button>
+    <button id="btnOrder">顺序浏览</button>
+    <button id="btnKey">重点题</button>
+    <button id="btnDue">今日应复习</button>
+    <button id="btnReset">重置进度</button>
+    <button id="btnExportLocal">导出本地错题</button>
+  </div>
+
+  <div id="card"></div>
+  <div class="hint">
+    翻卡后选择「没记住 / 有点模糊 / 掌握」，系统会分别安排明天、3 天后或递进间隔后的复习。<br>
+    重点题 = 错误次数 ≥ 2；「今日应复习」只显示今天到期的题目。<br>
+    更新：往《错题本.md》追加错题后，运行 错题本/build.py 重新生成。
+  </div>
+</div>
+
+<script src="../../错题本/katex/katex.min.js"></script>
+<script>
+window.__DATA__ = [
+ {
+  "id": "001",
+  "章节": "01-计算机基础知识",
+  "日期": "2026-09-05",
+  "状态": "待复习",
+  "题型": "多选",
+  "题目": "关于汉字编码，下列说法正确的有（ ）",
+  "options": [
+   "A. GB2312 国标码共收录 6763 个汉字",
+   "B. 机内码用于内部存储汉字",
+   "C. 字形码用于显示/打印汉字",
+   "D. 每个汉字固定占 1 字节"
+  ],
+  "答案": "ABC",
+  "解析": "D 错，汉字占 2 字节。 （来源：四川省计算机类考纲讲练测）",
+  "错因": "概念不清",
+  "错误次数": 0,
+  "同类题": [
+   {
+    "id": "多选-15",
+    "来源": "四川省计算机类考纲讲练测",
+    "专题": "编码、单位与存储",
+    "题型": "多选",
+    "材料": "",
+    "题目": "下列属于计算机中常用存储容量单位的有（ ）",
+    "选项": [
+     "MB",
+     "GB",
+     "bit",
+     "Hz"
+    ],
+    "答案": "ABC",
+    "解析": "Hz 是频率单位，不是存储单位。",
+    "章节": "01-计算机基础知识"
+   },
+   {
+    "id": "多选-16",
+    "来源": "四川省计算机类考纲讲练测",
+    "专题": "编码、单位与存储",
+    "题型": "多选",
+    "材料": "",
+    "题目": "关于二进制、八进制、十六进制，下列说法正确的有（ ）",
+    "选项": [
+     "二进制只有 0 和 1 两个数码",
+     "八进制数码 0~7",
+     "十六进制中 F 表示 15",
+     "十进制数 10 等于十六进制数 A"
+    ],
+    "答案": "ABCD",
+    "解析": "二进制数码只有 0 和 1，八进制使用 0 至 7，十六进制用 F 表示十进制 15，十进制 10 与十六进制 A 等值。",
+    "章节": "01-计算机基础知识"
+   },
+   {
+    "id": "多选-17",
+    "来源": "四川省计算机类考纲讲练测",
+    "专题": "编码、单位与存储",
+    "题型": "多选",
+    "材料": "",
+    "题目": "关于 ASCII 码，下列说法正确的有（ ）",
+    "选项": [
+     "标准 ASCII 码共有 128 个字符",
+     "大写字母 ASCII 值比小写字母大",
+     "数字 ASCII 值小于字母",
+     "空格有对应 ASCII 值"
+    ],
+    "答案": "ACD",
+    "解析": "B 错，数字 < 大写 < 小写，大写比小写小。",
+    "章节": "01-计算机基础知识"
+   }
+  ]
+ },
+ {
+  "id": "002",
+  "章节": "01-计算机基础知识",
+  "日期": "2026-09-05",
+  "状态": "待复习",
+  "题型": "简答",
+  "题目": "冯·诺依曼计算机由哪几部分组成？",
+  "答案": "运算器、控制器、存储器、输入设备、输出设备五大部件（运算器与控制器合称 CPU）。",
+  "解析": "（本题未附解析） （来源：自编自测（高频））",
+  "错因": "概念不清",
+  "错误次数": 0,
+  "同类题": [
+   {
+    "id": "真题-6",
+    "来源": "2025 真题回忆",
+    "专题": "进制转换",
+    "题型": "简答",
+    "材料": "",
+    "题目": "无符号数 $(10100100)_2$ 减去 $(10011001)_2$ 的结果转成十进制为 \\_\\_\\_\\_。",
+    "选项": [],
+    "答案": "11",
+    "解析": "$10100100-10011001=00001011_2=11_{10}$。",
+    "章节": "01-计算机基础知识"
+   },
+   {
+    "id": "真题-7",
+    "来源": "2025 真题回忆",
+    "专题": "进制转换",
+    "题型": "简答",
+    "材料": "",
+    "题目": "有三个数值：无符号数 $(11100110)_2$、$(354)_8$、$(EA)_{16}$，请比较它们的大小。",
+    "选项": [],
+    "答案": "$(354)_8 < (EA)_{16} < (11100110)_2$",
+    "解析": "都转十进制：$(11100110)_2=230$，$(354)_8=236$，$(EA)_{16}=234$，即 230 < 234 < 236。",
+    "章节": "01-计算机基础知识"
+   },
+   {
+    "id": "真题-31",
+    "来源": "2025 真题回忆",
+    "专题": "简答题",
+    "题型": "简答",
+    "材料": "",
+    "题目": "列举网络拓扑结构，并简述主要特征。",
+    "选项": [],
+    "答案": "常见拓扑有总线型、星型、环型、树型、网状型等。星型以中央节点为中心，易于管理但中心故障影响全网；总线型布线简单但故障难定位；环型数据单向传输；网状型可靠性高但成本高。",
+    "解析": "按节点连接方式区分拓扑结构；星型便于集中管理但依赖中心节点，网状型冗余链路多但建设成本较高。",
+    "章节": "01-计算机基础知识"
+   }
+  ]
+ },
+ {
+  "id": "003",
+  "章节": "03-Word 文字处理",
+  "日期": "2026-09-05",
+  "状态": "待复习",
+  "题型": "单选",
+  "题目": "Word 中可设置的目录级别数量最多为（ ）",
+  "options": [
+   "A. 3",
+   "B. 5",
+   "C. 9",
+   "D. 10"
+  ],
+  "答案": "C",
+  "解析": "Word 目录级别支持 1-9 级。 （来源：2025 四川专升本计算机真题（回忆））",
+  "错因": "概念不清",
+  "错误次数": 0,
+  "同类题": [
+   {
+    "id": "真题-44",
+    "来源": "2025 四川专升本计算机真题（回忆）",
+    "专题": "2025 真题客观题",
+    "题型": "单选",
+    "材料": "",
+    "题目": "在 Word 中用\"矩形\"绘制任意大小正方形，操作是（ ）",
+    "选项": [
+     "Shift+拖动",
+     "Ctrl+拖动",
+     "Alt+拖动",
+     "Esc+拖动"
+    ],
+    "答案": "A",
+    "解析": "Shift+拖动可画正圆/正方形等正形。",
+    "章节": "03-Word 文字处理"
+   },
+   {
+    "id": "真题-30",
+    "来源": "2025 真题回忆",
+    "专题": "简答题",
+    "题型": "简答",
+    "材料": "",
+    "题目": "列举 Word 中图片嵌入的类型（环绕方式）。",
+    "选项": [],
+    "答案": "嵌入型、四周型、紧密型、穿越型、上下型、衬于文字下方、浮于文字上方等。",
+    "解析": "Word 图片版式包括嵌入型和多种文字环绕方式，回答时列出常见类型即可。",
+    "章节": "03-Word 文字处理"
+   },
+   {
+    "id": "真题-56-3",
+    "来源": "真题",
+    "专题": "2025 真题客观题",
+    "题型": "判断",
+    "材料": "",
+    "题目": "Word 中不能同时设置字体为加粗和倾斜。",
+    "选项": [
+     "对",
+     "错"
+    ],
+    "答案": "错",
+    "解析": "可以同时设置",
+    "章节": "03-Word 文字处理"
+   }
+  ]
+ },
+ {
+  "id": "004",
+  "章节": "99-综合",
+  "日期": "2026-09-05",
+  "状态": "待复习",
+  "题型": "简答",
+  "题目": "PowerPoint 打印内容设为\"讲义\"时，一页纸最多可打印____张幻灯片。",
+  "答案": "9",
+  "解析": "讲义版式支持 1/2/3/4/6/9 张，最多 9 张。 （来源：2025 四川专升本计算机真题（回忆））",
+  "错因": "概念不清",
+  "错误次数": 0,
+  "同类题": []
+ },
+ {
+  "id": "005",
+  "章节": "01-计算机基础知识",
+  "日期": "2026-09-05",
+  "状态": "待复习",
+  "题型": "单选",
+  "题目": "十六进制数 $3A_{16}$ 转换为十进制数是（ ）",
+  "options": [
+   "A. 55",
+   "B. 56",
+   "C. 57",
+   "D. 58"
+  ],
+  "答案": "D",
+  "解析": "$3\\times16+10=58$。 （来源：四川省计算机类考纲讲练测）",
+  "错因": "计算失误",
+  "错误次数": 0,
+  "同类题": [
+   {
+    "id": "练习-1",
+    "来源": "四川省计算机类考纲讲练测",
+    "专题": "进制转换",
+    "题型": "单选",
+    "材料": "",
+    "题目": "二进制数 $10010_2$ 转换为十进制数是（ ）",
+    "选项": [
+     "16",
+     "17",
+     "18",
+     "19"
+    ],
+    "答案": "C",
+    "解析": "$1\\times2^4+0\\times2^3+0\\times2^2+1\\times2^1+0\\times2^0=18$。",
+    "章节": "01-计算机基础知识"
+   },
+   {
+    "id": "练习-2",
+    "来源": "四川省计算机类考纲讲练测",
+    "专题": "进制转换",
+    "题型": "单选",
+    "材料": "",
+    "题目": "十进制数 23 转换为二进制数是（ ）",
+    "选项": [
+     "10111",
+     "11001",
+     "10101",
+     "11101"
+    ],
+    "答案": "A",
+    "解析": "除 2 取余逆序：$23=10111_2$。",
+    "章节": "01-计算机基础知识"
+   },
+   {
+    "id": "练习-4",
+    "来源": "四川省计算机类考纲讲练测",
+    "专题": "进制转换",
+    "题型": "单选",
+    "材料": "",
+    "题目": "八进制数 $72_8$ 转换为十进制数是（ ）",
+    "选项": [
+     "56",
+     "57",
+     "58",
+     "59"
+    ],
+    "答案": "C",
+    "解析": "$7\\times8+2=58$。",
+    "章节": "01-计算机基础知识"
+   }
+  ]
+ },
+ {
+  "id": "006",
+  "章节": "01-计算机基础知识",
+  "日期": "2026-09-05",
+  "状态": "待复习",
+  "题型": "简答",
+  "题目": "无符号数 $(10100100)_2-(10011001)_2$ 的结果转十进制为____。",
+  "答案": "11",
+  "解析": "$164-153=11$（或按位减法：$(00001011)_2=11$）。 （来源：2025 四川专升本计算机真题（回忆））",
+  "错因": "计算失误",
+  "错误次数": 0,
+  "同类题": [
+   {
+    "id": "真题-6",
+    "来源": "2025 真题回忆",
+    "专题": "进制转换",
+    "题型": "简答",
+    "材料": "",
+    "题目": "无符号数 $(10100100)_2$ 减去 $(10011001)_2$ 的结果转成十进制为 \\_\\_\\_\\_。",
+    "选项": [],
+    "答案": "11",
+    "解析": "$10100100-10011001=00001011_2=11_{10}$。",
+    "章节": "01-计算机基础知识"
+   },
+   {
+    "id": "真题-7",
+    "来源": "2025 真题回忆",
+    "专题": "进制转换",
+    "题型": "简答",
+    "材料": "",
+    "题目": "有三个数值：无符号数 $(11100110)_2$、$(354)_8$、$(EA)_{16}$，请比较它们的大小。",
+    "选项": [],
+    "答案": "$(354)_8 < (EA)_{16} < (11100110)_2$",
+    "解析": "都转十进制：$(11100110)_2=230$，$(354)_8=236$，$(EA)_{16}=234$，即 230 < 234 < 236。",
+    "章节": "01-计算机基础知识"
+   },
+   {
+    "id": "真题-31",
+    "来源": "2025 真题回忆",
+    "专题": "简答题",
+    "题型": "简答",
+    "材料": "",
+    "题目": "列举网络拓扑结构，并简述主要特征。",
+    "选项": [],
+    "答案": "常见拓扑有总线型、星型、环型、树型、网状型等。星型以中央节点为中心，易于管理但中心故障影响全网；总线型布线简单但故障难定位；环型数据单向传输；网状型可靠性高但成本高。",
+    "解析": "按节点连接方式区分拓扑结构；星型便于集中管理但依赖中心节点，网状型冗余链路多但建设成本较高。",
+    "章节": "01-计算机基础知识"
+   }
+  ]
+ },
+ {
+  "id": "007",
+  "章节": "01-计算机基础知识",
+  "日期": "2026-09-05",
+  "状态": "待复习",
+  "题型": "判断",
+  "题目": "一个字节由 8 个位组成。",
+  "options": [
+   "A. 对",
+   "B. 错"
+  ],
+  "答案": "对",
+  "解析": "1 Byte = 8 bit （来源：练习）",
+  "错因": "概念不清",
+  "错误次数": 0,
+  "同类题": [
+   {
+    "id": "练习-20-29-1",
+    "来源": "练习",
+    "专题": "判断对错",
+    "题型": "判断",
+    "材料": "",
+    "题目": "二进制数 1111 等于十进制数 15。",
+    "选项": [
+     "对",
+     "错"
+    ],
+    "答案": "对",
+    "解析": "8+4+2+1=15",
+    "章节": "01-计算机基础知识"
+   },
+   {
+    "id": "练习-20-29-2",
+    "来源": "练习",
+    "专题": "判断对错",
+    "题型": "判断",
+    "材料": "",
+    "题目": "在计算机中，1GB 等于 1000MB。",
+    "选项": [
+     "对",
+     "错"
+    ],
+    "答案": "错",
+    "解析": "1GB=1024MB",
+    "章节": "01-计算机基础知识"
+   },
+   {
+    "id": "练习-20-29-4",
+    "来源": "练习",
+    "专题": "判断对错",
+    "题型": "判断",
+    "材料": "",
+    "题目": "标准 ASCII 码可以表示所有国家的文字。",
+    "选项": [
+     "对",
+     "错"
+    ],
+    "答案": "错",
+    "解析": "只含英文/数字/符号",
+    "章节": "01-计算机基础知识"
+   }
+  ]
+ },
+ {
+  "id": "008",
+  "章节": "01-计算机基础知识",
+  "日期": "2026-09-05",
+  "状态": "待复习",
+  "题型": "多选",
+  "题目": "关于二进制、八进制、十六进制，下列说法正确的有（ ）",
+  "options": [
+   "A. 二进制只有 0 和 1 两个数码",
+   "B. 八进制数码 0~7",
+   "C. 十六进制中 F 表示 15",
+   "D. 十进制数 10 等于十六进制数 A"
+  ],
+  "答案": "ABCD",
+  "解析": "二进制数码只有 0 和 1，八进制使用 0 至 7，十六进制用 F 表示十进制 15，十进制 10 与十六进制 A 等值。 （来源：四川省计算机类考纲讲练测）",
+  "错因": "理解偏差",
+  "错误次数": 0,
+  "同类题": [
+   {
+    "id": "多选-15",
+    "来源": "四川省计算机类考纲讲练测",
+    "专题": "编码、单位与存储",
+    "题型": "多选",
+    "材料": "",
+    "题目": "下列属于计算机中常用存储容量单位的有（ ）",
+    "选项": [
+     "MB",
+     "GB",
+     "bit",
+     "Hz"
+    ],
+    "答案": "ABC",
+    "解析": "Hz 是频率单位，不是存储单位。",
+    "章节": "01-计算机基础知识"
+   },
+   {
+    "id": "多选-17",
+    "来源": "四川省计算机类考纲讲练测",
+    "专题": "编码、单位与存储",
+    "题型": "多选",
+    "材料": "",
+    "题目": "关于 ASCII 码，下列说法正确的有（ ）",
+    "选项": [
+     "标准 ASCII 码共有 128 个字符",
+     "大写字母 ASCII 值比小写字母大",
+     "数字 ASCII 值小于字母",
+     "空格有对应 ASCII 值"
+    ],
+    "答案": "ACD",
+    "解析": "B 错，数字 < 大写 < 小写，大写比小写小。",
+    "章节": "01-计算机基础知识"
+   },
+   {
+    "id": "多选-18",
+    "来源": "四川省计算机类考纲讲练测",
+    "专题": "编码、单位与存储",
+    "题型": "多选",
+    "材料": "",
+    "题目": "关于汉字编码，下列说法正确的有（ ）",
+    "选项": [
+     "GB2312 国标码共收录 6763 个汉字",
+     "机内码用于内部存储汉字",
+     "字形码用于显示/打印汉字",
+     "每个汉字固定占 1 字节"
+    ],
+    "答案": "ABC",
+    "解析": "D 错，汉字占 2 字节。",
+    "章节": "01-计算机基础知识"
+   }
+  ]
+ },
+ {
+  "id": "009",
+  "章节": "02-操作系统",
+  "日期": "2026-09-05",
+  "状态": "待复习",
+  "题型": "多选",
+  "题目": "我国自主生产的操作系统有（ ）",
+  "options": [
+   "A. 麒麟",
+   "B. 鸿蒙",
+   "C. UOS",
+   "D. Windows"
+  ],
+  "答案": "ABC",
+  "解析": "麒麟（Kylin）、鸿蒙（HarmonyOS）、UOS（统信）都是国产；Windows 是美国微软。 （来源：2025 四川专升本计算机真题（回忆））",
+  "错因": "概念不清",
+  "错误次数": 0,
+  "同类题": [
+   {
+    "id": "真题-35",
+    "来源": "2025 四川专升本计算机真题（回忆）",
+    "专题": "2025 真题客观题",
+    "题型": "单选",
+    "材料": "",
+    "题目": "下列既是输入又是输出设备的选项是（ ）",
+    "选项": [
+     "绘图仪",
+     "扫描仪",
+     "手写笔",
+     "触摸屏"
+    ],
+    "答案": "D",
+    "解析": "触摸屏既能显示输出又能触摸输入；绘图仪只输出，扫描仪、手写笔只输入。",
+    "章节": "02-操作系统"
+   },
+   {
+    "id": "真题-36",
+    "来源": "2025 四川专升本计算机真题（回忆）",
+    "专题": "2025 真题客观题",
+    "题型": "单选",
+    "材料": "",
+    "题目": "在 Windows 中选择不连续的文件或文件夹，应使用的按键是（ ）",
+    "选项": [
+     "Tab",
+     "Alt",
+     "Shift",
+     "Ctrl"
+    ],
+    "答案": "D",
+    "解析": "Ctrl+单击选不连续多个；Shift+单击选连续区间。",
+    "章节": "02-操作系统"
+   },
+   {
+    "id": "真题-37",
+    "来源": "2025 四川专升本计算机真题（回忆）",
+    "专题": "2025 真题客观题",
+    "题型": "单选",
+    "材料": "",
+    "题目": "对活动窗口截图的快捷键是（ ）",
+    "选项": [
+     "Shift+PrintScreen",
+     "Ctrl+PrintScreen",
+     "Alt+PrintScreen",
+     "Esc+PrintScreen"
+    ],
+    "答案": "C",
+    "解析": "Alt+PrintScreen 截当前活动窗口；PrintScreen 截全屏。",
+    "章节": "02-操作系统"
+   }
+  ]
+ },
+ {
+  "id": "010",
+  "章节": "03-Word 文字处理",
+  "日期": "2026-09-06",
+  "状态": "待复习",
+  "题型": "单选",
+  "题目": "在 Word 中用\"矩形\"绘制任意大小正方形，操作是（ ）",
+  "options": [
+   "A. Shift+拖动",
+   "B. Ctrl+拖动",
+   "C. Alt+拖动",
+   "D. Esc+拖动"
+  ],
+  "答案": "A",
+  "解析": "Shift+拖动可画正圆/正方形等正形。 （来源：2025 四川专升本计算机真题（回忆））",
+  "错误次数": 1,
+  "同类题": [
+   {
+    "id": "真题-43",
+    "来源": "2025 四川专升本计算机真题（回忆）",
+    "专题": "2025 真题客观题",
+    "题型": "单选",
+    "材料": "",
+    "题目": "Word 中可设置的目录级别数量最多为（ ）",
+    "选项": [
+     "3",
+     "5",
+     "9",
+     "10"
+    ],
+    "答案": "C",
+    "解析": "Word 目录级别支持 1-9 级。",
+    "章节": "03-Word 文字处理"
+   },
+   {
+    "id": "真题-30",
+    "来源": "2025 真题回忆",
+    "专题": "简答题",
+    "题型": "简答",
+    "材料": "",
+    "题目": "列举 Word 中图片嵌入的类型（环绕方式）。",
+    "选项": [],
+    "答案": "嵌入型、四周型、紧密型、穿越型、上下型、衬于文字下方、浮于文字上方等。",
+    "解析": "Word 图片版式包括嵌入型和多种文字环绕方式，回答时列出常见类型即可。",
+    "章节": "03-Word 文字处理"
+   },
+   {
+    "id": "真题-56-3",
+    "来源": "真题",
+    "专题": "2025 真题客观题",
+    "题型": "判断",
+    "材料": "",
+    "题目": "Word 中不能同时设置字体为加粗和倾斜。",
+    "选项": [
+     "对",
+     "错"
+    ],
+    "答案": "错",
+    "解析": "可以同时设置",
+    "章节": "03-Word 文字处理"
+   }
+  ]
+ },
+ {
+  "id": "011",
+  "章节": "01-计算机基础知识",
+  "日期": "2026-09-06",
+  "状态": "待复习",
+  "题型": "单选",
+  "题目": "CAE 的中文含义是（ ）。",
+  "options": [
+   "A. 计算机辅助教学",
+   "B. 计算机辅助设计",
+   "C. 计算机辅助制造",
+   "D. 计算机辅助工程"
+  ],
+  "答案": "D",
+  "解析": "计算机辅助教学简称 CAI，计算机辅助设计简称 CAD，计算机辅助制造简称 CAM，计算机辅助工程简称 CAE。 （来源：四川省专升本考试复习全书·计算机基础（第一章综合训练））",
+  "错误次数": 0,
+  "同类题": [
+   {
+    "id": "练习-1",
+    "来源": "四川省计算机类考纲讲练测",
+    "专题": "进制转换",
+    "题型": "单选",
+    "材料": "",
+    "题目": "二进制数 $10010_2$ 转换为十进制数是（ ）",
+    "选项": [
+     "16",
+     "17",
+     "18",
+     "19"
+    ],
+    "答案": "C",
+    "解析": "$1\\times2^4+0\\times2^3+0\\times2^2+1\\times2^1+0\\times2^0=18$。",
+    "章节": "01-计算机基础知识"
+   },
+   {
+    "id": "练习-2",
+    "来源": "四川省计算机类考纲讲练测",
+    "专题": "进制转换",
+    "题型": "单选",
+    "材料": "",
+    "题目": "十进制数 23 转换为二进制数是（ ）",
+    "选项": [
+     "10111",
+     "11001",
+     "10101",
+     "11101"
+    ],
+    "答案": "A",
+    "解析": "除 2 取余逆序：$23=10111_2$。",
+    "章节": "01-计算机基础知识"
+   },
+   {
+    "id": "练习-3",
+    "来源": "四川省计算机类考纲讲练测",
+    "专题": "进制转换",
+    "题型": "单选",
+    "材料": "",
+    "题目": "十六进制数 $3A_{16}$ 转换为十进制数是（ ）",
+    "选项": [
+     "55",
+     "56",
+     "57",
+     "58"
+    ],
+    "答案": "D",
+    "解析": "$3\\times16+10=58$。",
+    "章节": "01-计算机基础知识"
+   }
+  ]
+ },
+ {
+  "id": "012",
+  "章节": "03-Word 文字处理",
+  "日期": "2026-09-06",
+  "状态": "待复习",
+  "题型": "简答",
+  "题目": "（Word 页边距） 简述在 Word 中设置页边距的操作步骤。",
+  "答案": "①打开\"布局\"（或\"页面布局\"）选项卡；②点击\"页边距\"按钮；③选择预设值，或选\"自定义页边距\"；④在对话框设置上、下、左、右页边距数值；⑤单击\"确定\"。",
+  "解析": "页边距设置位于布局选项卡；可直接选择预设值，也可在自定义对话框中分别输入四边数值。 （来源：办公自动化操作题（公共来源，已核验））",
+  "错误次数": 0,
+  "同类题": [
+   {
+    "id": "真题-30",
+    "来源": "2025 真题回忆",
+    "专题": "简答题",
+    "题型": "简答",
+    "材料": "",
+    "题目": "列举 Word 中图片嵌入的类型（环绕方式）。",
+    "选项": [],
+    "答案": "嵌入型、四周型、紧密型、穿越型、上下型、衬于文字下方、浮于文字上方等。",
+    "解析": "Word 图片版式包括嵌入型和多种文字环绕方式，回答时列出常见类型即可。",
+    "章节": "03-Word 文字处理"
+   },
+   {
+    "id": "真题-70",
+    "来源": "2025 四川专升本计算机真题（回忆）",
+    "专题": "2025 真题客观题",
+    "题型": "简答",
+    "材料": "",
+    "题目": "Word 中段落缩进包括左缩进、右缩进、____缩进和悬挂缩进。",
+    "选项": [],
+    "答案": "首行",
+    "解析": "四种缩进：首行、悬挂、左、右。",
+    "章节": "03-Word 文字处理"
+   },
+   {
+    "id": "真题-72",
+    "来源": "2025 四川专升本计算机真题（回忆）",
+    "专题": "2025 真题客观题",
+    "题型": "简答",
+    "材料": "",
+    "题目": "Word 编辑限制（保护文档）类型为：不允许任何更改（只读）、____、批注、填写窗体。",
+    "选项": [],
+    "答案": "修订",
+    "解析": "编辑限制四类：只读、修订、批注、填写窗体。",
+    "章节": "03-Word 文字处理"
+   }
+  ]
+ },
+ {
+  "id": "013",
+  "章节": "02-操作系统",
+  "日期": "2026-09-06",
+  "状态": "待复习",
+  "题型": "判断",
+  "题目": "Windows 中进程与程序一一对应。",
+  "options": [
+   "A. 对",
+   "B. 错"
+  ],
+  "答案": "错",
+  "解析": "一个程序可对应多个进程 （来源：真题）",
+  "错误次数": 0,
+  "同类题": [
+   {
+    "id": "真题-55-2",
+    "来源": "真题",
+    "专题": "2025 真题客观题",
+    "题型": "判断",
+    "材料": "",
+    "题目": "外存容量越大，存储数据越多，读取速度也越快。",
+    "选项": [
+     "对",
+     "错"
+    ],
+    "答案": "错",
+    "解析": "外存容量与读取速度无关，外存比内存慢",
+    "章节": "02-操作系统"
+   },
+   {
+    "id": "真题-55-3",
+    "来源": "真题",
+    "专题": "2025 真题客观题",
+    "题型": "判断",
+    "材料": "",
+    "题目": "BIOS 是操作系统的一部分，用于驱动和管理硬件。",
+    "选项": [
+     "对",
+     "错"
+    ],
+    "答案": "错",
+    "解析": "BIOS 是固化在 ROM 中的基本输入输出系统，不是操作系统",
+    "章节": "02-操作系统"
+   },
+   {
+    "id": "真题-55-4",
+    "来源": "真题",
+    "专题": "2025 真题客观题",
+    "题型": "判断",
+    "材料": "",
+    "题目": "只要配置了虚拟内存，程序就不用占用物理内存即可被 CPU 执行。",
+    "选项": [
+     "对",
+     "错"
+    ],
+    "答案": "错",
+    "解析": "虚拟内存只是物理内存的补充，程序仍须调入物理内存执行",
+    "章节": "02-操作系统"
+   }
+  ]
+ }
+];
+(function(){
+  "use strict";
+  var MATH = true;
+  var ALL = (window.__DATA__||[]).slice();
+  // 合并本地存储的错题（手机APK/离线环境自动存入的）
+  try{
+    var _lkey="计算机_errorbook_local";
+    var _local=JSON.parse(localStorage.getItem(_lkey)||"[]");
+    if(_local.length){
+      _local.forEach(function(le){
+        // 按答案+章节+题型去重（题目文本可能因阅读材料长短不同而不完全一致）
+        var dup=ALL.find(function(it){
+          return it["答案"]===le["答案"] && it["章节"]===le["章节"] && it["题型"]===le["题型"];
+        });
+        if(!dup){ ALL.push(le); }
+      });
+    }
+  }catch(e){}
+  var storeKey = "计算机_cuowuji_v2";
+  var statusMap = {};
+  var revMap = {};
+  var planMap = {};
+  try{ var saved = JSON.parse(localStorage.getItem(storeKey)||"{}")||{}; statusMap=saved.st||{}; revMap=saved.rv||{}; planMap=saved.pm||{}; }catch(e){}
+  try{ localStorage.removeItem("cuowuji_status_v1"); }catch(e){}
+  function save(){ try{ localStorage.setItem(storeKey, JSON.stringify({st:statusMap,rv:revMap,pm:planMap})); }catch(e){} }
+  function st(it){ return statusMap[it.id] || it["状态"] || "待复习"; }
+  function setSt(id,v){ statusMap[id]=v; save(); }
+  function lastRev(it){ return (planMap[it.id]&&planMap[it.id].last) || revMap[it.id] || it["最近复习"] || it["日期"] || ""; }
+  function nextRev(it){ return (planMap[it.id]&&planMap[it.id].next) || ""; }
+  function setRev(id,d){ revMap[id]=d; save(); }
+  function daysBetween(d1,d2){
+    try{
+      var a=new Date(d1), b=new Date(d2);
+      return Math.round((b-a)/86400000);
+    }catch(e){ return 999; }
+  }
+  function today(){ var d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+  function addDays(base, days){ var d=new Date(base+"T00:00:00"); d.setDate(d.getDate()+days); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+  function isDue(it){
+    var next=nextRev(it);
+    return !next || daysBetween(next, today())>=0;
+  }
+  function schedule(it, grade){
+    var old=planMap[it.id]||{}, level=Number(old.level)||0, days=1, status="待复习";
+    if(grade==="hard"){ level=Math.max(1,level); days=3; }
+    if(grade==="good"){ level=Math.min(level+1,4); days=[7,7,14,30,45][level]; status="已掌握"; }
+    if(grade==="again"){ level=0; days=1; }
+    var now=today();
+    planMap[it.id]={last:now,next:addDays(now,days),level:level};
+    setSt(it.id,status); setRev(it.id,now); save();
+  }
+  function recordReason(it, reason, increment){
+    it["错因"]=reason;
+    if(increment) it["错误次数"]=(Number(it["错误次数"])||0)+1;
+    var payload={subject:"计算机",id:it.id,reason:reason,increment:!!increment};
+    if(location.protocol!=="http:" || location.hostname!=="127.0.0.1") return;
+    fetch("/api/update-review",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})
+      .then(function(r){if(!r.ok)throw new Error("save");}).catch(function(){ });
+  }
+  function renderWeak(){
+    var map={};
+    ALL.forEach(function(it){
+      var reason=it["错因"]||"未记录错因", chapter=it["章节"]||"未分类";
+      var key=chapter+"｜"+reason;
+      map[key]=(map[key]||0)+(Number(it["错误次数"])||0)+1;
+    });
+    var keys=Object.keys(map).sort(function(a,b){return map[b]-map[a];}).slice(0,5);
+    $("weakList").innerHTML=keys.length?keys.map(function(k){return '<div class="frow"><span class="nm" style="flex-basis:180px">'+escHtml(k.replace("｜"," · "))+'</span><span class="ct">'+map[k]+' 次</span></div>';}).join(""): "暂无数据";
+  }
+
+  var list=[], idx=0, revealed=false;
+  function $(id){ return document.getElementById(id); }
+
+  // 渲染数学公式（KaTeX），失败则保留原文
+  function escHtml(s){
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+  function renderMath(s){
+    var t = escHtml(s).replace(/\\_/g,"_");
+    if(!MATH || typeof katex==="undefined") return t;
+    function unesc(x){ return x.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&quot;/g,'"'); }
+    try{
+      t = t.replace(/\$\$([\s\S]+?)\$\$/g, function(_,x){
+        return '<div class="math-inline" style="margin:6px 0;">'+katex.renderToString(unesc(x),{displayMode:true,throwOnError:false})+'</div>';
+      });
+      t = t.replace(/\$([^$\n]+?)\$/g, function(_,x){
+        return '<span class="math-inline">'+katex.renderToString(unesc(x),{displayMode:false,throwOnError:false})+'</span>';
+      });
+    }catch(e){}
+    return t;
+  }
+
+  var chapters=[], reasons=[];
+  ALL.forEach(function(it){
+    if(chapters.indexOf(it["章节"])<0) chapters.push(it["章节"]);
+    if(it["错因"] && reasons.indexOf(it["错因"])<0) reasons.push(it["错因"]);
+  });
+  chapters.sort(); reasons.sort();
+  chapters.forEach(function(c){ var o=document.createElement("option"); o.value=c; o.textContent=c; $("selChapter").appendChild(o); });
+  reasons.forEach(function(r){ var o=document.createElement("option"); o.value=r; o.textContent=r; $("selReason").appendChild(o); });
+
+  function filtered(){
+    var c=$("selChapter").value, s=$("selStatus").value, r=$("selReason").value;
+    return ALL.filter(function(it){
+      if(c && it["章节"]!==c) return false;
+      if(s && st(it)!==s) return false;
+      if(r && it["错因"]!==r) return false;
+      return true;
+    });
+  }
+  function factorStat(){
+    var map={}, total=0;
+    ALL.forEach(function(it){
+      var r=it["错因"]||"未分类"; map[r]=(map[r]||0)+ (it["错误次数"]||0)+1; total++;
+    });
+    var keys=Object.keys(map).sort(function(a,b){return map[b]-map[a];});
+    return {map:map, keys:keys, total:total};
+  }
+  function renderFactor(){
+    var f=factorStat(), box=$("factorList"), html="";
+    if(!f.total){ box.innerHTML="<span style='color:var(--sub)'>暂无数据</span>"; return; }
+    f.keys.forEach(function(k){
+      var n=f.map[k], p=Math.round(n/f.total*100);
+      html+='<div class="frow"><span class="nm">'+escHtml(k)+'</span><div class="fbar"><i style="width:'+p+'%"></i></div><span class="ct">'+n+'</span></div>';
+    });
+    box.innerHTML=html;
+  }
+  function renderStats(){
+    var all=ALL.length, rev=0, mas=0, due=0;
+    ALL.forEach(function(it){ st(it)==="已掌握" ? mas++ : rev++; if(isDue(it)) due++; });
+    $("nTotal").textContent=all;
+    $("nReview").textContent=rev;
+    $("nMastered").textContent=mas;
+    $("nRate").textContent=(all?Math.round(mas/all*100):0)+"%";
+    $("bar").style.width=(all?Math.round(mas/all*100):0)+"%";
+    $("nDue").textContent=due;
+  }
+  function show(){
+    var box=$("card");
+    if(!list.length){
+      box.innerHTML='<div class="empty">当前筛选/模式下没有题目。<br>往《错题本.md》追加错题并运行 build.py 重新生成，或换个模式。</div>';
+      return;
+    }
+    var it=list[idx];
+    var answered=false;
+    var cls=st(it)==="已掌握"?"mastered":"review";
+    var label=st(it)==="已掌握"?"已掌握":"待复习";
+    var meta='<span class="tag qid">Q-'+it.id+'</span><span class="tag">'+escHtml(it["章节"])+'</span><span class="tag '+cls+'">'+label+'</span>';
+    if(it["题型"]) meta+='<span class="tag qid">'+escHtml(it["题型"])+'</span>';
+    if(it["错因"]) meta+='<span class="tag reason">'+escHtml(it["错因"])+'</span>';
+    if((it["错误次数"]||0)>0) meta+='<span class="tag err">错'+(it["错误次数"]||0)+'次</span>';
+    if(it["日期"]) meta+='<span class="tag qid">'+escHtml(it["日期"])+'</span>';
+    if(nextRev(it)) meta+='<span class="tag qid">下次 '+escHtml(nextRev(it))+'</span>';
+    var optsHtml="";
+    if(it.options && it.options.length){
+      // 错题本选项自带字母前缀（A. xxx / B. xxx），不再重复加
+      optsHtml='<ul class="opts">'+it.options.map(function(o,i){return '<li data-i="'+i+'"><span class="opt-letter">'+String.fromCharCode(65+i)+'</span>'+renderMath(String(o).replace(/^[A-Z][\.、]\s*/, ''))+'</li>';}).join("")+'</ul>';
+    }
+    var ansHtml='<div class="feedback" id="fb"></div>'
+      +'<div class="answer" id="ans">'
+      +'<div><span class="k">答案：</span>'+renderMath(it["答案"]||"-")+'</div>'
+      +(it["解析"]?'<div style="margin-top:6px"><span class="k">解析：</span>'+renderMath(it["解析"])+'</div>':'')
+      +(it["知识点"]?'<div style="margin-top:6px"><span class="k">知识点：</span>'+renderMath(it["知识点"])+'</div>':'')
+      +'</div>';
+    var reasonHtml='<div class="reason-tools"><span>这次为什么错？</span>'
+      +'<select id="reasonPick"><option value="">选择错因</option><option>概念不清</option><option>公式记错</option><option>方法不会</option><option>计算失误</option><option>审题失误</option><option>词汇不懂</option><option>语法不清</option><option>理解偏差</option><option>粗心</option><option>其他</option></select>'
+      +'<button id="reasonSave">记录错因</button></div>';
+    var similarHtml='<div class="similar"><div>再来一道同章节题</div>'
+      +((it["同类题"]||[]).length?(it["同类题"]||[]).map(function(candidate,n){return '<a href="#" data-similar="'+n+'">'+renderMath(candidate.id+' · '+(candidate["题目"]||"未命名"))+'</a>';}).join(""):'<span>当前题库暂无可推荐的同章节题。</span>')
+      +'</div>';
+    box.innerHTML=
+      '<div class="card">'
+      +'<div class="meta">'+meta+'</div>'
+      +'<div class="qtext">'+renderMath(it["题目"])+'</div>'
+      +optsHtml
+      +'<div class="btns">'
+      +(revealed?'':'<button id="btnShow">显示答案</button>')
+      +'<button id="btnAgain" class="u">没记住 · 明天</button>'
+      +'<button id="btnHard" class="h">有点模糊 · 3 天后</button>'
+      +'<button id="btnGood" class="m">掌握 · 延后复习</button>'
+      +'</div>'
+      +ansHtml
+      +reasonHtml
+      +similarHtml
+      +'<div class="nav"><button id="btnPrev">‹ 上一题</button><span style="font-size:12px;color:var(--sub);align-self:center;">'+(idx+1)+' / '+list.length+'</span><button id="btnNext">下一题 ›</button></div>'
+      +'</div>';
+    var a=$("ans"); if(a) a.style.display = revealed?"block":"none";
+    var fb=$("fb");
+    function fbShow(msg,cls){ if(fb){ fb.innerHTML=msg; fb.className="feedback "+cls; fb.style.display="block"; } }
+    function revealAnswer(){ revealed=true; answered=true; var aa=$("ans"); if(aa) aa.style.display="block"; var bs=$("btnShow"); if(bs) bs.style.display="none"; }
+    function answerIndex(q){
+      var ans=String(q["答案"]||"").trim();
+      if(/^[A-H]$/.test(ans)) return ans.charCodeAt(0)-65;
+      if(q.options&&q.options.length){
+        var i=q.options.indexOf(ans);
+        if(i>=0) return i;
+        // 判断题：答案为"对/错"等文字时，映射到含对应文字的选项
+        var isJudge=String(q["题型"]||"").indexOf("判断")>=0;
+        if(isJudge){
+          if(/^(对|正确|是|T|True|√|真)$/i.test(ans)){ for(var j=0;j<q.options.length;j++) if(/对|正确|是|√|真/.test(q.options[j])) return j; }
+          if(/^(错|错误|否|F|False|×|假)$/i.test(ans)){ for(var j=0;j<q.options.length;j++) if(/错|错误|否|×|假/.test(q.options[j])) return j; }
+        }
+        // 通用子串匹配（答案是选项文本的一部分）
+        for(var j=0;j<q.options.length;j++) if(q.options[j].indexOf(ans)>=0) return j;
+      }
+      return -1;
+    }
+    var optsEls=box.querySelectorAll(".opts li");
+    if(optsEls.length){
+      var multi=String(it["题型"]||"").indexOf("多选")>=0;
+      if(multi){
+        optsEls.forEach(function(li){ li.addEventListener("click",function(){ if(answered||revealed) return; li.classList.toggle("sel"); }); });
+        var subBtn=document.createElement("button");
+        subBtn.id="btnSubmit"; subBtn.textContent="提交答案"; subBtn.className="m";
+        var btnsBox=box.querySelector(".btns");
+        if(btnsBox) btnsBox.insertBefore(subBtn, btnsBox.firstChild);
+        subBtn.addEventListener("click",function(){
+          if(answered||revealed) return;
+          var selSet=[]; optsEls.forEach(function(o,i){ if(o.classList.contains("sel")) selSet.push(i); });
+          var ans=String(it["答案"]||"").trim(), okSet=[];
+          for(var k=0;k<ans.length;k++){ var c=ans.charCodeAt(k)-65; if(c>=0&&c<optsEls.length) okSet.push(c); }
+          var correct=selSet.length===okSet.length && okSet.every(function(x){return selSet.indexOf(x)>=0;});
+          optsEls.forEach(function(o){
+            o.classList.remove("sel");
+            var idx=parseInt(o.getAttribute("data-i"),10);
+            if(okSet.indexOf(idx)>=0) o.classList.add("right");
+            else if(selSet.indexOf(idx)>=0) o.classList.add("wrong");
+          });
+          if(correct){ fbShow("✔ 答对了！","ok"); }
+          else{ fbShow("✘ 答错了，正确答案是 "+String(it["答案"])+"。","no"); }
+          revealAnswer();
+        });
+      }else{
+        optsEls.forEach(function(li){
+          li.addEventListener("click",function(){
+            if(answered||revealed) return;
+            var ai=answerIndex(it), sel=parseInt(li.getAttribute("data-i"),10);
+            if(sel===ai){ li.classList.add("right"); fbShow("✔ 答对了！","ok"); }
+            else{
+              li.classList.add("wrong");
+              optsEls.forEach(function(o){ if(parseInt(o.getAttribute("data-i"),10)===ai) o.classList.add("right"); });
+              fbShow("✘ 答错了，正确答案是 "+String(it["答案"])+"。","no");
+            }
+            revealAnswer();
+          });
+        });
+      }
+    }
+    var reasonPick=$("reasonPick");
+    if(reasonPick) reasonPick.value=it["错因"]||"";
+    box.querySelectorAll("a[data-similar]").forEach(function(link){
+      link.onclick=function(event){
+        event.preventDefault();
+        var candidate=(it["同类题"]||[])[Number(link.getAttribute("data-similar"))];
+        if(!candidate) return;
+        // 同类题来自题库，可能不在ALL里，直接加入list最前面
+        list=[candidate].concat(list.filter(function(x){return x!==candidate;}));
+        idx=0; revealed=false; show();
+      };
+    });
+    bind();
+  }
+  function bind(){
+    var s=$("btnShow"); if(s) s.onclick=function(){ revealed=true; show(); };
+    var a=$("btnAgain"); if(a) a.onclick=function(){ schedule(list[idx],"again"); revealed=false; if(idx<list.length-1){idx++;} show(); renderStats(); };
+    var h=$("btnHard"); if(h) h.onclick=function(){ schedule(list[idx],"hard"); revealed=false; if(idx<list.length-1){idx++;} show(); renderStats(); };
+    var g=$("btnGood"); if(g) g.onclick=function(){ schedule(list[idx],"good"); revealed=false; if(idx<list.length-1){idx++;} show(); renderStats(); };
+    var rs=$("reasonSave"); if(rs) rs.onclick=function(){ var reason=$("reasonPick").value; if(!reason){return;} recordReason(list[idx],reason,false); save(); renderFactor(); renderWeak(); show(); };
+    var p=$("btnPrev"); if(p) p.onclick=function(){ if(idx>0){idx--;revealed=false;show();} };
+    var n=$("btnNext"); if(n) n.onclick=function(){ if(idx<list.length-1){idx++;revealed=false;show();} };
+  }
+  function reload(){ list=filtered(); idx=0; revealed=false; show(); renderStats(); }
+  function setMode(btn){
+    ["btnShuffle","btnOrder","btnKey","btnDue"].forEach(function(id){ $(id).classList.remove("on"); });
+    $(btn).classList.add("on");
+  }
+  $("selChapter").onchange=function(){ setMode("btnOrder"); reload(); };
+  $("selStatus").onchange=function(){ setMode("btnOrder"); reload(); };
+  $("selReason").onchange=function(){ setMode("btnOrder"); reload(); };
+  $("btnOrder").onclick=function(){ setMode("btnOrder"); reload(); };
+  $("btnShuffle").onclick=function(){ setMode("btnShuffle"); list=filtered();
+    for(var i=list.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=list[i]; list[i]=list[j]; list[j]=t; }
+    idx=0; revealed=false; show(); renderStats(); };
+  $("btnKey").onclick=function(){ setMode("btnKey"); list=filtered().filter(function(it){return (it["错误次数"]||0)>=2;}); idx=0; revealed=false; show(); renderStats(); };
+  $("btnDue").onclick=function(){ setMode("btnDue"); list=filtered().filter(isDue); idx=0; revealed=false; show(); renderStats(); };
+  $("btnReset").onclick=function(){ if(confirm("确定清空本学科所有标记与复习进度吗？")){ statusMap={}; revMap={}; planMap={}; save(); reload(); } };
+  $("btnExportLocal").onclick=function(){
+    try{
+      var _lkey="计算机_errorbook_local";
+      var _local=JSON.parse(localStorage.getItem(_lkey)||"[]");
+      if(!_local.length){ alert("本地暂无错题。在题库页做题并点「存入错题本」后，错题会自动存在这里。"); return; }
+      var out="## 本地错题（手机端）\n\n";
+      _local.forEach(function(it,i){
+        out+="**练习 "+(i+1)+".** "+(it.题目||"")+"\n";
+        if(it.选项&&it.选项.length){
+          out+="- "+it.选项.map(function(o,j){return String.fromCharCode(65+j)+". "+o;}).join("　")+"\n";
+        }
+        out+="- **答案："+(it.答案||"")+"**　解析："+(it.解析||"")+"\n";
+        out+="- 来源："+(it.来源||"")+"（"+(it.日期||"")+"）\n\n";
+      });
+      var ta=document.createElement("textarea");
+      ta.value=out; document.body.appendChild(ta); ta.select();
+      document.execCommand("copy"); ta.remove();
+      alert("已复制 "+_local.length+" 道本地错题到剪贴板。\n粘贴到电脑端《错题本.md》末尾后运行 build.py 即可同步。");
+    }catch(e){ alert("导出失败："+e.message); }
+  };
+  renderFactor();
+  renderWeak();
+  if(new URLSearchParams(location.search).get("mode")==="due") $("btnDue").click(); else reload();
+})();
+</script>
+</body>
+</html>

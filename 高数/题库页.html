@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>高等数学 · 题库刷题</title>
+<style>
+:root{--accent:#94D8C3;--accent-d:#33475C;--text:#1A1B1C;--sub:#6B7280;--bg:#F4F3EE;--card:#FFFFFF;--border:#E4E3DD;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Roboto','PingFang SC','Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);padding:16px;line-height:1.6;}
+.wrap{max-width:760px;margin:0 auto;}
+h1{font-size:20px;font-weight:700;margin-bottom:2px;}
+.back{font-size:12px;color:var(--sub);text-decoration:none;display:inline-block;margin-bottom:6px;}
+.sub{font-size:12px;color:var(--sub);margin-bottom:12px;}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.stat{flex:1 1 110px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:9px 12px;}
+.stat .n{font-size:18px;font-weight:700;}
+.stat .l{font-size:11px;color:var(--sub);}
+.stat.hot{border-color:var(--accent);}
+.toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.toolbar select,.toolbar button{font-size:13px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);cursor:pointer;}
+.toolbar button.primary{background:var(--accent-d);color:#fff;border-color:var(--accent-d);font-weight:600;}
+.toolbar button.on{background:var(--accent);border-color:var(--accent);color:#1A1B1C;font-weight:600;}
+.toolbar button.danger{background:rgba(234,102,104,0.14);border-color:#EA6668;color:#B44244;font-weight:600;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;}
+.meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px;}
+.tag{font-size:11px;padding:2px 8px;border-radius:10px;background:var(--accent);color:#22304A;}
+.tag.qid{background:rgba(0,0,0,0.06);color:var(--sub);}
+.tag.src{background:rgba(0,0,0,0.05);color:var(--sub);}
+.material{background:rgba(0,0,0,0.035);border-left:3px solid var(--accent);padding:10px 12px;border-radius:0 8px 8px 0;margin-bottom:10px;font-size:13px;white-space:pre-wrap;}
+.qtext{font-size:15px;font-weight:600;margin-bottom:10px;white-space:pre-wrap;}
+.opts{list-style:none;margin-bottom:10px;}
+.opts li{font-size:13.5px;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;margin-bottom:8px;background:#FBFBF8;cursor:pointer;transition:all .18s ease;position:relative;user-select:none;-webkit-tap-highlight-color:transparent;}
+.opts li:active{transform:scale(0.97);}
+.opts li:hover{border-color:var(--accent);background:rgba(155,187,244,0.06);}
+.opts li.sel{border-color:var(--accent-d);background:rgba(0,0,0,0.04);}
+.opts li.right{border-color:#52C41A;background:rgba(82,196,26,0.12);animation:pulse .5s ease;}
+.opts li.wrong{border-color:#EA6668;background:rgba(234,102,104,0.10);animation:shake .4s ease;}
+.opts li .opt-letter{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:rgba(0,0,0,0.06);font-weight:700;font-size:12px;margin-right:8px;flex:0 0 auto;}
+.opts li.sel .opt-letter{background:var(--accent-d);color:#fff;}
+.opts li.right .opt-letter{background:#52C41A;color:#fff;}
+.opts li.wrong .opt-letter{background:#EA6668;color:#fff;}
+@keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-6px);}40%{transform:translateX(6px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(82,196,26,0.4);}70%{box-shadow:0 0 0 10px rgba(82,196,26,0);}100%{box-shadow:0 0 0 0 rgba(82,196,26,0);}}
+.answer{display:none;border-left:3px solid var(--accent-d);background:rgba(155,187,244,0.10);padding:10px 12px;border-radius:0 8px 8px 0;margin-bottom:10px;font-size:13.5px;white-space:pre-wrap;}
+.answer .k{font-weight:700;color:var(--accent-d);}
+.feedback{display:none;font-size:13.5px;font-weight:600;margin-bottom:10px;padding:8px 12px;border-radius:8px;}
+.feedback.ok{background:rgba(82,196,26,0.12);color:#3E8C13;}
+.feedback.no{background:rgba(234,102,104,0.10);color:#B44244;}
+.btns{display:flex;gap:8px;flex-wrap:wrap;}
+.btns button{font-size:13px;padding:8px 14px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--text);cursor:pointer;}
+.btns button.g{background:rgba(82,196,26,0.14);border-color:#52C41A;color:#3E8C13;font-weight:600;}
+.btns button.r{background:rgba(234,102,104,0.12);border-color:#EA6668;color:#B44244;font-weight:600;}
+.btns button.d{background:rgba(250,173,20,0.16);border-color:#FAAD14;color:#8A5B00;font-weight:600;}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:12px;}
+.nav button{font-size:13px;padding:8px 14px;border:1px solid var(--border);border-radius:8px;background:var(--card);cursor:pointer;}
+.basket{background:var(--card);border:1px dashed var(--accent);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
+.basket .bt{font-size:13px;font-weight:700;margin-bottom:8px;}
+.basket .blist{font-size:12.5px;color:var(--text);}
+.basket .blist div{display:flex;gap:8px;align-items:flex-start;margin-bottom:4px;}
+.basket .blist span{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.basket .blist button{font-size:11px;padding:2px 8px;border:1px solid var(--border);border-radius:6px;background:#fff;cursor:pointer;color:var(--sub);}
+.basket .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.basket .actions button{font-size:13px;padding:7px 12px;border:1px solid var(--border);border-radius:8px;cursor:pointer;}
+.basket .actions .exp{background:var(--accent-d);color:#fff;border-color:var(--accent-d);font-weight:600;}
+.expout{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
+.expout textarea{width:100%;min-height:150px;font-family:Consolas,monospace;font-size:12px;border:1px solid var(--border);border-radius:8px;padding:10px;background:#FBFBF8;color:var(--text);}
+#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#33475C;color:#fff;font-size:13px;padding:10px 18px;border-radius:10px;max-width:88vw;box-shadow:0 4px 16px rgba(0,0,0,0.18);z-index:99;display:none;line-height:1.5;}
+.empty{text-align:center;color:var(--sub);font-size:13px;padding:30px 10px;background:var(--card);border:1px dashed var(--border);border-radius:14px;}
+.hint{font-size:11.5px;color:var(--sub);margin-top:12px;line-height:1.7;}
+.math-inline{display:inline-block;vertical-align:middle;}
+/* 移动端适配 */
+@media (max-width:480px){
+  .toolbar select,.toolbar button{min-height:44px;font-size:14px;}
+  .opts li{min-height:44px;display:flex;align-items:center;font-size:14px;padding:10px 12px;}
+  .btns button{min-height:44px;font-size:14px;}
+  .nav button{min-height:44px;font-size:14px;}
+  .basket .actions button{min-height:44px;}
+  .qtext{font-size:16px;}
+}
+</style>
+<link rel="stylesheet" href="../错题本/katex/katex.min.css">
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../错题本/index.html">‹ 返回错题本总入口</a>
+  <h1>高等数学 · 题库刷题</h1>  <div class="sub">数据源：同目录《题库.md》 · 做错一键入篮，一键存入《错题本.md》</div>
+
+  <div class="stats">
+    <div class="stat"><div class="n" id="nTotal">0</div><div class="l">题库总题</div></div>
+    <div class="stat"><div class="n" id="nDone">0</div><div class="l">已完成</div></div>
+    <div class="stat"><div class="n" id="nLeft">0</div><div class="l">本组待做</div></div>
+    <div class="stat hot"><div class="n" id="nBasket">0</div><div class="l">错题篮子</div></div>
+  </div>
+
+  <div class="toolbar">
+    <select id="selTopic"><option value="">全部专题</option></select>
+    <button id="btnShuffle" class="primary">随机抽题</button>
+    <button id="btnOrder">顺序浏览</button>
+    <button id="btnUndone">只看未做</button>
+    <button id="btnBasket">错题篮子</button>
+    <button id="btnReset">重置进度</button>
+  </div>
+
+  <div id="card"></div>
+
+  <div class="basket" id="basketBox">
+    <div class="bt">错题篮子（做错的题会进这里，可一键存入错题本）</div>
+    <div class="blist" id="basketList"></div>
+    <div class="actions">
+      <button class="exp" id="btnExport">存入错题本</button>
+      <button id="btnClearBasket">清空篮子</button>
+    </div>
+  </div>
+
+  <div class="expout" id="expBox" style="display:none;">
+    <div class="sub" style="margin-bottom:6px;">当前页面不是从“启动错题本”打开，无法直接写入文件。请复制以下内容，粘贴到本学科《错题集\错题本.md》末尾：</div>
+    <textarea id="expText" readonly></textarea>
+  </div>
+
+  <div id="toast"></div>
+
+  <div class="hint">
+    操作：看题 → 点选答案判对错（或点「显示答案」）→ 按结果点「做对了」或「做错了·记入错题」→ 攒够一批点「存入错题本」。从“启动错题本”打开时，系统会自动写入并更新复习页。<br>
+    章节、序号、选项格式已自动生成；直接双击 HTML 打开时仍可导出文本作为兼容方案。
+  </div>
+</div>
+
+<script src="../错题本/katex/katex.min.js"></script>
+<script>
+window.__TIKU__ = [
+ {
+  "id": "真题-1",
+  "来源": "往年专升本试题汇总",
+  "专题": "极限",
+  "题型": "单选",
+  "材料": "",
+  "题目": "$\\lim_{n\\to\\infty}\\sqrt[n]{3^n+5^n+7^n}=(\\ )$",
+  "选项": [
+   "0",
+   "3",
+   "5",
+   "7"
+  ],
+  "答案": "D",
+  "解析": "夹逼准则，$\\sqrt[n]{7^n}\\le\\sqrt[n]{3^n+5^n+7^n}\\le\\sqrt[n]{3\\cdot 7^n}$，左右极限均为 7。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "真题-2",
+  "来源": "往年专升本试题汇总",
+  "专题": "极限",
+  "题型": "单选",
+  "材料": "",
+  "题目": "$\\lim_{x\\to0}\\left(x\\sin\\frac1x+\\frac1x\\sin x\\right)=(\\ )$",
+  "选项": [
+   "0",
+   "1",
+   "2",
+   "不存在"
+  ],
+  "答案": "B",
+  "解析": "$x\\sin\\frac1x\\to0$（有界×无穷小），$\\frac{\\sin x}{x}\\to1$。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "真题-3",
+  "来源": "往年专升本试题汇总",
+  "专题": "极限",
+  "题型": "单选",
+  "材料": "",
+  "题目": "$\\lim_{x\\to0}\\frac{\\sin x}{x}+\\lim_{x\\to\\infty}\\frac{\\sin x}{x}=(\\ )$",
+  "选项": [
+   "0",
+   "1",
+   "2",
+   "不存在"
+  ],
+  "答案": "B",
+  "解析": "前者 =1，后者 =0（有界×无穷小），合计 1。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "真题-4",
+  "来源": "往年专升本试题汇总",
+  "专题": "极限",
+  "题型": "单选",
+  "材料": "",
+  "题目": "数列 $\\{\\sin(3n+1)\\}$ 是（ ）",
+  "选项": [
+   "有界的单调增数列",
+   "$\\{\\sin 2\\}$ 的子列",
+   "有收敛子列的数列",
+   "收敛数列"
+  ],
+  "答案": "C",
+  "解析": "有界数列必有收敛子列（致密性定理）。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "真题-5",
+  "来源": "往年专升本试题汇总",
+  "专题": "极限",
+  "题型": "单选",
+  "材料": "",
+  "题目": "下列数列 $\\{a_n\\}$ 中，具有收敛子列的是（ ）",
+  "选项": [
+   "$a_n=\\arctan(3n)$",
+   "$a_n=\\tan(3n)$",
+   "$a_n=\\ln(\\tan n)$",
+   "$a_n=e^{100n}$"
+  ],
+  "答案": "A",
+  "解析": "$\\arctan$ 有界，故必有收敛子列。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "真题-6",
+  "来源": "往年专升本试题汇总",
+  "专题": "极限",
+  "题型": "单选",
+  "材料": "",
+  "题目": "当 $x\\to0$ 时，下列无穷小量与 $x$ 等价的是（ ）",
+  "选项": [
+   "$1-\\cos x$",
+   "$\\sqrt{1+x^2}-1$",
+   "$\\ln(1+x)+x^2$",
+   "$e^{x^2}-1$"
+  ],
+  "答案": "C",
+  "解析": "$\\ln(1+x)+x^2\\sim x$；其余分别为 $\\frac12x^2$、$\\frac12x^2$、$x^2$。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "真题-7",
+  "来源": "往年专升本试题汇总",
+  "专题": "极限",
+  "题型": "单选",
+  "材料": "",
+  "题目": "下列极限计算正确的是（ ）",
+  "选项": [
+   "$\\lim_{x\\to\\infty}\\frac{\\sin 2x}{x}=2$",
+   "$\\lim_{x\\to+\\infty}\\frac{\\arctan x}{x}=1$",
+   "$\\lim_{x\\to2}\\frac{x^2-4}{x-2}=\\infty$",
+   "$\\lim_{x\\to0^+}x^x=1$"
+  ],
+  "答案": "D",
+  "解析": "$x^x=e^{x\\ln x}\\to e^0=1$；A 应为 0，B 应为 0，C 应为 4。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "真题-8",
+  "来源": "往年专升本试题汇总",
+  "专题": "极限",
+  "题型": "单选",
+  "材料": "",
+  "题目": "当 $x\\to0$ 时，$x^2-\\sin x$ 是关于 $x$ 的（ ）",
+  "选项": [
+   "高阶无穷小",
+   "同阶但不等价无穷小",
+   "低阶无穷小",
+   "等价无穷小"
+  ],
+  "答案": "B",
+  "解析": "$\\dfrac{x^2-\\sin x}{x}\\to -1$，同阶不等价。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "真题-9",
+  "来源": "往年专升本试题汇总",
+  "专题": "极限",
+  "题型": "简答",
+  "材料": "",
+  "题目": "计算 $\\lim_{x\\to0}\\left(\\frac1x-\\frac{1}{e^x-1}\\right)$",
+  "选项": [],
+  "答案": "$\\dfrac12$",
+  "解析": "通分后用洛必达：$\\lim\\frac{e^x-1-x}{x(e^x-1)}=\\lim\\frac{e^x-1}{e^x-1+xe^x}=\\frac12$。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "真题-10",
+  "来源": "往年专升本试题汇总",
+  "专题": "极限",
+  "题型": "简答",
+  "材料": "",
+  "题目": "计算 $\\lim_{x\\to0}\\frac{e^x-e^{-x}-2x}{x-\\sin x}$",
+  "选项": [],
+  "答案": "$2$",
+  "解析": "连续三次洛必达：原式 $=\\lim\\frac{e^x+e^{-x}-2}{1-\\cos x}=\\lim\\frac{e^x-e^{-x}}{\\sin x}=\\lim\\frac{e^x+e^{-x}}{\\cos x}=2$。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "真题-11",
+  "来源": "往年专升本试题汇总",
+  "专题": "极限",
+  "题型": "简答",
+  "材料": "",
+  "题目": "求 $\\lim_{x\\to+\\infty}\\left(\\cos\\frac1x\\right)^x$",
+  "选项": [],
+  "答案": "$1$",
+  "解析": "化为 $e^{x\\ln\\cos\\frac1x}$，而 $x\\ln\\cos\\frac1x\\sim x\\cdot(-\\frac{1}{2x^2})\\to0$，故极限 1。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "真题-12",
+  "来源": "往年专升本试题汇总",
+  "专题": "极限",
+  "题型": "简答",
+  "材料": "",
+  "题目": "求 $\\lim_{x\\to1}\\frac{\\int_x^1(1-t+\\ln t)\\,dt}{(x-1)^3}$",
+  "选项": [],
+  "答案": "$-\\dfrac16$",
+  "解析": "变限积分+洛必达（分子求导注意上下限）：分子 $=\\int_1^x(t-1-\\ln t)dt$，连续洛必达三次得 $-\\frac16$。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "自编-13",
+  "来源": "自编自测（对标考纲\"等价无穷小\"）",
+  "专题": "极限",
+  "题型": "简答",
+  "材料": "",
+  "题目": "计算 $\\lim_{x\\to0}\\frac{\\sin 3x}{2x}$",
+  "选项": [],
+  "答案": "$\\dfrac32$",
+  "解析": "$\\sin3x\\sim3x$。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "自编-14",
+  "来源": "自编自测",
+  "专题": "极限",
+  "题型": "简答",
+  "材料": "",
+  "题目": "计算 $\\lim_{x\\to\\infty}\\frac{3x^2+2x-1}{2x^2-x+5}$",
+  "选项": [],
+  "答案": "$\\dfrac32$",
+  "解析": "分子分母同除 $x^2$，取最高次项系数比。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "真题-15",
+  "来源": "2025 真题回忆（据讲解整理）",
+  "专题": "一元函数微分学",
+  "题型": "简答",
+  "材料": "",
+  "题目": "设 $y=x^2-3x-3$，在曲线某点处的切线平行于直线 $y=x$（斜率 1），求该切点坐标。",
+  "选项": [],
+  "答案": "$(2,-5)$",
+  "解析": "$y'=2x-3=1\\Rightarrow x=2$，$y=4-6-3=-5$。",
+  "章节": "02-导数与微分"
+ },
+ {
+  "id": "自编-16",
+  "来源": "自编自测",
+  "专题": "一元函数微分学",
+  "题型": "简答",
+  "材料": "",
+  "题目": "求曲线 $y=x^3$ 在点 $(1,1)$ 处的切线方程。",
+  "选项": [],
+  "答案": "$y=3x-2$",
+  "解析": "$y'=3x^2$，$k=3$，点斜式 $y-1=3(x-1)$。",
+  "章节": "02-导数与微分"
+ },
+ {
+  "id": "自编-17",
+  "来源": "自编自测",
+  "专题": "一元函数微分学",
+  "题型": "简答",
+  "材料": "",
+  "题目": "求函数 $y=x^3-3x+1$ 的单调增区间和极值。",
+  "选项": [],
+  "答案": "增区间 $(-\\infty,-1)\\cup(1,+\\infty)$，减区间 $(-1,1)$；极大值 $y(-1)=3$，极小值 $y(1)=-1$。",
+  "解析": "$y'=3x^2-3=3(x-1)(x+1)$。",
+  "章节": "02-导数与微分"
+ },
+ {
+  "id": "自编-18",
+  "来源": "自编自测",
+  "专题": "一元函数微分学",
+  "题型": "简答",
+  "材料": "",
+  "题目": "用洛必达法则求 $\\lim_{x\\to0}\\frac{1-\\cos x}{x^2}$。",
+  "选项": [],
+  "答案": "$\\dfrac12$",
+  "解析": "$\\lim\\frac{\\sin x}{2x}=\\frac12$（或 $1-\\cos x\\sim\\frac12x^2$）。",
+  "章节": "02-导数与微分"
+ },
+ {
+  "id": "自编-19",
+  "来源": "自编自测",
+  "专题": "一元函数积分学",
+  "题型": "简答",
+  "材料": "",
+  "题目": "计算不定积分 $\\int (x^2+1)\\,dx$",
+  "选项": [],
+  "答案": "$\\dfrac{x^3}{3}+x+C$",
+  "解析": "逐项积分，$\\int x^2dx=\\frac{x^3}{3}$，$\\int1dx=x$，最后加积分常数 $C$。",
+  "章节": "04-不定积分"
+ },
+ {
+  "id": "自编-20",
+  "来源": "自编自测",
+  "专题": "一元函数积分学",
+  "题型": "简答",
+  "材料": "",
+  "题目": "计算定积分 $\\int_0^1(2x+1)\\,dx$",
+  "选项": [],
+  "答案": "$2$",
+  "解析": "$[x^2+x]_0^1=2$。",
+  "章节": "04-不定积分"
+ },
+ {
+  "id": "自编-21",
+  "来源": "自编自测",
+  "专题": "一元函数积分学",
+  "题型": "简答",
+  "材料": "",
+  "题目": "用换元法计算 $\\int_0^1 xe^{x^2}\\,dx$",
+  "选项": [],
+  "答案": "$\\dfrac12(e-1)$",
+  "解析": "令 $t=x^2$，$\\frac12\\int_0^1e^t\\,dt=\\frac12(e-1)$。",
+  "章节": "04-不定积分"
+ },
+ {
+  "id": "自编-22",
+  "来源": "自编自测",
+  "专题": "一元函数积分学",
+  "题型": "简答",
+  "材料": "",
+  "题目": "用分部积分法计算 $\\int x e^x\\,dx$",
+  "选项": [],
+  "答案": "$(x-1)e^x+C$",
+  "解析": "取 $u=x$、$dv=e^x dx$，则 $\\int xe^xdx=xe^x-\\int e^xdx=(x-1)e^x+C$。",
+  "章节": "04-不定积分"
+ },
+ {
+  "id": "自编-23",
+  "来源": "自编自测（高频：变限积分求导）",
+  "专题": "一元函数积分学",
+  "题型": "简答",
+  "材料": "",
+  "题目": "求变限积分函数 $F(x)=\\int_0^x t^2\\,dt$ 的导数 $F'(x)$。",
+  "选项": [],
+  "答案": "$x^2$",
+  "解析": "变限积分求导公式。",
+  "章节": "02-导数与微分"
+ },
+ {
+  "id": "自编-24",
+  "来源": "自编自测",
+  "专题": "多元函数与二重积分",
+  "题型": "简答",
+  "材料": "",
+  "题目": "设 $z=x^2y$，求 $\\dfrac{\\partial z}{\\partial x}$ 和 $\\dfrac{\\partial z}{\\partial y}$。",
+  "选项": [],
+  "答案": "$\\dfrac{\\partial z}{\\partial x}=2xy$，$\\dfrac{\\partial z}{\\partial y}=x^2$",
+  "解析": "对 $x$ 求偏导时把 $y$ 看作常数，对 $y$ 求偏导时把 $x$ 看作常数。",
+  "章节": "07-多元函数微积分"
+ },
+ {
+  "id": "自编-25",
+  "来源": "自编自测",
+  "专题": "多元函数与二重积分",
+  "题型": "简答",
+  "材料": "",
+  "题目": "计算二重积分 $\\iint_D x\\,d\\sigma$，其中 $D$ 为 $0\\le x\\le1,0\\le y\\le2$。",
+  "选项": [],
+  "答案": "$1$",
+  "解析": "$\\int_0^1x\\,dx\\cdot\\int_0^2dy=\\frac12\\cdot2=1$。",
+  "章节": "07-多元函数微积分"
+ },
+ {
+  "id": "自编-26",
+  "来源": "自编自测",
+  "专题": "无穷级数",
+  "题型": "简答",
+  "材料": "",
+  "题目": "判断级数 $\\sum_{n=1}^\\infty \\frac{1}{n^2}$ 的敛散性。",
+  "选项": [],
+  "答案": "收敛",
+  "解析": "$p=2>1$ 的 p 级数收敛。",
+  "章节": "08-无穷级数"
+ },
+ {
+  "id": "自编-27",
+  "来源": "自编自测",
+  "专题": "无穷级数",
+  "题型": "简答",
+  "材料": "",
+  "题目": "求幂级数 $\\sum_{n=0}^\\infty \\frac{x^n}{n!}$ 的收敛半径。",
+  "选项": [],
+  "答案": "$R=+\\infty$",
+  "解析": "比值法 $\\lim\\frac{1/(n+1)!}{1/n!}=0$。",
+  "章节": "08-无穷级数"
+ },
+ {
+  "id": "自编-28",
+  "来源": "自编自测",
+  "专题": "常微分方程",
+  "题型": "简答",
+  "材料": "",
+  "题目": "求微分方程 $\\dfrac{dy}{dx}=2xy$ 的通解。",
+  "选项": [],
+  "答案": "$y=Ce^{x^2}$",
+  "解析": "可分离变量：$\\int\\frac{dy}{y}=\\int 2x\\,dx$。",
+  "章节": "06-微分方程"
+ },
+ {
+  "id": "自编-29",
+  "来源": "自编自测（高频）",
+  "专题": "常微分方程",
+  "题型": "简答",
+  "材料": "",
+  "题目": "求二阶常系数齐次方程 $y''-3y'+2y=0$ 的通解。",
+  "选项": [],
+  "答案": "$y=C_1e^x+C_2e^{2x}$",
+  "解析": "特征方程 $r^2-3r+2=0$，$r=1,2$。",
+  "章节": "06-微分方程"
+ },
+ {
+  "id": "真题-30",
+  "来源": "2025 真题回忆",
+  "专题": "线性代数",
+  "题型": "单选",
+  "材料": "",
+  "题目": "行列式 $\\begin{vmatrix}2&0&2&5\\\\0&0&-2&2\\\\5&-2&2&2\\\\0&0&0&-5\\end{vmatrix}$ 的值为（ ）",
+  "选项": [
+   "-40",
+   "-20",
+   "20",
+   "40"
+  ],
+  "答案": "D",
+  "解析": "按第 4 行展开，再化简得 40。",
+  "章节": "09-线性代数"
+ },
+ {
+  "id": "自编-31",
+  "来源": "自编自测",
+  "专题": "线性代数",
+  "题型": "简答",
+  "材料": "",
+  "题目": "计算行列式 $\\begin{vmatrix}1&2\\\\3&4\\end{vmatrix}$",
+  "选项": [],
+  "答案": "$-2$",
+  "解析": "$1\\times4-2\\times3=-2$。",
+  "章节": "09-线性代数"
+ },
+ {
+  "id": "自编-32",
+  "来源": "自编自测",
+  "专题": "线性代数",
+  "题型": "简答",
+  "材料": "",
+  "题目": "求矩阵 $A=\\begin{pmatrix}1&2\\\\3&4\\end{pmatrix}$ 的逆矩阵。",
+  "选项": [],
+  "答案": "$A^{-1}=\\begin{pmatrix}-2&1\\\\ \\frac32&-\\frac12\\end{pmatrix}$",
+  "解析": "$\\det A=-2$，伴随矩阵法。",
+  "章节": "09-线性代数"
+ },
+ {
+  "id": "自编-33",
+  "来源": "自编自测",
+  "专题": "线性代数",
+  "题型": "简答",
+  "材料": "",
+  "题目": "判断齐次线性方程组 $\\begin{cases}x_1+2x_2=0\\\\2x_1+4x_2=0\\end{cases}$ 是否有非零解。",
+  "选项": [],
+  "答案": "有",
+  "解析": "系数矩阵秩为 1 < 未知量个数 2，有无穷多解（含非零解）。",
+  "章节": "09-线性代数"
+ },
+ {
+  "id": "练习-34",
+  "来源": "2025-2026 专升本高数模拟卷",
+  "专题": "模拟卷精选",
+  "题型": "单选",
+  "材料": "",
+  "题目": "函数 $f(x)=\\ln(x+\\sqrt{x^2+1})$ 的定义域是（ ）",
+  "选项": [
+   "$(-\\infty,+\\infty)$",
+   "$[0,+\\infty)$",
+   "$(-1,1)$",
+   "$(-\\infty,-1)\\cup(1,+\\infty)$"
+  ],
+  "答案": "A",
+  "解析": "$\\sqrt{x^2+1}>|x|$，故 $x+\\sqrt{x^2+1}>0$ 恒成立，定义域为全体实数。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "练习-35",
+  "来源": "2025-2026 专升本高数模拟卷",
+  "专题": "模拟卷精选",
+  "题型": "单选",
+  "材料": "",
+  "题目": "求极限 $\\lim_{x\\to2}\\frac{x^2-4}{x-2}$（ ）",
+  "选项": [
+   "0",
+   "2",
+   "4",
+   "不存在"
+  ],
+  "答案": "C",
+  "解析": "$\\frac{x^2-4}{x-2}=\\frac{(x+2)(x-2)}{x-2}=x+2$，$x\\to2$ 时趋于 4。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "练习-36",
+  "来源": "2025-2026 专升本高数模拟卷",
+  "专题": "模拟卷精选",
+  "题型": "单选",
+  "材料": "",
+  "题目": "曲线 $y=e^{-x}$ 在点 $(0,1)$ 处的切线方程是（ ）",
+  "选项": [
+   "$y=x+1$",
+   "$y=x-1$",
+   "$y=-x+1$",
+   "$y=-x-1$"
+  ],
+  "答案": "C",
+  "解析": "$y'=-e^{-x}$，$y'(0)=-1$，切线 $y-1=-(x-0)$，即 $y=-x+1$。",
+  "章节": "02-导数与微分"
+ },
+ {
+  "id": "练习-37",
+  "来源": "2025-2026 专升本高数模拟卷",
+  "专题": "模拟卷精选",
+  "题型": "单选",
+  "材料": "",
+  "题目": "不定积分 $\\int\\frac{x^2+1}{x^2-1}\\,dx$ 等于（ ）",
+  "选项": [
+   "$x+\\ln|x^2-1|+C$",
+   "$\\ln|x^2+1|-x+C$",
+   "$\\ln|x^2-1|-x+C$",
+   "$\\ln|x^2+1|+x+C$"
+  ],
+  "答案": "A",
+  "解析": "$\\frac{x^2+1}{x^2-1}=1+\\frac{2}{x^2-1}$，$\\int\\frac{2}{x^2-1}dx=\\ln|x^2-1|$，故原式 $=x+\\ln|x^2-1|+C$。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "练习-38",
+  "来源": "2025-2026 专升本高数模拟卷",
+  "专题": "模拟卷精选",
+  "题型": "单选",
+  "材料": "",
+  "题目": "若级数 $\\sum a_n$ 收敛，则级数 $\\sum a_n^2$ 的敛散性是（ ）",
+  "选项": [
+   "一定收敛",
+   "一定发散",
+   "可能收敛也可能发散",
+   "无法判断"
+  ],
+  "答案": "C",
+  "解析": "如 $a_n=\\frac{(-1)^n}{\\sqrt n}$，$\\sum a_n$ 收敛但 $\\sum a_n^2=\\sum\\frac1n$ 发散；$a_n=\\frac1{n^2}$ 时两者都收敛。",
+  "章节": "08-无穷级数"
+ },
+ {
+  "id": "练习-39",
+  "来源": "2025-2026 专升本高数模拟卷",
+  "专题": "模拟卷精选",
+  "题型": "简答",
+  "材料": "",
+  "题目": "求极限 $\\lim_{x\\to0}\\frac{\\sin3x}{x}$。",
+  "选项": [],
+  "答案": "3",
+  "解析": "$\\lim_{x\\to0}\\frac{\\sin3x}{3x}=1$，故原式 $=3$。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "练习-40",
+  "来源": "2025-2026 专升本高数模拟卷",
+  "专题": "模拟卷精选",
+  "题型": "简答",
+  "材料": "",
+  "题目": "求不定积分 $\\int\\frac{1}{1+x^2}\\,dx$。",
+  "选项": [],
+  "答案": "$\\arctan x+C$",
+  "解析": "反正切函数积分基本公式。",
+  "章节": "04-不定积分"
+ },
+ {
+  "id": "练习-41",
+  "来源": "2025-2026 专升本高数模拟卷",
+  "专题": "模拟卷精选",
+  "题型": "简答",
+  "材料": "",
+  "题目": "微分方程 $y''-y=0$ 的特征方程为____。",
+  "选项": [],
+  "答案": "$r^2-1=0$",
+  "解析": "$y''$ 对应 $r^2$，$y$ 对应 $1$。",
+  "章节": "02-导数与微分"
+ },
+ {
+  "id": "练习-42",
+  "来源": "2025-2026 专升本高数模拟卷",
+  "专题": "模拟卷精选",
+  "题型": "简答",
+  "材料": "",
+  "题目": "矩阵 $A=\\begin{pmatrix}1&0\\\\0&2\\end{pmatrix}$ 的行列式 $|A|=$____。",
+  "选项": [],
+  "答案": "2",
+  "解析": "对角矩阵行列式等于主对角线元素之积 $1\\times2=2$。",
+  "章节": "09-线性代数"
+ },
+ {
+  "id": "练习-43",
+  "来源": "2025-2026 专升本高数模拟卷",
+  "专题": "模拟卷精选",
+  "题型": "简答",
+  "材料": "",
+  "题目": "向量 $\\alpha=(1,2,3)$，$\\beta=(4,5,6)$，则内积 $\\alpha\\cdot\\beta=$____。",
+  "选项": [],
+  "答案": "32",
+  "解析": "$1\\times4+2\\times5+3\\times6=4+10+18=32$。",
+  "章节": "09-线性代数"
+ },
+ {
+  "id": "练习-44",
+  "来源": "自编自测（原题选项有误，改用规范通解形式）",
+  "专题": "模拟卷精选",
+  "题型": "简答",
+  "材料": "",
+  "题目": "求微分方程 $y'-2y=e^{2x}$ 的通解。",
+  "选项": [],
+  "答案": "$y=(x+C)e^{2x}$",
+  "解析": "一阶线性非齐次，$p=-2$，积分因子 $e^{-2x}$，$(ye^{-2x})'=1$，故 $ye^{-2x}=x+C$。",
+  "章节": "02-导数与微分"
+ },
+ {
+  "id": "练习-45",
+  "来源": "自编自测（罗尔定理证明题高频题型）",
+  "专题": "证明与应用专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（证明） 设函数 $f(x)$ 在 $[0,1]$ 上连续，在 $(0,1)$ 内可导，且 $f(0)=0$，$f(1)=1$。证明：存在 $\\xi\\in(0,1)$，使得 $f'(\\xi)=2\\xi$。",
+  "选项": [],
+  "答案": "构造 $F(x)=f(x)-x^2$。则 $F(0)=0-0=0$，$F(1)=1-1=0$，$F(x)$ 在 $[0,1]$ 连续、$(0,1)$ 可导。由罗尔定理，存在 $\\xi\\in(0,1)$ 使 $F'(\\xi)=0$，即 $f'(\\xi)-2\\xi=0$，故 $f'(\\xi)=2\\xi$。",
+  "解析": "构造辅助函数使端点函数值相等，再应用罗尔定理；$F'(x)=f'(x)-2x$，所以 $F'(\\xi)=0$ 等价于结论。",
+  "章节": "03-中值定理与导数应用"
+ },
+ {
+  "id": "练习-46",
+  "来源": "自编自测（拉格朗日直接应用）",
+  "专题": "证明与应用专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（证明） 设 $f(x)=e^x$。证明：对任意 $a<b$，存在 $\\xi\\in(a,b)$，使得 $e^b-e^a=e^\\xi(b-a)$。",
+  "选项": [],
+  "答案": "$f$ 在 $[a,b]$ 连续、$(a,b)$ 可导。由拉格朗日中值定理，存在 $\\xi\\in(a,b)$ 使 $f'(\\xi)=\\frac{f(b)-f(a)}{b-a}=\\frac{e^b-e^a}{b-a}$。又 $f'(x)=e^x$，故 $e^\\xi=\\frac{e^b-e^a}{b-a}$，即 $e^b-e^a=e^\\xi(b-a)$。",
+  "解析": "指数函数满足拉格朗日中值定理条件，代入 $f'(x)=e^x$ 后整理即可得到所证等式。",
+  "章节": "03-中值定理与导数应用"
+ },
+ {
+  "id": "练习-47",
+  "来源": "自编自测（中值定理证不等式）",
+  "专题": "证明与应用专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（证明） 证明：当 $x>0$ 时，$\\frac{x}{1+x}<\\ln(1+x)<x$。",
+  "选项": [],
+  "答案": "令 $f(t)=\\ln(1+t)$，在 $[0,x]$ 上用拉格朗日中值定理：$\\ln(1+x)-\\ln1=f'(\\xi)x=\\frac{x}{1+\\xi}$（$0<\\xi<x$）。因 $\\frac{1}{1+x}<\\frac{1}{1+\\xi}<1$，故 $\\frac{x}{1+x}<\\ln(1+x)<x$。",
+  "解析": "由 $0<\\xi<x$ 得 $1<1+\\xi<1+x$，取倒数并乘以正数 $x$，即可得到两端不等式。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "练习-48",
+  "来源": "自编自测（几何最值高频题）",
+  "专题": "证明与应用专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（应用） 用边长为 $a$ 的正方形铁皮，四角各截去一个同样大小的正方形，做成无盖方盒。问截去的小正方形边长 $x$ 多大时，盒的容积最大？",
+  "选项": [],
+  "答案": "$V(x)=x(a-2x)^2$，$0<x<\\frac a2$。$V'(x)=(a-2x)(a-6x)$，令 $V'=0$ 得 $x=\\frac a6$（$x=\\frac a2$ 不合）。$V''(\\frac a6)<0$，为极大值即最大值。故 $x=\\frac a6$ 时容积最大。（例如 $a=12$ 时 $x=2$）",
+  "解析": "由底面边长得到容积函数，在定义域内求驻点；$x=\\frac a6$ 为内部驻点且二阶导数为负，因此取得最大容积。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "练习-49",
+  "来源": "自编自测（经济最值）",
+  "专题": "证明与应用专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（应用） 已知某商品需求函数 $q=100-2p$（$q$ 需求量、$p$ 价格），总成本函数 $C(q)=50+20q$。求使利润最大的价格与需求量，并求最大利润。",
+  "选项": [],
+  "答案": "收入 $R=pq=100p-2p^2$，成本 $C=50+20(100-2p)=2050-40p$。利润 $L=R-C=140p-2p^2-2050$。$L'=140-4p=0\\Rightarrow p=35$，$L''=-4<0$ 取最大。$q=100-70=30$，$L_{\\max}=140\\times35-2\\times35^2-2050=400$。",
+  "解析": "将需求函数代入收入和成本得到关于 $p$ 的二次利润函数；一阶导数为零给出驻点，二阶导数为负确认其为最大值。",
+  "章节": "02-导数与微分"
+ },
+ {
+  "id": "练习-50",
+  "来源": "自编自测（定积分几何应用）",
+  "专题": "证明与应用专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（应用） 求曲线 $y=x^2$ 与 $y=x$ 所围成的平面图形的面积。",
+  "选项": [],
+  "答案": "两曲线交点 $x=0,\\ 1$。$S=\\int_0^1(x-x^2)\\,dx=\\big[\\frac{x^2}{2}-\\frac{x^3}{3}\\big]_0^1=\\frac12-\\frac13=\\frac16$。",
+  "解析": "交点确定积分区间；在 $[0,1]$ 上直线位于抛物线上方，所以面积等于上方函数减下方函数的定积分。",
+  "章节": "04-不定积分"
+ },
+ {
+  "id": "练习-51",
+  "来源": "自编自测（经济/几何最值）",
+  "专题": "证明与应用专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（应用） 用围墙围成面积为 $216\\,m^2$ 的矩形场地，并在正中用一堵隔墙将其分成两块。问长、宽各为多少时，所用材料最省？",
+  "选项": [],
+  "答案": "设宽 $x$、长 $y$，$xy=216$。材料总长 $L=2(x+y)+x=3x+2y=3x+\\frac{432}{x}$。$L'=3-\\frac{432}{x^2}=0\\Rightarrow x=12$，$L''=\\frac{864}{x^3}>0$ 取最小。$y=216/12=18$。故宽 $12\\,m$、长 $18\\,m$。",
+  "解析": "用面积约束消去 $y$，再对材料总长函数求驻点；二阶导数为正，故宽为 $12$ 米、长为 $18$ 米时材料最省。",
+  "章节": "02-导数与微分"
+ },
+ {
+  "id": "练习-52",
+  "来源": "自编自测（行列式计算）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（线代·计算） 计算行列式 $\\begin{vmatrix}1&2&3\\\\4&5&6\\\\7&8&9\\end{vmatrix}$。",
+  "选项": [],
+  "答案": "0",
+  "解析": "按第一行展开：$1(45-48)-2(36-42)+3(32-35)=-3+12-9=0$。",
+  "章节": "09-线性代数"
+ },
+ {
+  "id": "练习-53",
+  "来源": "自编自测（二阶行列式）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（线代·计算） 计算行列式 $\\begin{vmatrix}1&2\\\\3&4\\end{vmatrix}$。",
+  "选项": [],
+  "答案": "$-2$",
+  "解析": "$1\\times4-2\\times3=4-6=-2$。",
+  "章节": "09-线性代数"
+ },
+ {
+  "id": "练习-54",
+  "来源": "自编自测（三角行列式）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（线代·计算） 计算上三角行列式 $\\begin{vmatrix}1&2&3\\\\0&4&5\\\\0&0&6\\end{vmatrix}$。",
+  "选项": [],
+  "答案": "24",
+  "解析": "上（下）三角行列式等于主对角元素之积：$1\\times4\\times6=24$。",
+  "章节": "09-线性代数"
+ },
+ {
+  "id": "练习-55",
+  "来源": "自编自测（矩阵乘法）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（线代·计算） 已知矩阵 $A=\\begin{pmatrix}1&2\\\\3&4\\end{pmatrix}$，矩阵 $B=\\begin{pmatrix}5&6\\\\7&8\\end{pmatrix}$，求 $AB$。",
+  "选项": [],
+  "答案": "$\\begin{pmatrix}19&22\\\\43&50\\end{pmatrix}$",
+  "解析": "$c_{11}=1\\times5+2\\times7=19$，$c_{12}=1\\times6+2\\times8=22$，$c_{21}=3\\times5+4\\times7=43$，$c_{22}=3\\times6+4\\times8=50$。",
+  "章节": "09-线性代数"
+ },
+ {
+  "id": "练习-56",
+  "来源": "自编自测（矩阵转置）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（线代·概念） 矩阵 $A=\\begin{pmatrix}1&2&3\\\\4&5&6\\end{pmatrix}$ 的转置 $A^T$ 的阶数是（ ）\n- 选项：A. $2\\times3$ / B. $3\\times2$ / C. $2\\times2$ / D. $3\\times3$",
+  "选项": [],
+  "答案": "B",
+  "解析": "转置把行与列互换，$2\\times3$ 矩阵的转置为 $3\\times2$。",
+  "章节": "09-线性代数"
+ },
+ {
+  "id": "练习-57",
+  "来源": "自编自测（线性方程组求解）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（线代·计算） 解线性方程组 $\\begin{cases}x+y+z=6\\\\2x-y+z=3\\\\x+2y-z=2\\end{cases}$。",
+  "选项": [],
+  "答案": "$(x,y,z)=(1,2,3)$",
+  "解析": "由①得 $x=6-y-z$，代入②③得 $3y+z=9$、$y-2z=-4$；解得 $z=3,\\ y=2,\\ x=1$。",
+  "章节": "09-线性代数"
+ },
+ {
+  "id": "练习-58",
+  "来源": "自编自测（矩阵可逆）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（线代·概念） 方阵 $A$ 可逆的充要条件是（ ）\n- 选项：A. $|A|=0$ / B. $|A|\\ne0$ / C. $A$ 是零矩阵 / D. $A$ 是对称矩阵",
+  "选项": [],
+  "答案": "B",
+  "解析": "$|A|\\ne0$ 时 $A$ 可逆，且 $A^{-1}=\\frac{1}{|A|}A^*$。",
+  "章节": "09-线性代数"
+ },
+ {
+  "id": "练习-59",
+  "来源": "自编自测（矩阵的秩）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（线代·概念） 矩阵 $A$ 的秩是指（ ）",
+  "选项": [],
+  "答案": "$A$ 中不等于零的子式的最高阶数。",
+  "解析": "秩也等于其行（列）向量组的极大无关组所含向量个数；满秩方阵可逆。",
+  "章节": "09-线性代数"
+ },
+ {
+  "id": "练习-60",
+  "来源": "自编自测（特征值）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（线代·计算） 求对角矩阵 $A=\\begin{pmatrix}2&0\\\\0&3\\end{pmatrix}$ 的特征值。",
+  "选项": [],
+  "答案": "$\\lambda_1=2,\\ \\lambda_2=3$",
+  "解析": "$|\\lambda I-A|=(\\lambda-2)(\\lambda-3)=0$，特征值即主对角元素 $2,3$。",
+  "章节": "09-线性代数"
+ },
+ {
+  "id": "练习-61",
+  "来源": "自编自测（特征值性质）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（线代·概念） 设 $n$ 阶矩阵 $A$ 的特征值为 $\\lambda_1,\\lambda_2,\\dots,\\lambda_n$，下列说法正确的是（ ）\n- 选项：A. $\\lambda_1+\\lambda_2+\\dots+\\lambda_n=|A|$ / B. $\\lambda_1\\lambda_2\\cdots\\lambda_n=|A|$ / C. $\\lambda_1\\lambda_2\\cdots\\lambda_n=\\text{tr}(A)$ / D. 特征值互不相同",
+  "选项": [],
+  "答案": "B",
+  "解析": "特征值之积等于 $|A|$，之和等于迹 $\\text{tr}(A)$。",
+  "章节": "09-线性代数"
+ },
+ {
+  "id": "练习-62",
+  "来源": "自编自测（逆矩阵）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（线代·计算） 求 $A=\\begin{pmatrix}1&2\\\\3&4\\end{pmatrix}$ 的逆矩阵 $A^{-1}$。",
+  "选项": [],
+  "答案": "$\\begin{pmatrix}-2&1\\\\\\frac32&-\\frac12\\end{pmatrix}$",
+  "解析": "$|A|=-2$，$A^*=\\begin{pmatrix}4&-2\\\\-3&1\\end{pmatrix}$，$A^{-1}=\\frac1{|A|}A^*=\\begin{pmatrix}-2&1\\\\\\frac32&-\\frac12\\end{pmatrix}$。",
+  "章节": "09-线性代数"
+ },
+ {
+  "id": "练习-63",
+  "来源": "自编自测（齐次方程组）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（线代·概念） 齐次线性方程组 $AX=0$ 有非零解的充要条件是（ ）\n- 选项：A. $|A|\\ne0$ / B. $|A|=0$ / C. 常数项全为 $0$ / D. 方程个数多于未知数个数",
+  "选项": [],
+  "答案": "B",
+  "解析": "齐次方程组有非零解 $\\iff$ 系数矩阵秩小于未知数个数 $\\iff$ 方阵时 $|A|=0$。",
+  "章节": "09-线性代数"
+ },
+ {
+  "id": "练习-64",
+  "来源": "自编自测（重要极限）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（极限·计算） 求 $\\lim\\limits_{x\\to0}\\dfrac{\\sin3x}{x}$。",
+  "选项": [],
+  "答案": "3",
+  "解析": "$\\lim\\limits_{x\\to0}\\dfrac{\\sin3x}{3x}\\cdot3=1\\times3=3$（等价无穷小 $\\sin u\\sim u$）。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "练习-65",
+  "来源": "自编自测（重要极限）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（极限·计算） 求 $\\lim\\limits_{x\\to\\infty}\\left(1+\\dfrac1x\\right)^{x}$。",
+  "选项": [],
+  "答案": "$e$",
+  "解析": "第二个重要极限，$\\lim(1+\\frac1x)^x=e$；若为 $(1+\\frac{k}{x})^x$ 则等于 $e^k$。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "练习-66",
+  "来源": "自编自测（等价无穷小）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（极限·计算） 求 $\\lim\\limits_{x\\to0}\\dfrac{1-\\cos x}{x^2}$。",
+  "选项": [],
+  "答案": "$\\frac12$",
+  "解析": "$1-\\cos x\\sim\\frac12x^2$，故原式 $=\\dfrac{\\frac12x^2}{x^2}=\\frac12$。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "练习-67",
+  "来源": "自编自测（等价无穷小）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（极限·计算） 求 $\\lim\\limits_{x\\to0}\\dfrac{e^x-1}{x}$。",
+  "选项": [],
+  "答案": "1",
+  "解析": "$e^x-1\\sim x$，原式 $=1$（等价于 $f'(0)=e^0=1$）。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "练习-68",
+  "来源": "自编自测（无穷大比无穷大型）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（极限·计算） 求 $\\lim\\limits_{x\\to\\infty}\\dfrac{2x^2+1}{3x^2-x+1}$。",
+  "选项": [],
+  "答案": "$\\frac23$",
+  "解析": "分子分母同除以 $x^2$，$\\dfrac{2+\\frac1{x^2}}{3-\\frac1x+\\frac1{x^2}}\\to\\frac23$。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "练习-69",
+  "来源": "自编自测（有界×无穷小）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（极限·计算） 求 $\\lim\\limits_{x\\to0}x\\sin\\dfrac1x$。",
+  "选项": [],
+  "答案": "0",
+  "解析": "$|\\sin\\frac1x|\\le1$ 有界，$x\\to0$ 为无穷小，有界函数乘无穷小仍为无穷小。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "练习-70",
+  "来源": "自编自测（基本积分公式）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（积分·计算） 求不定积分 $\\int x^2\\,dx$。",
+  "选项": [],
+  "答案": "$\\frac{x^3}{3}+C$",
+  "解析": "幂函数积分公式 $\\int x^n dx=\\frac{x^{n+1}}{n+1}+C$。",
+  "章节": "04-不定积分"
+ },
+ {
+  "id": "练习-71",
+  "来源": "自编自测（凑微分）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（积分·计算） 求不定积分 $\\int e^{2x}\\,dx$。",
+  "选项": [],
+  "答案": "$\\frac12e^{2x}+C$",
+  "解析": "凑微分 $\\int e^{2x}dx=\\frac12\\int e^{2x}d(2x)=\\frac12e^{2x}+C$。",
+  "章节": "04-不定积分"
+ },
+ {
+  "id": "练习-72",
+  "来源": "自编自测（基本积分公式）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（积分·计算） 求不定积分 $\\int\\dfrac{1}{1+x^2}\\,dx$。",
+  "选项": [],
+  "答案": "$\\arctan x+C$",
+  "解析": "基本积分公式，$\\int\\frac1{1+x^2}dx=\\arctan x+C$。",
+  "章节": "04-不定积分"
+ },
+ {
+  "id": "练习-73",
+  "来源": "自编自测（定积分计算）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（积分·计算） 求定积分 $\\int_0^1 x\\,dx$。",
+  "选项": [],
+  "答案": "$\\frac12$",
+  "解析": "$\\big[\\frac{x^2}{2}\\big]_0^1=\\frac12-0=\\frac12$。",
+  "章节": "04-不定积分"
+ },
+ {
+  "id": "练习-74",
+  "来源": "自编自测（分部积分）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（积分·计算） 求不定积分 $\\int xe^x\\,dx$。",
+  "选项": [],
+  "答案": "$(x-1)e^x+C$",
+  "解析": "分部积分 $\\int x e^x dx=x e^x-\\int e^x dx=(x-1)e^x+C$（选 $u=x$，$dv=e^xdx$）。",
+  "章节": "04-不定积分"
+ },
+ {
+  "id": "练习-75",
+  "来源": "自编自测（定积分计算）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（积分·计算） 求定积分 $\\int_0^\\pi \\sin x\\,dx$。",
+  "选项": [],
+  "答案": "2",
+  "解析": "$\\big[-\\cos x\\big]_0^\\pi=(-\\cos\\pi)-(-\\cos0)=1+1=2$。",
+  "章节": "04-不定积分"
+ },
+ {
+  "id": "练习-76",
+  "来源": "自编自测（偏导数）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（多元·计算） 设 $z=x^2y+y^3$，求 $\\dfrac{\\partial z}{\\partial x}$。",
+  "选项": [],
+  "答案": "$2xy$",
+  "解析": "对 $x$ 求偏导时把 $y$ 看作常数：$\\frac{\\partial z}{\\partial x}=2xy+0=2xy$。",
+  "章节": "07-多元函数微积分"
+ },
+ {
+  "id": "练习-77",
+  "来源": "自编自测（偏导数）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（多元·计算） 设 $z=\\ln(x^2+y^2)$，求 $\\dfrac{\\partial z}{\\partial x}$。",
+  "选项": [],
+  "答案": "$\\dfrac{2x}{x^2+y^2}$",
+  "解析": "复合函数求偏导，$\\frac{\\partial z}{\\partial x}=\\frac{1}{x^2+y^2}\\cdot2x=\\frac{2x}{x^2+y^2}$。",
+  "章节": "01-函数与极限"
+ },
+ {
+  "id": "练习-78",
+  "来源": "自编自测（全微分）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（多元·概念） 函数 $z=f(x,y)$ 在点 $(x_0,y_0)$ 处的全微分公式是（ ）\n- 选项：A. $dz=f_x(x_0,y_0)dx+f_y(x_0,y_0)dy$ / B. $dz=f(x_0,y_0)(dx+dy)$ / C. $dz=f_x'(x_0)dx$ / D. $dz=0$",
+  "选项": [],
+  "答案": "A",
+  "解析": "全微分等于两个偏导数与相应微分之积的和 $dz=f_xdx+f_ydy$。",
+  "章节": "02-导数与微分"
+ },
+ {
+  "id": "练习-79",
+  "来源": "自编自测（二重积分）",
+  "专题": "计算专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（多元·计算） 求二重积分 $\\iint\\limits_D x\\,d\\sigma$，其中 $D$ 为 $0\\le x\\le1,\\ 0\\le y\\le1$。",
+  "选项": [],
+  "答案": "$\\frac12$",
+  "解析": "$\\int_0^1\\int_0^1 x\\,dy\\,dx=\\int_0^1 x\\,dx=\\frac12$。",
+  "章节": "07-多元函数微积分"
+ }
+];
+window.__TIKU_META__ = {baseQid: 4};
+try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_sync&&_sync["高数"]&&_sync["高数"].tiku){window.__TIKU__=_sync["高数"].tiku;}}catch(e){}
+(function(){
+  "use strict";
+  var MATH = true;
+  var ALL = (window.__TIKU__||[]).slice();
+  var BASE_QID = parseInt((window.__TIKU_META__&&window.__TIKU_META__.baseQid)||1,10);
+  var storeKey = "高数_tiku_v1";
+  var done={}, basket=[], nextId=BASE_QID;
+  try{ var saved=JSON.parse(localStorage.getItem(storeKey)||"{}")||{}; done=saved.dn||{}; basket=saved.bk||[]; nextId=saved.nx||BASE_QID; }catch(e){}
+  function save(){ try{ localStorage.setItem(storeKey, JSON.stringify({dn:done,bk:basket,nx:nextId})); }catch(e){} }
+
+  function $(id){ return document.getElementById(id); }
+  function escHtml(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function showToast(msg, ms){
+    var el=document.getElementById("toast");
+    if(!el) return;
+    el.textContent=msg; el.style.display="block";
+    clearTimeout(el._t);
+    el._t=setTimeout(function(){ el.style.display="none"; }, ms||4200);
+  }
+  function copyText(txt){
+    var done=false;
+    try{
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){done=true;}).catch(function(){});
+      }
+    }catch(e){}
+    return done;
+  }
+  function renderMath(s){
+    var t=escHtml(s);
+    if(!MATH || typeof katex==="undefined") return t;
+    function unesc(x){ return x.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&quot;/g,'"'); }
+    try{
+      t=t.replace(/\$\$([\s\S]+?)\$\$/g,function(_,x){ return '<div class="math-inline" style="margin:6px 0;">'+katex.renderToString(unesc(x),{displayMode:true,throwOnError:false})+'</div>'; });
+      t=t.replace(/\$([^$\n]+?)\$/g,function(_,x){ return '<span class="math-inline">'+katex.renderToString(unesc(x),{displayMode:false,throwOnError:false})+'</span>'; });
+    }catch(e){}
+    return t;
+  }
+
+  var topics=[];
+  ALL.forEach(function(it){ if(topics.indexOf(it["专题"])<0) topics.push(it["专题"]); });
+  topics.sort();
+  topics.forEach(function(t){ var o=document.createElement("option"); o.value=t; o.textContent=t; $("selTopic").appendChild(o); });
+
+  var mode="shuffle"; // shuffle|order|undone|basket
+  var list=[], idx=0, revealed=false, answered=false;
+  function setMode(m){
+    mode=m;
+    ["btnShuffle","btnOrder","btnUndone","btnBasket"].forEach(function(id){
+      $("btnShuffle").classList.remove("on");$("btnOrder").classList.remove("on");$("btnUndone").classList.remove("on");$("btnBasket").classList.remove("on");
+    });
+    if(m==="shuffle")$("btnShuffle").classList.add("on");
+    else if(m==="order")$("btnOrder").classList.add("on");
+    else if(m==="undone")$("btnUndone").classList.add("on");
+    else if(m==="basket")$("btnBasket").classList.add("on");
+    reload();
+  }
+  function pool(){
+    var t=$("selTopic").value;
+    var base=ALL.filter(function(it){
+      if(t && it["专题"]!==t) return false;
+      if(mode==="basket") return basket.indexOf(it.id)>=0;
+      if(mode==="undone") return !done[it.id];
+      return true;
+    });
+    if(mode==="shuffle"){
+      var arr=base.slice(); for(var i=arr.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=arr[i];arr[i]=arr[j];arr[j]=tmp;}
+      return arr;
+    }
+    return base;
+  }
+  function answerIndex(it){
+    var ans=String(it["答案"]||"").trim();
+    if(/^[A-H]$/.test(ans)) return ans.charCodeAt(0)-65;
+    if(it["选项"]&&it["选项"].length) return it["选项"].indexOf(ans);
+    return -1;
+  }
+  function stats(){
+    var doneN=Object.keys(done).length;
+    $("nTotal").textContent=ALL.length;
+    $("nDone").textContent=doneN;
+    $("nLeft").textContent=list.length;
+    $("nBasket").textContent=basket.length;
+    renderBasket();
+  }
+  function renderBasket(){
+    var box=$("basketList");
+    if(!basket.length){ box.innerHTML='<span style="color:var(--sub)">暂无错题。做题时点「做错了·记入错题」即可入篮。</span>'; return; }
+    var html="";
+    basket.forEach(function(id){
+      var it=null; ALL.forEach(function(x){ if(x.id===id) it=x; });
+      if(!it) return;
+      html+='<div><span>'+escHtml((it["题型"]||"")+" · "+it["题目"]).replace(/<span>.*?<\/span>/g,"")+'</span><button data-rm="'+id+'">移除</button></div>';
+    });
+    box.innerHTML=html;
+    box.querySelectorAll("button[data-rm]").forEach(function(b){
+      b.addEventListener("click",function(){ basket=basket.filter(function(x){return x!==b.getAttribute("data-rm");}); save(); reload(); stats(); });
+    });
+  }
+  function show(){
+    var box=$("card");
+    if(!list.length){
+      box.innerHTML='<div class="empty">当前范围没有题目。<br>换一个专题 / 模式，或点击「重置进度」重新开始。</div>';
+      $("btnShowA").style.visibility="hidden"; $("btnOK").style.visibility="hidden"; $("btnNO").style.visibility="hidden";
+      $("btnPrev").style.visibility="hidden"; $("btnNext").style.visibility="hidden";
+      return;
+    }
+    ["btnShowA","btnOK","btnNO","btnPrev","btnNext"].forEach(function(id){ var el=$(id); if(el) el.style.visibility="visible"; });
+    var it=list[idx];
+    revealed=false; answered=false;
+    var html='<div class="meta">';
+    html+='<span class="tag qid">'+escHtml(it.id)+'</span><span class="tag">'+escHtml(it["专题"])+'</span><span class="tag">'+escHtml(it["题型"]||"")+'</span><span class="tag src">'+escHtml(it["来源"]||"")+'</span>';
+    if(done[it.id]) html+='<span class="tag" style="background:rgba(82,196,26,0.14);color:#3E8C13;">已完成</span>';
+    if(basket.indexOf(it.id)>=0) html+='<span class="tag" style="background:rgba(234,102,104,0.14);color:#B44244;">已入篮</span>';
+    html+='</div>';
+    if(it["材料"]) html+='<div class="material">'+renderMath(it["材料"])+'</div>';
+    html+='<div class="qtext">'+renderMath(it["题目"])+'</div>';
+    if(it["选项"]&&it["选项"].length){
+      html+='<ul class="opts">';
+      var letters="ABCDEFGH";
+      it["选项"].forEach(function(o,i){
+        html+='<li data-i="'+i+'"><span class="opt-letter">'+letters[i]+'</span>'+renderMath(String(o).replace(/^[A-Z][\.、]\s*/, ''))+'</li>';
+      });
+      html+='</ul>';
+    }
+    html+='<div class="feedback" id="fb"></div>';
+    html+='<div class="answer" id="ans"></div>';
+    html+='<div class="btns">';
+    html+='<button id="btnShowA">显示答案 / 解析</button>';
+    html+='<button id="btnOK" class="g" style="display:none;">做对了 ✔</button>';
+    html+='<button id="btnNO" class="r" style="display:none;">做错了 · 记入错题</button>';
+    html+='<button id="btnSkip">跳过</button>';
+    html+='</div>';
+    html+='<div class="nav"><button id="btnPrev">‹ 上一题</button><span style="font-size:12px;color:var(--sub);align-self:center;">'+(idx+1)+' / '+list.length+'</span><button id="btnNext">下一题 ›</button></div>';
+    box.innerHTML=html;
+
+    var ansBox=$("ans"), fb=$("fb");
+    function renderAnswer(){
+      var a="<div class='k'>答案："+renderMath(it["答案"])+"</div>";
+      if(it["解析"]) a+="<br>"+renderMath(it["解析"]);
+      if(it["来源"]) a+="<br><span style='color:var(--sub)'>来源："+escHtml(it["来源"])+"</span>";
+      ansBox.innerHTML=a;
+      ansBox.style.display="block";
+    }
+    function markOK(){
+      done[it.id]=1; answered=true; save();
+      // 同步更新复习进度：标记为已掌握，今日学习不再显示
+      try{
+        var rkey="高数_cuowuji_v2";
+        var rsaved=JSON.parse(localStorage.getItem(rkey)||"{}")||{};
+        var rpm=rsaved.pm||{}, rst=rsaved.st||{}, rrv=rsaved.rv||{};
+        var old=rpm[it.id]||{}, level=Math.min((Number(old.level)||0)+1,4);
+        var days=[7,7,14,30,45][level];
+        var now=new Date(); var y=now.getFullYear(), m=String(now.getMonth()+1).padStart(2,"0"), d=String(now.getDate()).padStart(2,"0");
+        var today=y+"-"+m+"-"+d;
+        var nd=new Date(now.getTime()+days*86400000);
+        var next=nd.getFullYear()+"-"+String(nd.getMonth()+1).padStart(2,"0")+"-"+String(nd.getDate()).padStart(2,"0");
+        rpm[it.id]={last:today,next:next,level:level};
+        rst[it.id]="已掌握"; rrv[it.id]=today;
+        localStorage.setItem(rkey,JSON.stringify({st:rst,rv:rrv,pm:rpm}));
+      }catch(e){}
+      fb.innerHTML="✔ 答对了"; fb.className="feedback ok"; fb.style.display="block";
+      $("btnOK").style.display="none"; $("btnNO").style.display="none";
+      if(basket.indexOf(it.id)>=0){ basket=basket.filter(function(x){return x!==it.id;}); save(); stats(); }
+      stats();
+    }
+    function markNO(){
+      if(basket.indexOf(it.id)<0) basket.push(it.id);
+      save(); stats();
+      fb.innerHTML="已记入错题篮子（可点下方「存入错题本」批量入库）"; fb.className="feedback no"; fb.style.display="block";
+      $("btnNO").style.display="none"; $("btnOK").style.display="none";
+    }
+    // 选择题作答
+    var opts=box.querySelectorAll(".opts li");
+    if(opts.length){
+      var multi=(it["题型"]==="多选");
+      if(multi){
+        // 多选题：点选 toggle，提交时与答案集合比较
+        opts.forEach(function(li){
+          li.addEventListener("click",function(){
+            if(answered||revealed) return;
+            li.classList.toggle("sel");
+          });
+        });
+        var subBtn=document.createElement("button");
+        subBtn.id="btnSubmit"; subBtn.textContent="提交答案"; subBtn.className="m";
+        var btns=box.querySelector(".btns");
+        btns.insertBefore(subBtn, btns.firstChild);
+        subBtn.addEventListener("click",function(){
+          if(answered||revealed) return;
+          var selSet=[];
+          opts.forEach(function(o,i){ if(o.classList.contains("sel")) selSet.push(i); });
+          var ans=String(it["答案"]||"").trim(), okSet=[];
+          for(var k=0;k<ans.length;k++){ var c=ans.charCodeAt(k)-65; if(c>=0&&c<opts.length) okSet.push(c); }
+          var correct=selSet.length===okSet.length && okSet.every(function(x){return selSet.indexOf(x)>=0;});
+          opts.forEach(function(o,i){
+            o.classList.remove("sel");
+            if(okSet.indexOf(i)>=0) o.classList.add("right");
+            else if(selSet.indexOf(i)>=0) o.classList.add("wrong");
+          });
+          if(correct){
+            markOK(); renderAnswer();
+          }else{
+            fb.innerHTML="✘ 答错了，正确答案是 "+String(it["答案"])+"。"; fb.className="feedback no"; fb.style.display="block";
+            revealed=true; answered=true; renderAnswer();
+            $("btnNO").style.display="inline-block";
+          }
+        });
+      }else{
+      opts.forEach(function(li){
+        li.addEventListener("click",function(){
+          if(answered||revealed) return;
+          var ai=answerIndex(it), sel=parseInt(li.getAttribute("data-i"),10);
+          if(sel===ai){
+            li.classList.add("right");
+            fb.innerHTML="✔ 答对了！"; fb.className="feedback ok"; fb.style.display="block";
+            revealed=true; answered=true; markOK();
+            renderAnswer();
+          }else{
+            li.classList.add("wrong");
+            opts.forEach(function(o){ if(parseInt(o.getAttribute("data-i"),10)===ai) o.classList.add("right"); });
+            fb.innerHTML="✘ 答错了，正确答案是 "+String(it["答案"])+"。"; fb.className="feedback no"; fb.style.display="block";
+            revealed=true; answered=true;
+            renderAnswer();
+            $("btnNO").style.display="inline-block";
+          }
+        });
+      });
+      }
+      $("btnShowA").addEventListener("click",function(){
+        if(revealed) return;
+        revealed=true; renderAnswer();
+        $("btnOK").style.display="inline-block";
+        $("btnNO").style.display="inline-block";
+      });
+    }else{
+      // 无选项题：显示答案后判定
+      $("btnShowA").addEventListener("click",function(){
+        if(revealed) return;
+        revealed=true; renderAnswer();
+        $("btnOK").style.display="inline-block";
+        $("btnNO").style.display="inline-block";
+      });
+    }
+    $("btnOK").addEventListener("click",markOK);
+    $("btnNO").addEventListener("click",markNO);
+    $("btnSkip").addEventListener("click",function(){ if(idx<list.length-1){idx++;show();} else {idx=0;show();} });
+    $("btnPrev").addEventListener("click",function(){ idx=(idx-1+list.length)%list.length; show(); });
+    $("btnNext").addEventListener("click",function(){ idx=(idx+1)%list.length; show(); });
+    stats();
+  }
+  function reload(){
+    list=pool(); idx=0; show();
+  }
+
+  $("selTopic").addEventListener("change",reload);
+  $("btnShuffle").addEventListener("click",function(){setMode("shuffle");});
+  $("btnOrder").addEventListener("click",function(){setMode("order");});
+  $("btnUndone").addEventListener("click",function(){setMode("undone");});
+  $("btnBasket").addEventListener("click",function(){setMode("basket");});
+  $("btnReset").addEventListener("click",function(){
+    // 两次点击确认（避免原生弹窗在 file:// 下的不稳定）
+    if(this._arm){
+      done={}; basket=[]; nextId=BASE_QID; save();
+      this._arm=false; this.textContent="重置进度";
+      showToast("已重置本学科刷题进度。");
+      reload();
+    }else{
+      this._arm=true; this.textContent="再点一次确认重置";
+      var self=this;
+      setTimeout(function(){ self._arm=false; self.textContent="重置进度"; }, 3000);
+    }
+  });
+  $("btnClearBasket").addEventListener("click",function(){
+    if(!basket.length) return;
+    basket=[]; save(); reload(); stats();
+  });
+  // 导出
+  function fmtDate(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+  function buildExport(){
+    var out="";
+    basket.forEach(function(id){
+      var it=null; ALL.forEach(function(x){ if(x.id===id) it=x; });
+      if(!it) return;
+      out+="## Q-"+String(nextId).padStart(3,"0")+"\n";
+      out+="- 章节："+escHtml(it["章节"]||"99-综合")+"\n";
+      out+="- 日期："+fmtDate(new Date())+"\n";
+      out+="- 状态：待复习\n";
+      out+="- 题型："+(it["题型"]||"选择")+"\n";
+      var q=it["题目"]; if(it["材料"]) q=(it["材料"]+"\n\n"+q);
+      out+="- 题目："+q+"\n";
+      if(it["选项"]&&it["选项"].length){
+        var letters="ABCDEFGH";
+        var optsStr=it["选项"].map(function(o,i){return letters[i]+". "+o;}).join(" / ");
+        out+="- 选项："+optsStr+"\n";
+      }
+      out+="- 答案："+it["答案"]+"\n";
+      var jx=it["解析"]||"";
+      if(it["来源"]&&it["来源"]!=="自编") jx=(jx?jx+" ":"")+"（来源："+it["来源"]+"）";
+      out+="- 解析："+jx+"\n\n";
+      nextId++;
+    });
+    return out.trim();
+  }
+  function showManualExport(txt){
+    var box=$("expBox"), ta=$("expText");
+    ta.value=txt;
+    box.style.display="block";
+    ta.select();
+    ta.setSelectionRange(0, txt.length);
+    var copied=copyText(txt);
+    basket=[]; save(); reload(); stats();
+    showToast(copied ? "已复制到剪贴板。请粘贴到《错题本.md》末尾后运行 build.py。" :
+      "错题文本已生成，请全选复制后粘贴到《错题本.md》末尾。", 6000);
+  }
+  $("btnExport").addEventListener("click",async function(){
+    if(!basket.length){ showToast("错题篮子为空，先做题并把错题记入篮子。"); return; }
+    var txt=buildExport();
+    var button=this;
+    button.disabled=true; button.textContent="正在存入…";
+    // 构建本地错题JSON（手机APK/离线环境用）
+    var localErrors=[];
+    var todayStr=new Date().toISOString().slice(0,10);
+    basket.forEach(function(qid){
+      var it=ALL.find(function(x){return x.id===qid;});
+      if(it){
+        localErrors.push({
+          id:"L-"+qid, 题目:it.题目||"", 选项:it.选项||[],
+          答案:it.答案||"", 解析:it.解析||"",
+          章节:it.章节||it.专题||"综合", 题型:it.题型||"单选",
+          来源:it.来源||"题库", 状态:"待复习", 日期:todayStr
+        });
+      }
+    });
+    // 方式1：尝试server API（电脑端）
+    var serverOk=false;
+    try{
+      var res=await fetch("/api/append-error", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({subject:"高数", text:txt})
+      });
+      var data=await res.json();
+      if(res.ok){ nextId=parseInt(data.nextId,10)||nextId; serverOk=true; }
+    }catch(e){}
+    // 方式2：server成功则清空本地错题（已写入错题本.md）；失败才写入localStorage
+    try{
+      var lkey="高数_errorbook_local";
+      if(serverOk){
+        localStorage.removeItem(lkey);
+      }else{
+        var existing=JSON.parse(localStorage.getItem(lkey)||"[]");
+        localErrors.forEach(function(ne){
+          // 按答案+章节+题型去重（题目文本可能因阅读材料长短不同而不完全一致）
+          var found=existing.find(function(e){return e.答案===ne.答案 && e.章节===ne.章节 && e.题型===ne.题型;});
+          if(found){ found.错误次数=(found.错误次数||1)+1; }
+          else{ existing.push(ne); }
+        });
+        localStorage.setItem(lkey, JSON.stringify(existing));
+      }
+    }catch(e){}
+    basket=[]; save(); reload(); stats();
+    $("expBox").style.display="none";
+    if(serverOk){
+      showToast("已存入错题本，复习页已更新。", 4000);
+    }else{
+      showToast("已存入本地错题本（"+localErrors.length+"题），复习页自动读取。", 4000);
+    }
+    button.disabled=false; button.textContent="存入错题本";
+  });
+  // 初始
+  setMode("shuffle");
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>英语单词卡</title>
+<style>
+:root{--accent:#C9A7E8;--accent-d:#6D4BA3;--text:#1A1B1C;--sub:#6B7280;--bg:#F4F3EE;--card:#FFFFFF;--border:#E4E3DD;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Roboto','PingFang SC','Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);padding:16px;line-height:1.6;}
+.wrap{max-width:640px;margin:0 auto;}
+h1{font-size:20px;font-weight:700;margin-bottom:2px;}
+.back{font-size:12px;color:var(--sub);text-decoration:none;display:inline-block;margin-bottom:6px;}
+.sub{font-size:12px;color:var(--sub);margin-bottom:12px;}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.stat{flex:1 1 90px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:9px 12px;}
+.stat .n{font-size:18px;font-weight:700;}
+.stat .l{font-size:11px;color:var(--sub);}
+.toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.toolbar input,.toolbar select,.toolbar button{font-size:13px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);}
+.toolbar button{cursor:pointer;}
+.toolbar button.primary{background:var(--accent-d);color:#fff;border-color:var(--accent-d);font-weight:600;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 18px;text-align:center;margin-bottom:12px;min-height:180px;display:flex;flex-direction:column;justify-content:center;align-items:center;}
+.word{font-size:26px;font-weight:700;letter-spacing:.5px;}
+.phon{font-size:13px;color:var(--sub);margin-top:6px;}
+.detail{display:none;margin-top:14px;font-size:14px;line-height:1.8;}
+.detail .pos{color:var(--accent-d);font-weight:600;}
+.detail .ex{color:var(--sub);font-style:italic;font-size:13px;margin-top:4px;}
+.detail .root{font-size:12px;color:var(--sub);margin-top:6px;}
+.nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px;}
+.nav button{font-size:13px;padding:8px 14px;border:1px solid var(--border);border-radius:8px;background:var(--card);cursor:pointer;}
+.nav button.k{background:rgba(82,196,26,0.14);border-color:#52C41A;color:#3E8C13;}
+.nav button.f{background:rgba(250,173,20,0.18);border-color:#FAAD14;color:#8A5B00;}
+.nav button.n{background:rgba(234,102,104,0.12);border-color:#EA6668;color:#B44244;}
+.posinfo{font-size:12px;color:var(--sub);text-align:center;margin-top:10px;}
+.hint{font-size:11.5px;color:var(--sub);margin-top:14px;line-height:1.7;}
+.empty{text-align:center;color:var(--sub);font-size:13px;padding:30px 10px;background:var(--card);border:1px dashed var(--border);border-radius:14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../../错题本/index.html">‹ 返回错题本总入口</a>
+  <h1>英语 · 单词卡</h1>
+  <div class="sub">数据源：同目录《单词卡.md》 · 由 错题本/build.py 生成 · 翻卡记忆</div>
+
+  <div class="stats">
+    <div class="stat"><div class="n" id="nTotal">0</div><div class="l">总词数</div></div>
+    <div class="stat"><div class="n" id="nKnow">0</div><div class="l">已掌握</div></div>
+    <div class="stat"><div class="n" id="nFuzzy">0</div><div class="l">模糊</div></div>
+    <div class="stat"><div class="n" id="nNo">0</div><div class="l">未记住</div></div>
+  </div>
+
+  <div class="toolbar">
+    <input id="inpSearch" placeholder="搜索单词/释义…" style="flex:1 1 140px;min-width:0;">
+    <button id="btnShuffle" class="primary">随机抽词</button>
+    <button id="btnOrder">顺序浏览</button>
+    <button id="btnFuzzy">只背模糊词</button>
+    <button id="btnReset">重置</button>
+  </div>
+
+  <div class="card" id="card"></div>
+  <div class="nav">
+    <button id="btnFlip">翻看释义</button>
+    <button id="btnK" class="k">认识</button>
+    <button id="btnF" class="f">模糊</button>
+    <button id="btnN" class="n">不认识</button>
+  </div>
+  <div class="posinfo" id="pos">— / —</div>
+
+  <div class="hint">
+    看到单词 → 心里默念释义 → 点「翻看释义」核对 → 按掌握程度点「认识 / 模糊 / 不认识」（状态自动保存）。<br>
+    更新：往《单词卡.md》按格式追加生词，运行 错题本/build.py 重新生成。
+  </div>
+</div>
+
+<script>
+window.__WORDS__ = [];
+try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_sync&&_sync["英语"]&&_sync["英语"].words){window.__WORDS__=_sync["英语"].words;}}catch(e){}
+(function(){
+  "use strict";
+  var ALL=(window.__WORDS__||[]).slice();
+  var key="yingyu_wordcard_v1";
+  var stMap={};
+  try{ stMap=JSON.parse(localStorage.getItem(key)||"{}")||{}; }catch(e){ stMap={}; }
+  function save(){ try{ localStorage.setItem(key,JSON.stringify(stMap)); }catch(e){} }
+  function st(it){ return stMap[it.id]||it["状态"]||"待复习"; }
+  function setSt(id,v){ stMap[id]=v; save(); }
+
+  var list=[], idx=0, flipped=false;
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+  function pool(){
+    var q=($("inpSearch").value||"").trim().toLowerCase();
+    var onlyFuzzy=$("btnFuzzy").classList.contains("on");
+    return ALL.filter(function(it){
+      if(onlyFuzzy && st(it)!=="模糊") return false;
+      if(!q) return true;
+      var hay=(it["单词"]+" "+(it["释义"]||"")+" "+(it["词性"]||"")).toLowerCase();
+      return hay.indexOf(q)>=0;
+    });
+  }
+  function stats(){
+    var k=0,f=0,n=0;
+    ALL.forEach(function(it){ var s=st(it); if(s==="已掌握")k++; else if(s==="模糊")f++; else n++; });
+    $("nTotal").textContent=ALL.length; $("nKnow").textContent=k; $("nFuzzy").textContent=f; $("nNo").textContent=n;
+  }
+  function show(){
+    var box=$("card");
+    if(!list.length){
+      box.innerHTML='<div class="empty">当前范围没有单词。<br>往《单词卡.md》追加生词并运行 build.py 重新生成。</div>';
+      $("btnFlip").style.visibility="hidden"; $("btnK").style.visibility="hidden"; $("btnF").style.visibility="hidden"; $("btnN").style.visibility="hidden";
+      $("pos").textContent="0 / 0"; return;
+    }
+    $("btnFlip").style.visibility="visible"; $("btnK").style.visibility="visible"; $("btnF").style.visibility="visible"; $("btnN").style.visibility="visible";
+    var it=list[idx];
+    var html='<div class="word">'+esc(it["单词"])+'</div>';
+    if(it["音标"]) html+='<div class="phon">'+esc(it["音标"])+'</div>';
+    html+='<div class="detail" id="detail">';
+    if(it["词性"]) html+='<div><span class="pos">'+esc(it["词性"])+'</span> '+esc(it["释义"]||"")+'</div>';
+    else if(it["释义"]) html+='<div>'+esc(it["释义"])+'</div>';
+    if(it["例句"]) html+='<div class="ex">'+esc(it["例句"])+'</div>';
+    if(it["词根"]) html+='<div class="root">词根：'+esc(it["词根"])+'</div>';
+    html+='</div>';
+    box.innerHTML=html;
+    $("detail").style.display = flipped?"block":"none";
+    $("pos").textContent=(idx+1)+" / "+list.length;
+  }
+  function reload(){ list=pool(); idx=0; flipped=false; show(); stats(); }
+  $("btnFlip").onclick=function(){ flipped=true; var d=$("detail"); if(d) d.style.display="block"; };
+  $("btnK").onclick=function(){ if(!list.length)return; setSt(list[idx].id,"已掌握"); flipped=false; if(idx<list.length-1)idx++; show(); stats(); };
+  $("btnF").onclick=function(){ if(!list.length)return; setSt(list[idx].id,"模糊"); flipped=false; if(idx<list.length-1)idx++; show(); stats(); };
+  $("btnN").onclick=function(){ if(!list.length)return; setSt(list[idx].id,"不认识"); flipped=false; if(idx<list.length-1)idx++; show(); stats(); };
+  $("inpSearch").oninput=function(){ reload(); };
+  $("btnShuffle").onclick=function(){ list=pool();
+    for(var i=list.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=list[i]; list[i]=list[j]; list[j]=t; }
+    idx=0; flipped=false; show(); };
+  $("btnOrder").onclick=function(){ $("btnFuzzy").classList.remove("on"); reload(); };
+  $("btnFuzzy").onclick=function(){ $("btnFuzzy").classList.toggle("on"); reload(); };
+  $("btnReset").onclick=function(){ if(confirm("确定清空单词卡所有记忆状态吗？")){ stMap={}; save(); reload(); } };
+  reload();
+})();
+</script>
+</body>
+</html>

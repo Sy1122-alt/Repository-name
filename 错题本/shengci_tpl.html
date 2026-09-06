@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>英语 · 生词本</title>
+<style>
+:root{--accent:#C9A7E8;--accent-d:#7A5AA8;--text:#1A1B1C;--sub:#6B7280;--bg:#F4F3EE;--card:#FFFFFF;--border:#E4E3DD;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Roboto','PingFang SC','Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);padding:16px;line-height:1.6;}
+.wrap{max-width:820px;margin:0 auto;}
+h1{font-size:20px;font-weight:700;margin-bottom:2px;}
+.back{font-size:12px;color:var(--sub);text-decoration:none;display:inline-block;margin-bottom:6px;}
+.sub{font-size:12px;color:var(--sub);margin-bottom:12px;}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.stat{flex:1 1 130px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:9px 12px;}
+.stat .n{font-size:18px;font-weight:700;color:var(--accent-d);}
+.stat .l{font-size:11px;color:var(--sub);}
+.toolbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px;}
+.toolbar input[type=text]{flex:1 1 200px;font-size:13px;padding:8px 11px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);}
+.toolbar select,.toolbar button{font-size:13px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);cursor:pointer;}
+.toolbar button.on{background:var(--accent);border-color:var(--accent);font-weight:600;}
+.toolbar button.danger{background:rgba(234,102,104,0.12);border-color:#EA6668;color:#B44244;}
+.toolbar a.go{font-size:13px;padding:7px 12px;border-radius:8px;background:var(--accent-d);color:#fff;text-decoration:none;font-weight:600;}
+.wl{list-style:none;}
+.wl li{display:flex;align-items:center;gap:10px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;margin-bottom:5px;background:var(--card);font-size:13.5px;}
+.wl li .wd{font-weight:700;min-width:150px;flex:1 1 150px;}
+.wl li .ph{font-size:12px;color:var(--sub);min-width:130px;flex:0 1 130px;}
+.wl li .ps{font-size:12px;color:var(--accent-d);min-width:38px;}
+.wl li .mn{flex:3 1 240px;color:var(--text);}
+.wl li .meta{font-size:11px;color:var(--sub);flex:0 0 auto;text-align:right;}
+.wl li .rm{font-size:12px;cursor:pointer;border:1px solid var(--border);border-radius:6px;background:#fff;color:#B44244;padding:3px 8px;flex:0 0 auto;}
+.wl li .src{font-size:10px;padding:1px 6px;border-radius:8px;background:rgba(0,0,0,0.05);color:var(--sub);}
+.tag-src{font-size:10px;padding:1px 8px;border-radius:8px;margin-left:4px;flex:0 0 auto;font-weight:600;}
+.tag-通用{background:rgba(82,196,26,0.14);color:#3E8C13;border:1px solid #52C41A;}
+.tag-四级{background:rgba(250,173,20,0.18);color:#8A5B00;border:1px solid #FAAD14;}
+.tag-专升本{background:rgba(201,167,232,0.24);color:var(--accent-d);border:1px solid var(--accent);}
+.fcard .ftag{font-size:12px;margin-bottom:8px;display:inline-block;}
+.flip{display:none;}
+.fcard{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 22px;text-align:center;margin-bottom:12px;min-height:180px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;}
+.fcard .fw{font-size:34px;font-weight:700;letter-spacing:.5px;margin-bottom:6px;}
+.fcard .fph{font-size:16px;color:var(--sub);margin-bottom:10px;}
+.fcard .fback{display:none;font-size:18px;line-height:1.7;}
+.fcard .fback .ps{color:var(--accent-d);font-weight:600;margin-right:6px;}
+.fctrl{display:none;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;}
+.fctrl button{font-size:14px;padding:10px 20px;border:1px solid var(--border);border-radius:10px;background:var(--card);cursor:pointer;font-weight:600;}
+.fctrl button.known{background:rgba(82,196,26,0.14);border-color:#52C41A;color:#3E8C13;}
+.fctrl button.unk{background:rgba(234,102,104,0.12);border-color:#EA6668;color:#B44244;}
+.fprog{font-size:12px;color:var(--sub);text-align:center;margin-top:8px;}
+.empty{text-align:center;color:var(--sub);font-size:13.5px;padding:30px 0;}
+.dlbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center;}
+.dlbar button{font-size:13px;padding:8px 14px;border:1px solid var(--border);border-radius:8px;background:var(--card);cursor:pointer;}
+.dlbar button.g{background:rgba(82,196,26,0.14);border-color:#52C41A;color:#3E8C13;font-weight:600;}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#1A1B1C;color:#fff;font-size:13px;padding:9px 18px;border-radius:20px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:99;}
+.toast.show{opacity:1;}
+/* 移动端适配 */
+@media (max-width:480px){
+  .toolbar select,.toolbar button,.toolbar a{min-height:44px;font-size:14px;}
+  .toolbar input{min-height:44px;font-size:14px;}
+  .wl li{flex-wrap:wrap;gap:6px;padding:10px;}
+  .wl li .wd{min-width:0;flex:1 1 120px;}
+  .wl li .ph{min-width:0;flex:0 1 auto;}
+  .wl li .ps{min-width:0;}
+  .wl li .mn{flex:1 1 100%;min-width:0;word-break:break-word;font-size:13px;}
+  .wl li .rm{min-height:36px;}
+  .dlbar button{min-height:44px;font-size:14px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="__INDEX__">← 返回错题本总入口</a>
+  <h1>英语 · 生词本</h1>
+  <div class="sub">你在《单词本》里标星的生词 + 手动写入《生词本.md》的词，自动汇总到这里复习</div>
+
+  <div class="stats">
+    <div class="stat"><div class="n" id="stTotal">0</div><div class="l">生词总数</div></div>
+    <div class="stat"><div class="n" id="stWeb">0</div><div class="l">网页标星</div></div>
+    <div class="stat"><div class="n" id="stManual">0</div><div class="l">手动记录</div></div>
+  </div>
+
+  <div class="toolbar">
+    <input type="text" id="search" placeholder="在生词中搜索">
+    <button id="modeList" class="on">列表</button>
+    <button id="modeFlip">翻卡复习</button>
+    <a class="go" href="单词本.html">← 单词本</a>
+  </div>
+  <div class="dlbar">
+    <button id="btnExport">⬇ 导出到《生词本.md》</button>
+    <button id="btnCopy">复制 W- 格式</button>
+    <button id="btnClear" class="g">移除已掌握</button>
+    <button id="btnClearAll" class="danger">清空生词</button>
+  </div>
+
+  <div id="listBox"></div>
+  <div class="flip" id="flipBox">
+    <div class="fcard" id="fcard">
+      <div class="fw" id="fWord"></div>
+      <div class="fph" id="fPhon"></div>
+      <div id="ftag" class="ftag"></div>
+      <div class="fback" id="fBack"></div>
+    </div>
+    <div class="fctrl" id="fctrl">
+      <button class="known" id="bKnown">认识 ✓</button>
+      <button class="unk" id="bNo">还不熟 ✗</button>
+    </div>
+    <div class="fprog" id="fprog"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+window.__WORDS__ = __WORDS_JSON__;
+window.__MANUAL__ = __MANUAL_JSON__;
+try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_sync&&_sync["英语"]&&_sync["英语"].words){window.__WORDS__=_sync["英语"].words;}}catch(e){}
+(function(){
+  var WORDS = window.__WORDS__ || [];
+  var MANUAL = window.__MANUAL__ || [];
+  var KEY_S = "yingyu_shengci_v1";
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); };
+  function tagHtml(tag){
+    if(!tag) return '';
+    return '<span class="tag-src tag-'+esc(tag)+'">'+esc(tag)+'</span>';
+  }
+  function toast(msg){ var t=$("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(function(){t.classList.remove("show");},1400); }
+  function load(k){ try{ return JSON.parse(localStorage.getItem(k)||"{}")||{}; }catch(e){ return {}; } }
+  function save(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
+
+  var shengci = load(KEY_S);
+  var idx = {};
+  WORDS.forEach(function(w){ idx[String(w[0]).toLowerCase()] = {word:w[0], phon:w[1], pos:w[2], mean:w[3], src:"web", tag:w[4]||""}; });
+
+  // 生词列表合并：web（localStorage）+ manual（W-格式）
+  function buildList(){
+    var list = [];
+    Object.keys(shengci).forEach(function(k){
+      var base = idx[k] || {word:k, phon:"", pos:"", mean:"", src:"web"};
+      list.push({word:base.word, phon:base.phon, pos:base.pos, mean:base.mean, src:"web", tag:base.tag, t:shengci[k].t||"", status:shengci[k].s||""});
+    });
+    MANUAL.forEach(function(m){
+      var w = m["单词"]||"";
+      if(!w) return;
+      list.push({word:w, phon:m["音标"]||"", pos:m["词性"]||"", mean:m["释义"]||"", src:"manual", tag:"", t:"", status:m["状态"]||"待复习"});
+    });
+    // 去重（manual 优先）
+    var seen={}, out=[];
+    list.forEach(function(it){ var k=String(it.word).toLowerCase(); if(seen[k]) return; seen[k]=1; out.push(it); });
+    return out;
+  }
+  function render(){
+    var q = ($("search").value||"").trim().toLowerCase();
+    var list = buildList();
+    $("stTotal").textContent = list.length;
+    $("stWeb").textContent = Object.keys(shengci).length;
+    $("stManual").textContent = MANUAL.length;
+    var box=$("listBox"); box.innerHTML="";
+    var html='<ul class="wl">', count=0;
+    list.forEach(function(it){
+      if(q && !(String(it.word).toLowerCase().indexOf(q)>=0 || String(it.mean).toLowerCase().indexOf(q)>=0)) return;
+      count++;
+      html+='<li><span class="wd">'+esc(it.word)+'</span>'
+        +'<span class="ph">'+(it.phon?esc(it.phon):"")+'</span>'
+        +'<span class="ps">'+(it.pos?esc(it.pos):"")+'</span>'
+        +'<span class="mn">'+esc(it.mean)+'</span>'
+        +tagHtml(it.tag)
+        +'<span class="src">'+(it.src==="manual"?"手写":"标星")+'</span>'
+        +'<span class="meta">'+(it.t?esc(it.t):"")+'</span>'
+        +'<button class="rm" data-w="'+esc(it.word)+'">移除</button></li>';
+    });
+    html+='</ul>';
+    if(!count) html='<div class="empty">还没有生词。<br>去《单词本》给单词标星，或手动往《生词本.md》加词。</div>';
+    box.innerHTML=html;
+    box.querySelectorAll(".rm").forEach(function(b){ b.onclick=function(){ removeOne(b.getAttribute("data-w")); }; });
+    return list;
+  }
+  function removeOne(word){
+    var key=String(word).toLowerCase();
+    if(shengci[key]){ delete shengci[key]; save(KEY_S, shengci); toast("已移除："+word); }
+    else toast("该词为手动记录，请直接编辑《生词本.md》");
+    if(mode==="list") render();
+  }
+  // 翻卡
+  var mode="list", flips=[], fi=0, flipped=false;
+  function renderFlip(){
+    flips = buildList();
+    if(!flips.length){ $("flipBox").style.display="block"; $("fWord").textContent="没有生词"; $("fPhon").textContent=""; $("ftag").innerHTML=""; $("fBack").textContent=""; $("fctrl").style.display="none"; $("fprog").textContent=""; return; }
+    fi=0; flipped=false; showFlip();
+  }
+  function showFlip(){
+    var it=flips[fi]; if(!it) return;
+    $("fWord").textContent=it.word;
+    $("fPhon").textContent=it.phon||"";
+    $("ftag").innerHTML=tagHtml(it.tag);
+    $("fBack").innerHTML='<span class="ps">'+(it.pos?esc(it.pos)+".":"")+'</span>'+esc(it.mean);
+    $("fBack").style.display="none";
+    $("fctrl").style.display="flex";
+    $("fprog").textContent=(fi+1)+" / "+flips.length;
+  }
+  function next(){ fi++; if(fi>=flips.length){ $("fctrl").style.display="none"; $("fWord").textContent="本轮复习完！"; $("fPhon").textContent=""; $("ftag").innerHTML=""; $("fBack").style.display="none"; $("fprog").textContent="共 "+flips.length+" 个生词"; return; } flipped=false; showFlip(); }
+  function setMode(m){
+    mode=m;
+    $("modeList").className=m==="list"?"on":"";
+    $("modeFlip").className=m==="flip"?"on":"";
+    $("listBox").style.display=m==="list"?"block":"none";
+    $("flipBox").style.display=m==="flip"?"block":"none";
+    if(m==="flip") renderFlip();
+  }
+  $("search").addEventListener("input", function(){ if(mode==="list") render(); });
+  $("modeList").onclick=function(){ setMode("list"); };
+  $("modeFlip").onclick=function(){ setMode("flip"); };
+  $("fcard").onclick=function(){ if(fi>=flips.length)return; flipped=!flipped; $("fBack").style.display=flipped?"block":"none"; };
+  $("bKnown").onclick=next;
+  $("bNo").onclick=next;
+  $("btnClear").onclick=function(){
+    Object.keys(shengci).forEach(function(k){ if(shengci[k].s==="已掌握"||shengci[k].s==="认识") delete shengci[k]; });
+    save(KEY_S, shengci); toast("已移除标记为已掌握的网页生词"); render();
+  };
+  $("btnClearAll").onclick=function(){
+    shengci={}; save(KEY_S,shengci); toast("已清空网页标星的生词（手动记录不受影响）"); render();
+  };
+  // 导出
+  function toW(text){
+    var out="# 英语 · 生词本\n\n> 由《生词本.html》导出 / 手动维护。格式：每个生词用 `## W-序号` 开头。\n\n---\n\n";
+    var i=0;
+    text.forEach(function(it){
+      i++;
+      out+="## W-"+String(i).padStart(3,"0")+"\n";
+      out+="- 单词："+it.word+"\n";
+      if(it.phon) out+="- 音标："+it.phon+"\n";
+      if(it.pos) out+="- 词性："+it.pos+".\n";
+      out+="- 释义："+it.mean+"\n";
+      out+="- 状态：待复习\n";
+      out+="\n";
+    });
+    return out;
+  }
+  function downloadMd(text){
+    var blob=new Blob(["\ufeff"+text], {type:"text/markdown;charset=utf-8"});
+    var a=document.createElement("a");
+    a.href=URL.createObjectURL(blob); a.download="生词本.md"; document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); },1000);
+  }
+  $("btnExport").onclick=function(){
+    var list=buildList();
+    if(!list.length){ toast("还没有生词可导出"); return; }
+    downloadMd(toW(list)); toast("已导出《生词本.md》，请保存到 D:\\专升本学习\\英语\\错题集\\");
+  };
+  $("btnCopy").onclick=function(){
+    var list=buildList();
+    if(!list.length){ toast("还没有生词"); return; }
+    var text=toW(list);
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ toast("已复制 W- 格式"); },function(){ promptCopy(text); }); }
+    else promptCopy(text);
+  };
+  function promptCopy(text){ var ta=document.createElement("textarea"); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta); toast("已复制 W- 格式"); }
+  render();
+})();
+</script>
+</body>
+</html>

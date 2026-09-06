@@ -1,0 +1,11 @@
+# 排除大文件和不需要公开的内容
+ErrorBookApp/
+node_modules/
+tmp_*/
+official/
+计划表/
+*.apk
+*.pyc
+__pycache__/
+.DS_Store
+Thumbs.db

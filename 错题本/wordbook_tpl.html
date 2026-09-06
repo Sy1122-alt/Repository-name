@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>英语 · 单词本</title>
+<style>
+:root{--accent:#C9A7E8;--accent-d:#7A5AA8;--text:#1A1B1C;--sub:#6B7280;--bg:#F4F3EE;--card:#FFFFFF;--border:#E4E3DD;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Roboto','PingFang SC','Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);padding:16px;line-height:1.6;}
+.wrap{max-width:820px;margin:0 auto;}
+h1{font-size:20px;font-weight:700;margin-bottom:2px;}
+.back{font-size:12px;color:var(--sub);text-decoration:none;display:inline-block;margin-bottom:6px;}
+.sub{font-size:12px;color:var(--sub);margin-bottom:12px;}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.stat{flex:1 1 130px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:9px 12px;}
+.stat .n{font-size:18px;font-weight:700;color:var(--accent-d);}
+.stat .l{font-size:11px;color:var(--sub);}
+.toolbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px;}
+.toolbar input[type=text]{flex:1 1 200px;font-size:13px;padding:8px 11px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);}
+.toolbar select,.toolbar button{font-size:13px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);cursor:pointer;}
+.toolbar button.on{background:var(--accent);border-color:var(--accent);font-weight:600;}
+.toolbar button.danger{background:rgba(234,102,104,0.12);border-color:#EA6668;color:#B44244;}
+.toolbar a.go{font-size:13px;padding:7px 12px;border-radius:8px;background:var(--accent-d);color:#fff;text-decoration:none;font-weight:600;}
+.alpha{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:12px;}
+.alpha button{font-size:12px;min-width:26px;padding:4px 5px;border:1px solid var(--border);border-radius:6px;background:var(--card);cursor:pointer;}
+.alpha button.on{background:var(--accent);border-color:var(--accent);font-weight:700;}
+.grp{margin-bottom:14px;}
+.grp .gt{font-size:13px;font-weight:700;color:var(--accent-d);margin-bottom:6px;border-bottom:1px solid var(--border);padding-bottom:4px;}
+.wl{list-style:none;}
+.wl li{display:flex;align-items:center;gap:10px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;margin-bottom:5px;background:var(--card);font-size:13.5px;}
+.wl li .wd{font-weight:700;min-width:150px;flex:1 1 150px;}
+.wl li .ph{font-size:12px;color:var(--sub);min-width:130px;flex:0 1 130px;}
+.wl li .ps{font-size:12px;color:var(--accent-d);min-width:38px;}
+.wl li .mn{flex:3 1 260px;color:var(--text);}
+.wl li .star{font-size:15px;cursor:pointer;border:none;background:none;color:#C9A7E8;flex:0 0 auto;}
+.wl li .star.on{color:#EAA7B2;}
+.flip{display:none;}
+.fcard{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 22px;text-align:center;margin-bottom:12px;min-height:180px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;}
+.fcard .fw{font-size:34px;font-weight:700;letter-spacing:.5px;margin-bottom:6px;}
+.fcard .fph{font-size:16px;color:var(--sub);margin-bottom:10px;}
+.fcard .fback{display:none;font-size:18px;line-height:1.7;}
+.fcard .fback .ps{color:var(--accent-d);font-weight:600;margin-right:6px;}
+.fctrl{display:none;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;}
+.fctrl button{font-size:14px;padding:10px 20px;border:1px solid var(--border);border-radius:10px;background:var(--card);cursor:pointer;font-weight:600;}
+.fctrl button.known{background:rgba(82,196,26,0.14);border-color:#52C41A;color:#3E8C13;}
+.fctrl button.so{background:rgba(250,173,20,0.16);border-color:#FAAD14;color:#8A5B00;}
+.fctrl button.unk{background:rgba(234,102,104,0.12);border-color:#EA6668;color:#B44244;}
+.fctrl button.star{background:rgba(201,167,232,0.22);border-color:var(--accent);color:var(--accent-d);}
+.tag-src{font-size:10px;padding:1px 8px;border-radius:8px;margin-left:4px;flex:0 0 auto;font-weight:600;}
+.tag-通用{background:rgba(82,196,26,0.14);color:#3E8C13;border:1px solid #52C41A;}
+.tag-四级{background:rgba(250,173,20,0.18);color:#8A5B00;border:1px solid #FAAD14;}
+.tag-专升本{background:rgba(201,167,232,0.24);color:var(--accent-d);border:1px solid var(--accent);}
+.fcard .ftag{font-size:12px;margin-bottom:8px;display:inline-block;}
+.fnav{display:flex;justify-content:space-between;gap:8px;margin-top:6px;}
+.fnav button{font-size:13px;padding:8px 18px;border:1px solid var(--border);border-radius:8px;background:var(--card);cursor:pointer;}
+.fnav button:disabled{opacity:.35;cursor:not-allowed;}
+.fprog{font-size:12px;color:var(--sub);text-align:center;margin-top:8px;}
+.empty{text-align:center;color:var(--sub);font-size:13.5px;padding:30px 0;}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#1A1B1C;color:#fff;font-size:13px;padding:9px 18px;border-radius:20px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:99;}
+.toast.show{opacity:1;}
+/* 移动端适配 */
+@media (max-width:480px){
+  .toolbar select,.toolbar button,.toolbar a.go{min-height:44px;font-size:14px;}
+  .toolbar input[type=text]{min-height:44px;font-size:14px;}
+  .alpha button{min-height:32px;min-width:30px;font-size:13px;}
+  .wl li{flex-wrap:wrap;gap:6px;padding:10px;}
+  .wl li .wd{min-width:0;flex:1 1 120px;}
+  .wl li .ph{min-width:0;flex:0 1 auto;}
+  .wl li .ps{min-width:0;}
+  .wl li .mn{flex:1 1 100%;min-width:0;word-break:break-word;font-size:13px;}
+  .fnav button{min-height:44px;font-size:14px;}
+  .fctrl button{min-height:44px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="__INDEX__">← 返回错题本总入口</a>
+  <h1>英语 · 单词本</h1>
+  <div class="sub">数据源：同目录《单词本.md》（共 <b id="totalWords">0</b> 词）· 浏览 / 搜索 / 翻卡记忆 / 标记生词</div>
+
+  <div class="stats">
+    <div class="stat"><div class="n" id="stTotal">0</div><div class="l">词汇总量</div></div>
+    <div class="stat"><div class="n" id="stSheng">0</div><div class="l">已标记生词</div></div>
+    <div class="stat"><div class="n" id="stKnown">0</div><div class="l">已掌握</div></div>
+    <div class="stat"><div class="n" id="stFuzzy">0</div><div class="l">模糊</div></div>
+    <div class="stat"><div class="n" id="stNo">0</div><div class="l">不认识</div></div>
+  </div>
+
+  <div class="toolbar">
+    <input type="text" id="search" placeholder="搜索单词 / 释义（如 computer、'电脑'）">
+    <button id="modeList" class="on">列表浏览</button>
+    <button id="modeFlip">翻卡记忆</button>
+    <button id="btnReset" class="danger">重置记忆状态</button>
+    <a class="go" href="生词本.html">生词本 →</a>
+  </div>
+  <div class="alpha" id="alphaNav"></div>
+
+  <div id="listBox"></div>
+  <div class="flip" id="flipBox">
+    <div class="fcard" id="fcard">
+      <div class="fw" id="fWord"></div>
+      <div class="fph" id="fPhon"></div>
+      <div id="ftag" class="ftag"></div>
+      <div class="fback" id="fBack"></div>
+    </div>
+    <div class="fctrl" id="fctrl">
+      <button class="star" id="bStar">☆ 标生词</button>
+      <button class="known" id="bKnown">认识 ✓</button>
+      <button class="so" id="bFuzzy">模糊 ◐</button>
+      <button class="unk" id="bNo">不认识 ✗</button>
+    </div>
+    <div class="fnav" id="fnav">
+      <button id="bPrev">← 上一个</button>
+      <button id="bNext">下一个 →</button>
+    </div>
+    <div class="fprog" id="fprog"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+window.__WORDS__ = __WORDS_JSON__;
+try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_sync&&_sync["英语"]&&_sync["英语"].words){window.__WORDS__=_sync["英语"].words;}}catch(e){}
+(function(){
+  var WORDS = window.__WORDS__ || [];
+  var KEY_S = "yingyu_shengci_v1";   // 生词 {word: {t:日期, s:状态}}
+  var KEY_M = "yingyu_wordbook_v1";  // 记忆 {word: known|so|no}
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); };
+  function tagHtml(tag){
+    if(!tag) return '';
+    return '<span class="tag-src tag-'+esc(tag)+'">'+esc(tag)+'</span>';
+  }
+  function toast(msg){ var t=$("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(function(){t.classList.remove("show");},1400); }
+  function load(k){ try{ return JSON.parse(localStorage.getItem(k)||"{}")||{}; }catch(e){ return {}; } }
+  function save(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
+
+  var shengci = load(KEY_S), memo = load(KEY_M);
+  var mode = "list", curLetter = "", flips = [], fi = 0, flipped = false;
+
+  // 词条结构：构建索引 {word:{word,phon,pos,mean}}
+  var idx = {};
+  WORDS.forEach(function(w){ idx[String(w[0]).toLowerCase()] = {word:w[0], phon:w[1], pos:w[2], mean:w[3]}; });
+
+  function refreshStats(){
+    $("totalWords").textContent = WORDS.length;
+    $("stTotal").textContent = WORDS.length;
+    $("stSheng").textContent = Object.keys(shengci).length;
+    var k=0,f=0,n=0;
+    Object.keys(memo).forEach(function(w){ if(memo[w]==="known")k++; else if(memo[w]==="so")f++; else n++; });
+    $("stKnown").textContent=k; $("stFuzzy").textContent=f; $("stNo").textContent=n;
+  }
+  function buildAlpha(){
+    var letters = {}, all = [];
+    WORDS.forEach(function(w){ var L=String(w[0]).charAt(0).toUpperCase(); if(!/^[A-Z]$/.test(L))L="#"; if(!letters[L])letters[L]=0; letters[L]++; all.push(w); });
+    var box = $("alphaNav"); box.innerHTML="";
+    ["#"].concat("ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")).forEach(function(L){
+      var b=document.createElement("button");
+      b.textContent=L + (letters[L]?("·"+letters[L]):"");
+      if(!letters[L]) b.style.opacity=.3;
+      if(L===curLetter) b.className="on";
+      b.onclick=function(){ curLetter=L; renderList(); };
+      box.appendChild(b);
+    });
+  }
+  function renderList(){
+    var q = ($("search").value||"").trim().toLowerCase();
+    var box = $("listBox"); box.innerHTML="";
+    var html="", count=0, started=false;
+    var showL = curLetter;
+    WORDS.forEach(function(w){
+      var L=String(w[0]).charAt(0).toUpperCase(); if(!/^[A-Z]$/.test(L))L="#";
+      if(showL && showL!=="#" && L!==showL) return;
+      if(showL==="#" && L!=="#") return;
+      if(q && !(String(w[0]).toLowerCase().indexOf(q)>=0 || String(w[3]).toLowerCase().indexOf(q)>=0)) return;
+      if(!started){ html+='<div class="grp"><div class="gt">'+esc(L)+'（本组 '+L+' 词）</div><ul class="wl">'; started=true; }
+      count++;
+      var key=String(w[0]).toLowerCase();
+      var star = shengci[key]?'★':'☆';
+      html+='<li><span class="wd">'+esc(w[0])+'</span>'
+        +'<span class="ph">'+(w[1]?esc(w[1]):"")+'</span>'
+        +'<span class="ps">'+(w[2]?esc(w[2]):"")+'</span>'
+        +'<span class="mn">'+esc(w[3])+'</span>'
+        +tagHtml(w[4])
+        +'<button class="star '+(shengci[key]?"on":"")+'" data-w="'+esc(w[0])+'" title="标记/取消生词">'+star+'</button></li>';
+    });
+    if(started) html+='</ul></div>';
+    if(!count) html='<div class="empty">没有匹配的单词。<br>'+(q?'换个关键词试试':'点击上方字母查看')+'</div>';
+    box.innerHTML=html;
+    box.querySelectorAll(".star").forEach(function(b){
+      b.onclick=function(){ toggleStar(b.getAttribute("data-w")); };
+    });
+  }
+  function toggleStar(word){
+    var key=String(word).toLowerCase();
+    if(shengci[key]){ delete shengci[key]; toast("已从生词本移除："+word); }
+    else { shengci[key]={t:new Date().toISOString().slice(0,10), s:"待复习"}; toast("已标记为生词："+word); }
+    save(KEY_S, shengci); refreshStats();
+    if(mode==="list") renderList(); else { updateStarBtn(); }
+  }
+  // 翻卡
+  function renderFlip(){
+    var q = ($("search").value||"").trim().toLowerCase();
+    var pool = WORDS.filter(function(w){ return !q || String(w[0]).toLowerCase().indexOf(q)>=0 || String(w[3]).toLowerCase().indexOf(q)>=0; });
+    // 优先复习"不认识/模糊"，再随机
+    var unk=pool.filter(function(w){ return memo[String(w[0]).toLowerCase()]==="no"; });
+    var so=pool.filter(function(w){ return memo[String(w[0]).toLowerCase()]==="so"; });
+    var rest=pool.filter(function(w){ var m=memo[String(w[0]).toLowerCase()]; return m!=="no"&&m!=="so"; });
+    flips = unk.concat(so).concat(rest);
+    if(!flips.length){ $("flipBox").style.display="block"; $("fWord").textContent="没有可背的单词"; $("fPhon").textContent=""; $("ftag").innerHTML=""; $("fBack").textContent=""; $("fctrl").style.display="none"; $("fnav").style.display="none"; $("fprog").textContent=""; return; }
+    // 洗牌 rest 部分
+    for(var i=flips.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=flips[i]; flips[i]=flips[j]; flips[j]=t; }
+    fi=0; flipped=false;
+    showFlip();
+  }
+  function updateStarBtn(){
+    if(fi>=flips.length || !flips[fi]) return;
+    var w=String(flips[fi][0]).toLowerCase();
+    var b=$("bStar");
+    b.textContent = shengci[w] ? "★ 已标生词" : "☆ 标生词";
+    b.style.opacity = shengci[w] ? 1 : 0.85;
+  }
+  function showFlip(){
+    var w=flips[fi]; if(!w){ return; }
+    $("fWord").textContent=w[0];
+    $("fPhon").textContent=w[1]||"";
+    $("ftag").innerHTML=tagHtml(w[4]);
+    $("fBack").innerHTML='<span class="ps">'+(w[2]?esc(w[2])+".":"")+'</span>'+esc(w[3]);
+    $("fBack").style.display="none";
+    $("fctrl").style.display="flex";
+    $("fnav").style.display="flex";
+    $("fprog").textContent=(fi+1)+" / "+flips.length;
+    updateStarBtn();
+    $("bPrev").disabled = (fi<=0);
+    $("bNext").disabled = (fi>=flips.length-1);
+  }
+  function mark(level){
+    if(fi>=flips.length) return;
+    var w=flips[fi][0];
+    memo[String(w).toLowerCase()]=level;
+    save(KEY_M, memo); refreshStats();
+    fi++;
+    if(fi>=flips.length){ $("fctrl").style.display="none"; $("fWord").textContent="本轮背完！"; $("fPhon").textContent=""; $("ftag").innerHTML=""; $("fBack").style.display="none"; $("fprog").textContent="共 "+flips.length+" 词完成"; toast("本组背完"); return; }
+    flipped=false; showFlip();
+  }
+  function setMode(m){
+    mode=m;
+    $("modeList").className = m==="list"?"on":"";
+    $("modeFlip").className = m==="flip"?"on":"";
+    $("listBox").style.display = m==="list"?"block":"none";
+    $("flipBox").style.display = m==="flip"?"block":"none";
+    if(m==="flip"){ $("alphaNav").style.display="none"; renderFlip(); }
+    else { $("alphaNav").style.display="flex"; renderList(); }
+  }
+  $("search").addEventListener("input", function(){ if(mode==="list") renderList(); });
+  $("modeList").onclick=function(){ setMode("list"); };
+  $("modeFlip").onclick=function(){ setMode("flip"); };
+  $("fcard").onclick=function(){
+    if(fi>=flips.length) return;
+    flipped=!flipped; $("fBack").style.display=flipped?"block":"none";
+  };
+  $("bKnown").onclick=function(){ mark("known"); };
+  $("bFuzzy").onclick=function(){ mark("so"); };
+  $("bNo").onclick=function(){ mark("no"); };
+  $("bStar").onclick=function(){ if(fi<flips.length) toggleStar(flips[fi][0]); };
+  $("bPrev").onclick=function(){ if(fi>0){ fi--; flipped=false; showFlip(); } };
+  $("bNext").onclick=function(){ if(fi<flips.length-1){ fi++; flipped=false; showFlip(); } };
+  $("btnReset").onclick=function(){ memo={}; save(KEY_M,memo); refreshStats(); if(mode==="flip")renderFlip(); else renderList(); toast("已重置记忆状态"); };
+  refreshStats(); buildAlpha(); renderList();
+})();
+</script>
+</body>
+</html>

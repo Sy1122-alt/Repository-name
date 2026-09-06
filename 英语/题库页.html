@@ -1,0 +1,2599 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>英语 · 题库刷题</title>
+<style>
+:root{--accent:#C9A7E8;--accent-d:#33475C;--text:#1A1B1C;--sub:#6B7280;--bg:#F4F3EE;--card:#FFFFFF;--border:#E4E3DD;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Roboto','PingFang SC','Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);padding:16px;line-height:1.6;}
+.wrap{max-width:760px;margin:0 auto;}
+h1{font-size:20px;font-weight:700;margin-bottom:2px;}
+.back{font-size:12px;color:var(--sub);text-decoration:none;display:inline-block;margin-bottom:6px;}
+.sub{font-size:12px;color:var(--sub);margin-bottom:12px;}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.stat{flex:1 1 110px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:9px 12px;}
+.stat .n{font-size:18px;font-weight:700;}
+.stat .l{font-size:11px;color:var(--sub);}
+.stat.hot{border-color:var(--accent);}
+.toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.toolbar select,.toolbar button{font-size:13px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);cursor:pointer;}
+.toolbar button.primary{background:var(--accent-d);color:#fff;border-color:var(--accent-d);font-weight:600;}
+.toolbar button.on{background:var(--accent);border-color:var(--accent);color:#1A1B1C;font-weight:600;}
+.toolbar button.danger{background:rgba(234,102,104,0.14);border-color:#EA6668;color:#B44244;font-weight:600;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;}
+.meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px;}
+.tag{font-size:11px;padding:2px 8px;border-radius:10px;background:var(--accent);color:#22304A;}
+.tag.qid{background:rgba(0,0,0,0.06);color:var(--sub);}
+.tag.src{background:rgba(0,0,0,0.05);color:var(--sub);}
+.material{background:rgba(0,0,0,0.035);border-left:3px solid var(--accent);padding:10px 12px;border-radius:0 8px 8px 0;margin-bottom:10px;font-size:13px;white-space:pre-wrap;}
+.qtext{font-size:15px;font-weight:600;margin-bottom:10px;white-space:pre-wrap;}
+.opts{list-style:none;margin-bottom:10px;}
+.opts li{font-size:13.5px;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;margin-bottom:8px;background:#FBFBF8;cursor:pointer;transition:all .18s ease;position:relative;user-select:none;-webkit-tap-highlight-color:transparent;}
+.opts li:active{transform:scale(0.97);}
+.opts li:hover{border-color:var(--accent);background:rgba(155,187,244,0.06);}
+.opts li.sel{border-color:var(--accent-d);background:rgba(0,0,0,0.04);}
+.opts li.right{border-color:#52C41A;background:rgba(82,196,26,0.12);animation:pulse .5s ease;}
+.opts li.wrong{border-color:#EA6668;background:rgba(234,102,104,0.10);animation:shake .4s ease;}
+.opts li .opt-letter{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:rgba(0,0,0,0.06);font-weight:700;font-size:12px;margin-right:8px;flex:0 0 auto;}
+.opts li.sel .opt-letter{background:var(--accent-d);color:#fff;}
+.opts li.right .opt-letter{background:#52C41A;color:#fff;}
+.opts li.wrong .opt-letter{background:#EA6668;color:#fff;}
+@keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-6px);}40%{transform:translateX(6px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(82,196,26,0.4);}70%{box-shadow:0 0 0 10px rgba(82,196,26,0);}100%{box-shadow:0 0 0 0 rgba(82,196,26,0);}}
+.answer{display:none;border-left:3px solid var(--accent-d);background:rgba(155,187,244,0.10);padding:10px 12px;border-radius:0 8px 8px 0;margin-bottom:10px;font-size:13.5px;white-space:pre-wrap;}
+.answer .k{font-weight:700;color:var(--accent-d);}
+.feedback{display:none;font-size:13.5px;font-weight:600;margin-bottom:10px;padding:8px 12px;border-radius:8px;}
+.feedback.ok{background:rgba(82,196,26,0.12);color:#3E8C13;}
+.feedback.no{background:rgba(234,102,104,0.10);color:#B44244;}
+.btns{display:flex;gap:8px;flex-wrap:wrap;}
+.btns button{font-size:13px;padding:8px 14px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--text);cursor:pointer;}
+.btns button.g{background:rgba(82,196,26,0.14);border-color:#52C41A;color:#3E8C13;font-weight:600;}
+.btns button.r{background:rgba(234,102,104,0.12);border-color:#EA6668;color:#B44244;font-weight:600;}
+.btns button.d{background:rgba(250,173,20,0.16);border-color:#FAAD14;color:#8A5B00;font-weight:600;}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:12px;}
+.nav button{font-size:13px;padding:8px 14px;border:1px solid var(--border);border-radius:8px;background:var(--card);cursor:pointer;}
+.basket{background:var(--card);border:1px dashed var(--accent);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
+.basket .bt{font-size:13px;font-weight:700;margin-bottom:8px;}
+.basket .blist{font-size:12.5px;color:var(--text);}
+.basket .blist div{display:flex;gap:8px;align-items:flex-start;margin-bottom:4px;}
+.basket .blist span{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.basket .blist button{font-size:11px;padding:2px 8px;border:1px solid var(--border);border-radius:6px;background:#fff;cursor:pointer;color:var(--sub);}
+.basket .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.basket .actions button{font-size:13px;padding:7px 12px;border:1px solid var(--border);border-radius:8px;cursor:pointer;}
+.basket .actions .exp{background:var(--accent-d);color:#fff;border-color:var(--accent-d);font-weight:600;}
+.expout{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
+.expout textarea{width:100%;min-height:150px;font-family:Consolas,monospace;font-size:12px;border:1px solid var(--border);border-radius:8px;padding:10px;background:#FBFBF8;color:var(--text);}
+#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#33475C;color:#fff;font-size:13px;padding:10px 18px;border-radius:10px;max-width:88vw;box-shadow:0 4px 16px rgba(0,0,0,0.18);z-index:99;display:none;line-height:1.5;}
+.empty{text-align:center;color:var(--sub);font-size:13px;padding:30px 10px;background:var(--card);border:1px dashed var(--border);border-radius:14px;}
+.hint{font-size:11.5px;color:var(--sub);margin-top:12px;line-height:1.7;}
+.math-inline{display:inline-block;vertical-align:middle;}
+/* 移动端适配 */
+@media (max-width:480px){
+  .toolbar select,.toolbar button{min-height:44px;font-size:14px;}
+  .opts li{min-height:44px;display:flex;align-items:center;font-size:14px;padding:10px 12px;}
+  .btns button{min-height:44px;font-size:14px;}
+  .nav button{min-height:44px;font-size:14px;}
+  .basket .actions button{min-height:44px;}
+  .qtext{font-size:16px;}
+}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../错题本/index.html">‹ 返回错题本总入口</a>
+  <h1>英语 · 题库刷题</h1>  <div class="sub">数据源：同目录《题库.md》 · 做错一键入篮，一键存入《错题本.md》</div>
+
+  <div class="stats">
+    <div class="stat"><div class="n" id="nTotal">0</div><div class="l">题库总题</div></div>
+    <div class="stat"><div class="n" id="nDone">0</div><div class="l">已完成</div></div>
+    <div class="stat"><div class="n" id="nLeft">0</div><div class="l">本组待做</div></div>
+    <div class="stat hot"><div class="n" id="nBasket">0</div><div class="l">错题篮子</div></div>
+  </div>
+
+  <div class="toolbar">
+    <select id="selTopic"><option value="">全部专题</option></select>
+    <button id="btnShuffle" class="primary">随机抽题</button>
+    <button id="btnOrder">顺序浏览</button>
+    <button id="btnUndone">只看未做</button>
+    <button id="btnBasket">错题篮子</button>
+    <button id="btnReset">重置进度</button>
+  </div>
+
+  <div id="card"></div>
+
+  <div class="basket" id="basketBox">
+    <div class="bt">错题篮子（做错的题会进这里，可一键存入错题本）</div>
+    <div class="blist" id="basketList"></div>
+    <div class="actions">
+      <button class="exp" id="btnExport">存入错题本</button>
+      <button id="btnClearBasket">清空篮子</button>
+    </div>
+  </div>
+
+  <div class="expout" id="expBox" style="display:none;">
+    <div class="sub" style="margin-bottom:6px;">当前页面不是从“启动错题本”打开，无法直接写入文件。请复制以下内容，粘贴到本学科《错题集\错题本.md》末尾：</div>
+    <textarea id="expText" readonly></textarea>
+  </div>
+
+  <div id="toast"></div>
+
+  <div class="hint">
+    操作：看题 → 点选答案判对错（或点「显示答案」）→ 按结果点「做对了」或「做错了·记入错题」→ 攒够一批点「存入错题本」。从“启动错题本”打开时，系统会自动写入并更新复习页。<br>
+    章节、序号、选项格式已自动生成；直接双击 HTML 打开时仍可导出文本作为兼容方案。
+  </div>
+</div>
+
+<script src=""></script>
+<script>
+window.__TIKU__ = [
+ {
+  "id": "真题-1",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "I'm leaving in \\_\\_\\_\\_ minute. In \\_\\_\\_\\_ fact, I'll leave when I turn off the lights.",
+  "选项": [
+   "/; the",
+   "a; /",
+   "a; a",
+   "the; the"
+  ],
+  "答案": "B",
+  "解析": "in a minute（一会儿）；in fact（事实上）固定搭配，不加冠词。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-2",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "Please turn to Page \\_\\_\\_\\_, and look at the \\_\\_\\_\\_ picture.",
+  "选项": [
+   "Two; second",
+   "Two; two",
+   "second; two",
+   "second; second"
+  ],
+  "答案": "A",
+  "解析": "Page Two（编号用基数词）、the second picture（第几张用序数词）。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-3",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "The kids learned that light \\_\\_\\_\\_ faster than sound.",
+  "选项": [
+   "travel",
+   "traveled",
+   "travels",
+   "has traveled"
+  ],
+  "答案": "C",
+  "解析": "客观真理用一般现在时，主语 light 第三人称单数。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-4",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "The photo exhibition was held to \\_\\_\\_\\_ people's environmental awareness.",
+  "选项": [
+   "rise",
+   "give",
+   "arise",
+   "raise"
+  ],
+  "答案": "D",
+  "解析": "raise awareness 提高意识；rise/arise 是不及物动词。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-5",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "The famous lawyer made a speech \\_\\_\\_\\_ the education law.",
+  "选项": [
+   "in",
+   "on",
+   "at",
+   "for"
+  ],
+  "答案": "B",
+  "解析": "a speech on... 关于……的演讲。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-6",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "— We need a drink. — \\_\\_\\_\\_! Let's have one.",
+  "选项": [
+   "Greatly",
+   "Simply",
+   "Possibly",
+   "Exactly"
+  ],
+  "答案": "D",
+  "解析": "Exactly 表示\"正是如此/太对了\"。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-7",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "Neither you nor I am the expert on this issue, \\_\\_\\_\\_?",
+  "选项": [
+   "are we",
+   "aren't we",
+   "do we",
+   "don't we"
+  ],
+  "答案": "A",
+  "解析": "反意疑问句：陈述含否定词 neither...nor，附加问句用肯定；be 动词与主语 we 一致用 are。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-8",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "The hall was named after the professor \\_\\_\\_\\_ had made a great contribution to the university.",
+  "选项": [
+   "which",
+   "who",
+   "whose",
+   "whom"
+  ],
+  "答案": "B",
+  "解析": "先行词 professor，从句缺主语 → who。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-9",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "Hardly had I put down my cellphone \\_\\_\\_\\_ it rang again.",
+  "选项": [
+   "as",
+   "than",
+   "after",
+   "when"
+  ],
+  "答案": "D",
+  "解析": "Hardly...when... 一……就……（固定搭配，Hardly 开头部分倒装）。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-10",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "Peter won first prize in the Chinese Speech Competition. He \\_\\_\\_\\_ have studied very hard.",
+  "选项": [
+   "may",
+   "should",
+   "must",
+   "could"
+  ],
+  "答案": "C",
+  "解析": "must have done 表示对过去的肯定推测\"一定\"。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-11",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "The AI engineer, as well as his team members, \\_\\_\\_\\_ to attend the seminar on ChatGPT last month.",
+  "选项": [
+   "was invited",
+   "were invited",
+   "have been invited",
+   "has been invited"
+  ],
+  "答案": "A",
+  "解析": "as well as 不影响主谓一致，主语 The AI engineer 单数；last month 用过去时被动。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-12",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "The teacher explained it again \\_\\_\\_\\_ he could make himself better understood.",
+  "选项": [
+   "now that",
+   "even if",
+   "so that",
+   "as far as"
+  ],
+  "答案": "C",
+  "解析": "so that 表目的\"以便\"。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-13",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "The \\_\\_\\_\\_ of blood always makes her frightened.",
+  "选项": [
+   "sight",
+   "view",
+   "look",
+   "glance"
+  ],
+  "答案": "A",
+  "解析": "the sight of blood 看见血。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-14",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "As we arrived too early, \\_\\_\\_\\_ of the rooms were ready.",
+  "选项": [
+   "all",
+   "none",
+   "any",
+   "both"
+  ],
+  "答案": "B",
+  "解析": "来得太早，所以\"没有一间\"准备好 → none。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-15",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "When he was a child, the scientist was \\_\\_\\_\\_ about how life on earth began.",
+  "选项": [
+   "curious",
+   "anxious",
+   "careful",
+   "hopeful"
+  ],
+  "答案": "A",
+  "解析": "be curious about 对……好奇。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-16",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "— Have you completed your report yet? — No, but I \\_\\_\\_\\_ on it all day yesterday.",
+  "选项": [
+   "would work",
+   "had worked",
+   "have worked",
+   "was working"
+  ],
+  "答案": "D",
+  "解析": "yesterday + all day 表示过去某时段持续 → 过去进行时。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-17",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "\\_\\_\\_\\_ I know, they will go to Chengdu to watch the World University Games this summer.",
+  "选项": [
+   "As though",
+   "Even if",
+   "As soon as",
+   "As far as"
+  ],
+  "答案": "D",
+  "解析": "As far as I know 据我所知。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-18",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "Never in my life \\_\\_\\_\\_ such a wonderful lion dance.",
+  "选项": [
+   "have I seen",
+   "I have seen",
+   "did I see",
+   "I saw"
+  ],
+  "答案": "A",
+  "解析": "Never 开头的否定倒装 + 现在完成时。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-19",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "The school \\_\\_\\_\\_ great importance to students' mental health.",
+  "选项": [
+   "attaches",
+   "takes",
+   "pays",
+   "offers"
+  ],
+  "答案": "A",
+  "解析": "attach importance to 重视（固定搭配）。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-20",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "They gave a(n) \\_\\_\\_\\_ broadcast while the talent show was going on.",
+  "选项": [
+   "living",
+   "live",
+   "alive",
+   "lively"
+  ],
+  "答案": "B",
+  "解析": "live broadcast 现场直播（live 作形容词读 /laɪv/）。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-21",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "\\_\\_\\_\\_ it was only 5 p.m., the street lights in the northeast of the city were already on.",
+  "选项": [
+   "Although",
+   "However",
+   "Since",
+   "For"
+  ],
+  "答案": "A",
+  "解析": "虽然才下午 5 点，灯却亮了 → 让步状语从句 Although。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-22",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "Lily has made an \\_\\_\\_\\_ to meet her science teacher next Monday.",
+  "选项": [
+   "attention",
+   "approval",
+   "agreement",
+   "appointment"
+  ],
+  "答案": "D",
+  "解析": "make an appointment 预约。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-23",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "It is high time you \\_\\_\\_\\_ smoking.",
+  "选项": [
+   "give up",
+   "gave up",
+   "must give up",
+   "will give up"
+  ],
+  "答案": "B",
+  "解析": "It is high time + 过去式（虚拟语气）。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-24",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "Weather \\_\\_\\_\\_, the foreign guests will visit the Panda Base.",
+  "选项": [
+   "permits",
+   "permitted",
+   "permitting",
+   "is permitted"
+  ],
+  "答案": "C",
+  "解析": "独立主格结构 Weather permitting（天气允许的话）。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-25",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "The manager had his assistant \\_\\_\\_\\_ a presentation for the meeting with the clients.",
+  "选项": [
+   "preparing",
+   "to prepare",
+   "prepared",
+   "prepare"
+  ],
+  "答案": "D",
+  "解析": "have sb. do sth. 让某人做某事。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-26",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "\\_\\_\\_\\_ finds the lost car will get a gift as a reward.",
+  "选项": [
+   "Whomever",
+   "Whoever",
+   "No matter whom",
+   "No matter who"
+  ],
+  "答案": "B",
+  "解析": "Whoever 引导主语从句（作从句主语）；No matter who 只能引导让步状语从句。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-27",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "We were excited to learn Prof. Tu Youyou became the \\_\\_\\_\\_ scientist that won the Nobel Prize.",
+  "选项": [
+   "Chinese woman first",
+   "first Chinese woman",
+   "Chinese first woman",
+   "first woman Chinese"
+  ],
+  "答案": "B",
+  "解析": "形容词排序，first 在国籍前：the first Chinese woman scientist。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-28",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "I'd like to take \\_\\_\\_\\_ of this opportunity to thank you for your support.",
+  "选项": [
+   "care",
+   "advantage",
+   "note",
+   "hold"
+  ],
+  "答案": "B",
+  "解析": "take advantage of 利用。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-29",
+  "来源": "2023 真题",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "Traveling is becoming \\_\\_\\_\\_ popular in China as more and more people have their own cars.\n### B. 备考练习（库课）",
+  "选项": [
+   "importantly",
+   "successfully",
+   "increasingly",
+   "mostly"
+  ],
+  "答案": "C",
+  "解析": "increasingly popular 越来越受欢迎。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-30",
+  "来源": "库课备考练习",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "— I'm afraid I can't finish the work on time. — \\_\\_\\_\\_. I will help you.",
+  "选项": [
+   "Don't worry",
+   "Not at all",
+   "My pleasure",
+   "It's nice of you"
+  ],
+  "答案": "A",
+  "解析": "Don't worry 别担心。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-31",
+  "来源": "库课备考练习",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "The film \\_\\_\\_\\_ for ten minutes when we got to the cinema.",
+  "选项": [
+   "has been on",
+   "had been on",
+   "has started",
+   "had started"
+  ],
+  "答案": "B",
+  "解析": "for ten minutes 是延续性时间，须用延续性动词 be on；\"过去的过去\"用过去完成时。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-32",
+  "来源": "库课备考练习",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "She is the only one of the students who \\_\\_\\_\\_ good at French.",
+  "选项": [
+   "is",
+   "are",
+   "was",
+   "were"
+  ],
+  "答案": "A",
+  "解析": "the only one of + 复数名词，定语从句谓语用单数 is。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-33",
+  "来源": "库课备考练习",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "It is necessary for us \\_\\_\\_\\_ English well.",
+  "选项": [
+   "learn",
+   "learning",
+   "to learn",
+   "learned"
+  ],
+  "答案": "C",
+  "解析": "It is + adj. + for sb. + to do sth.",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-34",
+  "来源": "库课备考练习",
+  "专题": "词汇与语法结构",
+  "题型": "单选",
+  "材料": "",
+  "题目": "The doctor suggested that he \\_\\_\\_\\_ a rest at once.",
+  "选项": [
+   "takes",
+   "took",
+   "taking",
+   "take"
+  ],
+  "答案": "D",
+  "解析": "suggest 表\"建议\"时宾语从句用 (should) + 动词原形。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-35",
+  "来源": "真题",
+  "专题": "阅读理解",
+  "题型": "单选",
+  "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.",
+  "题目": "How long had Deng been preparing for the space mission?",
+  "选项": [
+   "Nearly 56 years",
+   "Nearly 25 years",
+   "Nearly 16 years",
+   "Nearly 15 years"
+  ],
+  "答案": "B",
+  "解析": "a quarter of a century = 25 年。",
+  "章节": "03-阅读理解"
+ },
+ {
+  "id": "真题-36",
+  "来源": "真题",
+  "专题": "阅读理解",
+  "题型": "单选",
+  "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.",
+  "题目": "The underlined word \"cherish\" is closest in meaning to \\_\\_\\_\\_.",
+  "选项": [
+   "value",
+   "chase",
+   "verify",
+   "challenge"
+  ],
+  "答案": "A",
+  "解析": "cherish = value 珍惜。",
+  "章节": "03-阅读理解"
+ },
+ {
+  "id": "真题-37",
+  "来源": "真题",
+  "专题": "阅读理解",
+  "题型": "单选",
+  "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.",
+  "题目": "Who was Deng especially grateful to?",
+  "选项": [
+   "The people who chose him",
+   "Those working people in China's space industry",
+   "Members of the Shenzhou XV crew",
+   "China's first group of astronauts"
+  ],
+  "答案": "B",
+  "解析": "原文 gratitude went to...scientists, engineers and other workers。",
+  "章节": "03-阅读理解"
+ },
+ {
+  "id": "真题-38",
+  "来源": "真题",
+  "专题": "阅读理解",
+  "题型": "单选",
+  "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.",
+  "题目": "Which of the following can best describe Deng?",
+  "选项": [
+   "Generous",
+   "Humorous",
+   "Intelligent",
+   "Persistent"
+  ],
+  "答案": "D",
+  "解析": "25 年坚持准备 → persistent（坚持不懈）。",
+  "章节": "03-阅读理解"
+ },
+ {
+  "id": "真题-39",
+  "来源": "2023 真题（Passage 2）",
+  "专题": "阅读理解",
+  "题型": "单选",
+  "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.",
+  "题目": "The text is mainly about \\_\\_\\_\\_.",
+  "选项": [
+   "an engineer who kept working hard",
+   "a reporter who interviewed a veteran",
+   "a scientist who took part in a space mission",
+   "an astronaut who eventually realized his dream"
+  ],
+  "答案": "D",
+  "解析": "主旨——最终圆梦的航天员。",
+  "章节": "03-阅读理解"
+ },
+ {
+  "id": "真题-40",
+  "来源": "2022 四川专升本英语真题",
+  "专题": "2022 四川专升本真题",
+  "题型": "单选",
+  "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "题目": "It is reported that ___ president will have dinner with ___ President O'Connor tomorrow.",
+  "选项": [
+   "the; the",
+   "a; a",
+   "the; /",
+   "/; /"
+  ],
+  "答案": "C",
+  "解析": "第一个 the 特指\"这位总统\"；President+人名 作头衔称呼时不加冠词。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-41",
+  "来源": "2022 四川专升本英语真题",
+  "专题": "2022 四川专升本真题",
+  "题型": "单选",
+  "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "题目": "It's only ___ from my school, so I can go on foot.",
+  "选项": [
+   "ten minute's walk",
+   "ten minutes' walk",
+   "ten minutes walk",
+   "ten minute walk"
+  ],
+  "答案": "B",
+  "解析": "复数名词所有格在 s 后加撇号：ten minutes' walk。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-42",
+  "来源": "2022 四川专升本英语真题",
+  "专题": "2022 四川专升本真题",
+  "题型": "单选",
+  "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "题目": "Put on your coat, ___ you will catch a cold.",
+  "选项": [
+   "and",
+   "but",
+   "or",
+   "so"
+  ],
+  "答案": "C",
+  "解析": "祈使句 + or + 结果：\"否则\"。and 表顺承、but 表转折、so 表因果。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-43",
+  "来源": "2022 四川专升本英语真题",
+  "专题": "2022 四川专升本真题",
+  "题型": "单选",
+  "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "题目": "It is said that the author ___ by the end of this year.",
+  "选项": [
+   "will finish",
+   "will be finish",
+   "will have finished",
+   "will have been finished"
+  ],
+  "答案": "C",
+  "解析": "by + 将来时间 → 将来完成时 will have done。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-44",
+  "来源": "2022 四川专升本英语真题",
+  "专题": "2022 四川专升本真题",
+  "题型": "单选",
+  "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "题目": "If you had done your homework yesterday, you ___ how to answer the question now.",
+  "选项": [
+   "know",
+   "knew",
+   "will know",
+   "would know"
+  ],
+  "答案": "D",
+  "解析": "混合虚拟语气——条件句表过去（had done），主句表现在（would do）。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-45",
+  "来源": "2022 四川专升本英语真题",
+  "专题": "2022 四川专升本真题",
+  "题型": "单选",
+  "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "题目": "They must have met with their guests last night, ___?",
+  "选项": [
+   "haven't they",
+   "didn't they",
+   "mustn't they",
+   "couldn't they"
+  ],
+  "答案": "B",
+  "解析": "must have done 表对过去推测，反意问句用 didn't（或 haven't 依据语境，本句有时间状语 last night 用 didn't）。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-46",
+  "来源": "2022 四川专升本英语真题",
+  "专题": "2022 四川专升本真题",
+  "题型": "单选",
+  "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "题目": "No sooner had he sat down ___ somebody knocked on the door.",
+  "选项": [
+   "when",
+   "than",
+   "then",
+   "it"
+  ],
+  "答案": "B",
+  "解析": "No sooner...than... 固定搭配，\"一……就……\"。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-47",
+  "来源": "2022 四川专升本英语真题",
+  "专题": "2022 四川专升本真题",
+  "题型": "单选",
+  "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "题目": "The manager together with some workers ___ visiting the new company now.",
+  "选项": [
+   "are",
+   "is",
+   "have been",
+   "has been"
+  ],
+  "答案": "B",
+  "解析": "就远原则——主语是 The manager（单数），together with 不影响谓语。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-48",
+  "来源": "2022 四川专升本英语真题",
+  "专题": "2022 四川专升本真题",
+  "题型": "单选",
+  "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "题目": "Some mountain areas, ___ the terrible road condition, are hard to arrive.",
+  "选项": [
+   "but for",
+   "in spite of",
+   "with regard to",
+   "due to"
+  ],
+  "答案": "D",
+  "解析": "due to 由于（表原因）；in spite of 尽管；but for 要不是；with regard to 关于。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-49",
+  "来源": "2022 四川专升本英语真题",
+  "专题": "2022 四川专升本真题",
+  "题型": "单选",
+  "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "题目": "Poor ___ she was, she never accepted anything for nothing.",
+  "选项": [
+   "although",
+   "though",
+   "so",
+   "yet"
+  ],
+  "答案": "B",
+  "解析": "as/though 引导让步状语从句可倒装：Poor though she was = Though she was poor。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "真题-50",
+  "来源": "2022 四川专升本英语真题",
+  "专题": "2022 四川专升本真题",
+  "题型": "简答",
+  "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "题目": "翻译：Please believe that the last thing I want to do is to be late and offend you and the guests from the head office.",
+  "选项": [],
+  "答案": "请你相信，我最不愿意做的事情就是迟到并冒犯您和总部来的客人。",
+  "解析": "the last thing 意为\"最不愿意做的事\"；head office 总部。",
+  "章节": "05-翻译"
+ },
+ {
+  "id": "真题-51",
+  "来源": "2022 四川专升本英语真题",
+  "专题": "2022 四川专升本真题",
+  "题型": "简答",
+  "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "题目": "翻译：He realized that leaving the bird there was equal to signing its death sentence, because it might be eaten by predators.",
+  "选项": [],
+  "答案": "他意识到，把鸟留在那里无异于让它等死，因为它可能会被食肉动物吃掉。",
+  "解析": "be equal to 等于/无异于；death sentence 死亡判决；predator 食肉动物。",
+  "章节": "05-翻译"
+ },
+ {
+  "id": "真题-52",
+  "来源": "2022 四川专升本英语真题",
+  "专题": "2022 四川专升本真题",
+  "题型": "简答",
+  "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "题目": "翻译：Young people's attitudes towards side jobs are not all the same.",
+  "选项": [],
+  "答案": "年轻人对副业的态度不尽相同。",
+  "解析": "attitude towards 对……的态度；side job 副业。",
+  "章节": "05-翻译"
+ },
+ {
+  "id": "真题-53",
+  "来源": "2022 四川专升本英语真题",
+  "专题": "2022 四川专升本真题",
+  "题型": "简答",
+  "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "题目": "翻译：In space, the astronauts carried out experiments to demonstrate interesting physical phenomena, such as \"disappearing buoyancy\" and \"water ball\".",
+  "选项": [],
+  "答案": "在太空中，宇航员通过实验展示了有趣的物理现象，如\"浮力消失\"和\"水球\"。",
+  "解析": "carry out experiments 做实验；buoyancy 浮力。",
+  "章节": "05-翻译"
+ },
+ {
+  "id": "真题-54",
+  "来源": "2022 四川专升本英语真题（参考例文）",
+  "专题": "2022 四川专升本真题",
+  "题型": "简答",
+  "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "题目": "写作：假设你是李夏，是第 31 届世界大学生运动会的志愿者，组委会安排你给来自世界各地的运动员写一封英文信，推荐四川的一个知名景点。内容包括：①景点介绍 ②推荐理由 ③注意事项。参考词汇：volunteer, recommend, scenic spot。",
+  "选项": [],
+  "答案": "（参考范文）： Dear friends, Welcome to Chengdu! I am a volunteer for the 31st World University Games. The organizing committee has asked me to recommend a famous scenic spot to you. One I strongly recommend is the Research Base of Giant Panda Breeding, since Chengdu is the home to pandas. There you can closely observe pandas and even watch female pandas nursing their cubs, which can further your understanding of how to protect these beautiful but endangered creatures. Besides, you'd better go there early in the morning, because it is very hot at noon and pandas will go to sleep inside the house then. May you have a good day!",
+  "解析": "范文按应用文书信结构组织，包含称呼、景点介绍、推荐理由、注意事项和结尾祝愿，覆盖题目要求的三个内容点。",
+  "章节": "01-词汇与词组"
+ },
+ {
+  "id": "练习-55",
+  "来源": "完形填空专项（篇一）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：My father often works very hard. And he has ___ to see a film.",
+  "选项": [
+   "little money",
+   "much money",
+   "little time",
+   "much time"
+  ],
+  "答案": "C",
+  "解析": "由下文可知父亲忙得没时间看电影。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-56",
+  "来源": "完形填空专项（篇一）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：Here I'll tell you ___ about him.",
+  "选项": [
+   "a funny story",
+   "a good story",
+   "an old story",
+   "a strange story"
+  ],
+  "答案": "A",
+  "解析": "下文讲述的是一件有趣的事。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-57",
+  "来源": "完形填空专项（篇一）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：One afternoon, when he finished his work and ___ go home...",
+  "选项": [
+   "was to",
+   "was about to",
+   "had to",
+   "ought"
+  ],
+  "答案": "B",
+  "解析": "be about to do 即将做某事（正打算回家）。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-58",
+  "来源": "完形填空专项（篇一）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：...he found a film ticket under the ___ on his desk.",
+  "选项": [
+   "box",
+   "book",
+   "glass",
+   "paper"
+  ],
+  "答案": "C",
+  "解析": "glass 玻璃杯（压在杯子下）。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-59",
+  "来源": "完形填空专项（篇一）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：He thought he ___ to have not much work to do that day...",
+  "选项": [
+   "happened",
+   "liked",
+   "pretended",
+   "wanted"
+  ],
+  "答案": "A",
+  "解析": "happen to do 碰巧。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-60",
+  "来源": "完形填空专项（篇一）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：...and ___ was quite wonderful to pass the ___ at the cinema.",
+  "选项": [
+   "it; evening",
+   "this; afternoon",
+   "that; day",
+   "which; morning"
+  ],
+  "答案": "A",
+  "解析": "it 作形式主语；evening 晚上（看电影通常在晚上）。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-61",
+  "来源": "完形填空专项（篇一）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：So he came back home and ___ finished his supper.",
+  "选项": [
+   "early",
+   "quietly",
+   "quickly",
+   "suddenly"
+  ],
+  "答案": "C",
+  "解析": "quickly 迅速地（赶时间）。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-62",
+  "来源": "完形填空专项（篇一）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：Then he said ___ to us and left.",
+  "选项": [
+   "hello",
+   "good-bye",
+   "good evening",
+   "good night"
+  ],
+  "答案": "B",
+  "解析": "good-bye 再见（要出门）。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-63",
+  "来源": "完形填空专项（篇一）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：But to our ___, he came back about half an hour later.",
+  "选项": [
+   "disappointment",
+   "joy",
+   "sorrow",
+   "surprise"
+  ],
+  "答案": "D",
+  "解析": "to one's surprise 令某人惊讶的是。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-64",
+  "来源": "完形填空专项（篇一）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：I ___ him what was the matter.",
+  "选项": [
+   "asked",
+   "explained",
+   "told",
+   "wanted"
+  ],
+  "答案": "A",
+  "解析": "asked 问（我问他是怎么回事）。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-65",
+  "来源": "完形填空专项（篇一）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：He smiled and told us about ___ funny thing...",
+  "选项": [
+   "a",
+   "one",
+   "some",
+   "the"
+  ],
+  "答案": "A",
+  "解析": "a funny thing 一件有趣的事（泛指）。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-66",
+  "来源": "完形填空专项（篇一）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：When my father was sitting in his seat, a ___ came to my father's...",
+  "选项": [
+   "man",
+   "woman",
+   "doctor",
+   "nurse"
+  ],
+  "答案": "B",
+  "解析": "下文 the woman 提示是女士。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-67",
+  "来源": "完形填空专项（篇一）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：...and said that the seat was ___.",
+  "选项": [
+   "hers",
+   "his",
+   "taken",
+   "wrong"
+  ],
+  "答案": "A",
+  "解析": "hers 她的（座位是她的）。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-68",
+  "来源": "完形填空专项（篇一）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：He took out the ticket ___ looked at it carefully.",
+  "选项": [
+   "and",
+   "but",
+   "or",
+   "so"
+  ],
+  "答案": "A",
+  "解析": "and 表并列（拿出来并仔细看）。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-69",
+  "来源": "完形填空专项（篇一）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：It was Row 17, ___.",
+  "选项": [
+   "Seat 1",
+   "Seat 2",
+   "Seat 3",
+   "Seat 4"
+  ],
+  "答案": "C",
+  "解析": "由下文 seat shown in it was Row 17, Seat 3 可知。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-70",
+  "来源": "完形填空专项（篇一）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：So he asked her ___ her ticket.",
+  "选项": [
+   "it bring",
+   "to get",
+   "to see",
+   "to show"
+  ],
+  "答案": "D",
+  "解析": "ask sb. to show sth. 让某人出示某物。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-71",
+  "来源": "完形填空专项（篇一）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：___? What's the matter with all this?",
+  "选项": [
+   "Why",
+   "How",
+   "When",
+   "Where"
+  ],
+  "答案": "A",
+  "解析": "Why 为什么（表示疑惑）。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-72",
+  "来源": "完形填空专项（篇一）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：The ___ of the tickets are different.",
+  "选项": [
+   "designs",
+   "colors",
+   "prices",
+   "owners"
+  ],
+  "答案": "B",
+  "解析": "colors 颜色（票的颜色不同，一语道破）。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-73",
+  "来源": "完形填空专项（篇一）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：Oh, ___, I made a mistake.",
+  "选项": [
+   "I'm sad",
+   "I'm sorry",
+   "I'm wrong",
+   "I'm worried"
+  ],
+  "答案": "B",
+  "解析": "I'm sorry 抱歉（发现自己错了）。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-75",
+  "来源": "完形填空专项（篇二）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：Last summer I went to the ___ every day.",
+  "选项": [
+   "playground",
+   "shore",
+   "seaside",
+   "sea"
+  ],
+  "答案": "C",
+  "解析": "由倒数第 4 句 It is easier to get to the seaside 可知。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-76",
+  "来源": "完形填空专项（篇二）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：I have a new ___, sometimes I have to work until late at night.",
+  "选项": [
+   "office",
+   "job",
+   "love",
+   "interest"
+  ],
+  "答案": "B",
+  "解析": "由下文 I like my new job 可知。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-77",
+  "来源": "完形填空专项（篇二）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：I have to work until ___ at night.",
+  "选项": [
+   "far",
+   "deep",
+   "late",
+   "lately"
+  ],
+  "答案": "C",
+  "解析": "until late at night 直到深夜。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-78",
+  "来源": "完形填空专项（篇二）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：I didn't receive much pay on my ___ job.",
+  "选项": [
+   "favorite",
+   "new",
+   "past",
+   "old"
+  ],
+  "答案": "D",
+  "解析": "与 new job 相对，old job 旧工作。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-79",
+  "来源": "完形填空专项（篇二）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：I prefer ___ to making more money.",
+  "选项": [
+   "swimming",
+   "riding",
+   "playing",
+   "working"
+  ],
+  "答案": "A",
+  "解析": "由上文 I enjoy swimming very much 可知。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-80",
+  "来源": "完形填空专项（篇二）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：Maybe I will be able to ___ enough money to buy a bike.",
+  "选项": [
+   "save",
+   "keep",
+   "take",
+   "cost"
+  ],
+  "答案": "A",
+  "解析": "save money 存钱。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-81",
+  "来源": "完形填空专项（篇二）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：My neighbor, Ms Wilson, has a bicycle that I could ___.",
+  "选项": [
+   "ride",
+   "renew",
+   "lend",
+   "borrow"
+  ],
+  "答案": "D",
+  "解析": "borrow 借入（借邻居的车）。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-82",
+  "来源": "完形填空专项（篇二）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：...while I'm riding to and from, I will be getting ___ at the same time.",
+  "选项": [
+   "enjoyment",
+   "rest",
+   "exercise",
+   "money"
+  ],
+  "答案": "C",
+  "解析": "骑车同时得到锻炼。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-83",
+  "来源": "完形填空专项（篇二）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：This new job is great! I'm very ___.",
+  "选项": [
+   "moved",
+   "excited",
+   "interested",
+   "disappointed"
+  ],
+  "答案": "B",
+  "解析": "excited 兴奋（对新工作满意）。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-84",
+  "来源": "完形填空专项（篇二）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：This will be a summer full of ___.",
+  "选项": [
+   "exercise",
+   "pleasure",
+   "interest",
+   "imagination"
+  ],
+  "答案": "A",
+  "解析": "由文章首句 getting plenty of exercise is very important 可知。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-85",
+  "来源": "完形填空专项（篇三）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：A quick temper has ___ me with plenty of opportunities to make them.",
+  "选项": [
+   "provided",
+   "mixed",
+   "compared",
+   "treated"
+  ],
+  "答案": "A",
+  "解析": "provide sb. with sth. 给某人提供某物。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-86",
+  "来源": "完形填空专项（篇三）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：In one of my earliest ___...",
+  "选项": [
+   "dreams",
+   "courses",
+   "memories",
+   "ideas"
+  ],
+  "答案": "C",
+  "解析": "earliest memories 最早的记忆。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-87",
+  "来源": "完形填空专项（篇三）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：\"Don't watch the ___ when you say 'I'm sorry'.\"",
+  "选项": [
+   "side",
+   "ground",
+   "wall",
+   "bottom"
+  ],
+  "答案": "B",
+  "解析": "道歉时不要看地面。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-88",
+  "来源": "完形填空专项（篇三）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：Hold your head up and look the person in the ___.",
+  "选项": [
+   "mind",
+   "soul",
+   "face",
+   "eye"
+  ],
+  "答案": "D",
+  "解析": "look sb. in the eye 直视某人眼睛。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-89",
+  "来源": "完形填空专项（篇三）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：...so he'll know you ___ it.",
+  "选项": [
+   "imagine",
+   "enjoy",
+   "mean",
+   "regret"
+  ],
+  "答案": "C",
+  "解析": "mean it 是真心实意的。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-90",
+  "来源": "完形填空专项（篇三）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：My mother thus made the key point of a(n) ___ apology: it must be direct.",
+  "选项": [
+   "useful",
+   "successful",
+   "equal",
+   "basic"
+  ],
+  "答案": "B",
+  "解析": "successful apology 成功的道歉。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-91",
+  "来源": "完形填空专项（篇三）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：You must never ___ to be doing something else.",
+  "选项": [
+   "pretend",
+   "forget",
+   "refuse",
+   "expect"
+  ],
+  "答案": "A",
+  "解析": "pretend to do 假装做某事。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-92",
+  "来源": "完形填空专项（篇三）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：You do not ___ a pile of letters while apologizing...",
+  "选项": [
+   "hold on",
+   "put away",
+   "look through",
+   "pick up"
+  ],
+  "答案": "C",
+  "解析": "look through 翻阅。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-93",
+  "来源": "完形填空专项（篇三）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：...while apologizing to a person ___ in position...",
+  "选项": [
+   "poorer",
+   "weaker",
+   "worse",
+   "lower"
+  ],
+  "答案": "D",
+  "解析": "lower in position 职位较低。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-94",
+  "来源": "完形填空专项（篇三）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：...after blaming him or her for a mistake that turned out to be your ___.",
+  "选项": [
+   "fault",
+   "reason",
+   "result",
+   "duty"
+  ],
+  "答案": "A",
+  "解析": "your fault 你的过错。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-95",
+  "来源": "完形填空专项（篇三）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：You do not apologize to a hostess, whose guest of honor you treat ___...",
+  "选项": [
+   "cruelly",
+   "freely",
+   "roughly",
+   "foolishly"
+  ],
+  "答案": "C",
+  "解析": "treat roughly 粗鲁对待。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-96",
+  "来源": "完形填空专项（篇三）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：...by sending flowers the next day without mentioning your bad ___.",
+  "选项": [
+   "manners",
+   "excuses",
+   "efforts",
+   "roles"
+  ],
+  "答案": "A",
+  "解析": "bad manners 无礼/失礼。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-97",
+  "来源": "完形填空专项（篇三）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：One of the important things you should do for an ___ apology...",
+  "选项": [
+   "active",
+   "effective",
+   "extra",
+   "easy"
+  ],
+  "答案": "B",
+  "解析": "effective apology 有效的道歉。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-98",
+  "来源": "完形填空专项（篇三）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：...is readiness to ___ the responsibility for our careless mistakes.",
+  "选项": [
+   "raise",
+   "perform",
+   "admit",
+   "bear"
+  ],
+  "答案": "D",
+  "解析": "bear the responsibility 承担责任。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-99",
+  "来源": "完形填空专项（篇三）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：We are used to making excuses, which leaves no ___ for the other person to ___ us.",
+  "选项": [
+   "situation; advise",
+   "need; forgive",
+   "sign; warn",
+   "room; forgive"
+  ],
+  "答案": "D",
+  "解析": "leave no room for 没有给……留余地；forgive 原谅。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-100",
+  "来源": "完形填空专项（篇三）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：Since most people are open-hearted, the no-excuse apology leaves both parties feeling ___ about themselves.",
+  "选项": [
+   "wiser",
+   "warmer",
+   "better",
+   "cleverer"
+  ],
+  "答案": "C",
+  "解析": "feel better 感觉更好。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-101",
+  "来源": "完形填空专项（篇三）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：That, after all, is the ___ of every apology.",
+  "选项": [
+   "purpose",
+   "method",
+   "end",
+   "advantage"
+  ],
+  "答案": "A",
+  "解析": "purpose 目的。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-102",
+  "来源": "完形填空专项（篇三）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：It ___ little whether the apologizer is wholly or only partly at fault...",
+  "选项": [
+   "cares",
+   "matters",
+   "depends",
+   "remains"
+  ],
+  "答案": "B",
+  "解析": "it matters little 关系不大。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-103",
+  "来源": "完形填空专项（篇三）",
+  "专题": "完形填空专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "完形：...answering for one's ___ encourages others to take their share of the blame.",
+  "选项": [
+   "facts",
+   "states",
+   "rights",
+   "actions"
+  ],
+  "答案": "D",
+  "解析": "actions 行为（对自己的行为负责）。",
+  "章节": "04-完形填空"
+ },
+ {
+  "id": "练习-104",
+  "来源": "教育在线翻译专项",
+  "专题": "翻译专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（汉译英） 各吹各的号，各唱各的调。",
+  "选项": [],
+  "答案": "Each does things in his own way.",
+  "解析": "each 作主语时谓语用单数 does；in his own way 表示“用自己的方式”，整句表达各人按自己的方式做事。",
+  "章节": "05-翻译"
+ },
+ {
+  "id": "练习-105",
+  "来源": "湖北专升本网翻译练习（已核验）",
+  "专题": "翻译专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（汉译英） 有这么多人的关心，在国外的最初几个月里，她感到非常幸福。",
+  "选项": [],
+  "答案": "With so many people caring about her, she feels very happy in the first few months abroad.",
+  "解析": "with + 独立主格表伴随。",
+  "章节": "05-翻译"
+ },
+ {
+  "id": "练习-106",
+  "来源": "专升本翻译练习 100 题（已核验）",
+  "专题": "翻译专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（汉译英） 假如你采用先进的措施，你就能获得事半功倍的效果。",
+  "选项": [],
+  "答案": "If you adopt the advanced method, you are able to achieve twice the result with half the effort.",
+  "解析": "事半功倍 = twice the result with half the effort。",
+  "章节": "05-翻译"
+ },
+ {
+  "id": "练习-107",
+  "来源": "专升本英语翻译模拟卷（已核验）",
+  "专题": "翻译专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（汉译英） 如果你束手无策，就顺其自然好了。",
+  "选项": [],
+  "答案": "You'd better leave things alone if you don't know how to deal with it.",
+  "解析": "leave things alone 顺其自然；deal with 应对。",
+  "章节": "05-翻译"
+ },
+ {
+  "id": "练习-108",
+  "来源": "教育在线翻译专项",
+  "专题": "翻译专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（英译汉） Liberty is more important than life.",
+  "选项": [],
+  "答案": "自由比生命更重要。",
+  "解析": "liberty 自由（政治语境）。",
+  "章节": "05-翻译"
+ },
+ {
+  "id": "练习-109",
+  "来源": "专升本英语翻译模拟卷（已核验）",
+  "专题": "翻译专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（英译汉） He expressed the hope that he could visit the museum again.",
+  "选项": [],
+  "答案": "他表达了要再次参观博物馆的愿望。",
+  "解析": "express the hope that… 表达……的愿望（that 从句作 hope 的同位语）。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-110",
+  "来源": "专升本英语翻译模拟卷（已核验）",
+  "专题": "翻译专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（英译汉） Since you're not interested, I won't tell you about it.",
+  "选项": [],
+  "答案": "既然你不感兴趣，那我就不告诉你了。",
+  "解析": "since 既然（原因）；tell sb. about sth. 告诉某人某事。",
+  "章节": "05-翻译"
+ },
+ {
+  "id": "练习-111",
+  "来源": "教育在线翻译专项",
+  "专题": "翻译专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（英译汉） Learning a foreign language has been a most trying experience for me, but one that I wouldn't trade for anything.",
+  "选项": [],
+  "答案": "学习外语对我来说是非常艰辛的经历，但它又无比珍贵。",
+  "解析": "trying 艰辛的；trade…for anything 用……去交换任何东西（即不可替代）。",
+  "章节": "05-翻译"
+ },
+ {
+  "id": "练习-112",
+  "来源": "专升本英语翻译强化训练（已核验）",
+  "专题": "翻译专项",
+  "题型": "简答",
+  "材料": "",
+  "题目": "（英译汉） The rapid development of artificial intelligence has significantly impacted various sectors of the modern economy, presenting both opportunities and challenges.",
+  "选项": [],
+  "答案": "人工智能的快速发展对现代经济的各个领域产生了显著影响，既带来了机遇也带来了挑战。",
+  "解析": "impact 影响（动词）；various sectors 各个领域；presenting 现在分词表伴随结果。",
+  "章节": "05-翻译"
+ },
+ {
+  "id": "练习-113",
+  "来源": "自编自测（现在完成时）",
+  "专题": "语法单选 + 词汇辨析专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "（语法·时态） She ______ in this company since 2010.",
+  "选项": [
+   "worked",
+   "has worked",
+   "works",
+   "had worked"
+  ],
+  "答案": "B",
+  "解析": "since + 过去时间点，主句用现在完成时 has worked。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-114",
+  "来源": "自编自测（过去完成时）",
+  "专题": "语法单选 + 词汇辨析专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "（语法·时态） By the time he arrived, the meeting ______.",
+  "选项": [
+   "began",
+   "has begun",
+   "had begun",
+   "begins"
+  ],
+  "答案": "C",
+  "解析": "\"by the time + 过去时\"表示到过去某一时刻之前已完成，用过去完成时 had begun。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-115",
+  "来源": "自编自测（虚拟语气）",
+  "专题": "语法单选 + 词汇辨析专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "（语法·虚拟） If I ______ you, I would accept the offer.",
+  "选项": [
+   "am",
+   "was",
+   "were",
+   "be"
+  ],
+  "答案": "C",
+  "解析": "与现在事实相反的虚拟条件句，be 动词一律用 were。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-116",
+  "来源": "自编自测（虚拟语气）",
+  "专题": "语法单选 + 词汇辨析专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "（语法·虚拟） I wish I ______ more time yesterday.",
+  "选项": [
+   "have",
+   "had",
+   "had had",
+   "have had"
+  ],
+  "答案": "C",
+  "解析": "wish 后用虚拟，对过去（yesterday）的愿望用过去完成时 had had。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-117",
+  "来源": "自编自测（非谓语）",
+  "专题": "语法单选 + 词汇辨析专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "（语法·非谓语） ______ from the top of the mountain, the city looks beautiful.",
+  "选项": [
+   "See",
+   "Seeing",
+   "Seen",
+   "To see"
+  ],
+  "答案": "C",
+  "解析": "the city 与 see 是被动关系，过去分词 Seen 作状语表被动。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-118",
+  "来源": "自编自测（非谓语）",
+  "专题": "语法单选 + 词汇辨析专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "（语法·非谓语） He had his car ______ yesterday.",
+  "选项": [
+   "repair",
+   "repaired",
+   "repairing",
+   "to repair"
+  ],
+  "答案": "B",
+  "解析": "have sth. done 表示\"让别人做某事/遭受\"，car 与 repair 被动，用过去分词 repaired。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-119",
+  "来源": "自编自测（定语从句）",
+  "专题": "语法单选 + 词汇辨析专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "（语法·定语从句） The book ______ cover is red is mine.",
+  "选项": [
+   "which",
+   "whose",
+   "who",
+   "that"
+  ],
+  "答案": "B",
+  "解析": "cover 与 book 是所属关系，定语从句用 whose 作定语。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-120",
+  "来源": "自编自测（定语从句）",
+  "专题": "语法单选 + 词汇辨析专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "（语法·定语从句） This is the factory ______ we visited last year.",
+  "选项": [
+   "where",
+   "which",
+   "who",
+   "whose"
+  ],
+  "答案": "B",
+  "解析": "visited 是及物动词，缺宾语，先行词是物用 which/that；where 是关系副词不能作宾语。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-121",
+  "来源": "自编自测（倒装）",
+  "专题": "语法单选 + 词汇辨析专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "（语法·倒装） Never ______ I seen such a beautiful scene.",
+  "选项": [
+   "have",
+   "had",
+   "do",
+   "did"
+  ],
+  "答案": "A",
+  "解析": "Never 等否定词位于句首引起部分倒装，seen 提示用现在完成时，助动词 have 提前。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-122",
+  "来源": "自编自测（倒装）",
+  "专题": "语法单选 + 词汇辨析专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "（语法·倒装） Only by working hard ______ you succeed.",
+  "选项": [
+   "you will",
+   "will you",
+   "you can",
+   "can't you"
+  ],
+  "答案": "B",
+  "解析": "\"Only + 状语\"位于句首，主句部分倒装，will you succeed。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-123",
+  "来源": "自编自测（主谓一致）",
+  "专题": "语法单选 + 词汇辨析专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "（语法·主谓一致） The number of students in our school ______ increasing.",
+  "选项": [
+   "are",
+   "is",
+   "were",
+   "have been"
+  ],
+  "答案": "B",
+  "解析": "the number of + 复数名词作主语，谓语用单数 is。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-124",
+  "来源": "自编自测（主谓一致）",
+  "专题": "语法单选 + 词汇辨析专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "（语法·主谓一致） A number of students ______ playing on the playground.",
+  "选项": [
+   "is",
+   "was",
+   "are",
+   "has been"
+  ],
+  "答案": "C",
+  "解析": "a number of + 复数名词意为\"许多\"，谓语用复数 are。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-125",
+  "来源": "自编自测（few/little 辨析）",
+  "专题": "语法单选 + 词汇辨析专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "（词汇·辨析） Hurry up! There is ______ time left.",
+  "选项": [
+   "few",
+   "little",
+   "a few",
+   "a little"
+  ],
+  "答案": "B",
+  "解析": "time 不可数，用 little（几乎没有）符合催促语境；a little 表示\"有一点\"。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-126",
+  "来源": "自编自测（rise/raise 辨析）",
+  "专题": "语法单选 + 词汇辨析专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "（词汇·辨析） The sun ______ in the east every morning.",
+  "选项": [
+   "raises",
+   "rises",
+   "arises",
+   "arouses"
+  ],
+  "答案": "B",
+  "解析": "rise 不及物\"升起\"（太阳升起）；raise 及物\"举起/提高\"；arise\"出现\"；arouse\"唤起\"。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-127",
+  "来源": "自编自测（except/besides 辨析）",
+  "专题": "语法单选 + 词汇辨析专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "（词汇·辨析） Everyone went to the party ______ Tom, who was ill.",
+  "选项": [
+   "besides",
+   "except",
+   "except for",
+   "apart from"
+  ],
+  "答案": "B",
+  "解析": "except\"除……之外（不包括）\"，Tom 生病没去，故用 except；besides 表示\"除……之外还有\"。",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-128",
+  "来源": "自编自测（sometime 辨析）",
+  "专题": "语法单选 + 词汇辨析专项",
+  "题型": "单选",
+  "材料": "",
+  "题目": "（词汇·辨析） I will call you ______ next week to discuss the plan.",
+  "选项": [
+   "sometime",
+   "some time",
+   "sometimes",
+   "some times"
+  ],
+  "答案": "A",
+  "解析": "sometime\"某时\"（副词）；some time\"一段时间\"；sometimes\"有时\"；some times\"几次\"。",
+  "章节": "02-语法"
+ }
+];
+window.__TIKU_META__ = {baseQid: 3};
+try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_sync&&_sync["英语"]&&_sync["英语"].tiku){window.__TIKU__=_sync["英语"].tiku;}}catch(e){}
+(function(){
+  "use strict";
+  var MATH = false;
+  var ALL = (window.__TIKU__||[]).slice();
+  var BASE_QID = parseInt((window.__TIKU_META__&&window.__TIKU_META__.baseQid)||1,10);
+  var storeKey = "英语_tiku_v1";
+  var done={}, basket=[], nextId=BASE_QID;
+  try{ var saved=JSON.parse(localStorage.getItem(storeKey)||"{}")||{}; done=saved.dn||{}; basket=saved.bk||[]; nextId=saved.nx||BASE_QID; }catch(e){}
+  function save(){ try{ localStorage.setItem(storeKey, JSON.stringify({dn:done,bk:basket,nx:nextId})); }catch(e){} }
+
+  function $(id){ return document.getElementById(id); }
+  function escHtml(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function showToast(msg, ms){
+    var el=document.getElementById("toast");
+    if(!el) return;
+    el.textContent=msg; el.style.display="block";
+    clearTimeout(el._t);
+    el._t=setTimeout(function(){ el.style.display="none"; }, ms||4200);
+  }
+  function copyText(txt){
+    var done=false;
+    try{
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){done=true;}).catch(function(){});
+      }
+    }catch(e){}
+    return done;
+  }
+  function renderMath(s){
+    var t=escHtml(s);
+    if(!MATH || typeof katex==="undefined") return t;
+    function unesc(x){ return x.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&quot;/g,'"'); }
+    try{
+      t=t.replace(/\$\$([\s\S]+?)\$\$/g,function(_,x){ return '<div class="math-inline" style="margin:6px 0;">'+katex.renderToString(unesc(x),{displayMode:true,throwOnError:false})+'</div>'; });
+      t=t.replace(/\$([^$\n]+?)\$/g,function(_,x){ return '<span class="math-inline">'+katex.renderToString(unesc(x),{displayMode:false,throwOnError:false})+'</span>'; });
+    }catch(e){}
+    return t;
+  }
+
+  var topics=[];
+  ALL.forEach(function(it){ if(topics.indexOf(it["专题"])<0) topics.push(it["专题"]); });
+  topics.sort();
+  topics.forEach(function(t){ var o=document.createElement("option"); o.value=t; o.textContent=t; $("selTopic").appendChild(o); });
+
+  var mode="shuffle"; // shuffle|order|undone|basket
+  var list=[], idx=0, revealed=false, answered=false;
+  function setMode(m){
+    mode=m;
+    ["btnShuffle","btnOrder","btnUndone","btnBasket"].forEach(function(id){
+      $("btnShuffle").classList.remove("on");$("btnOrder").classList.remove("on");$("btnUndone").classList.remove("on");$("btnBasket").classList.remove("on");
+    });
+    if(m==="shuffle")$("btnShuffle").classList.add("on");
+    else if(m==="order")$("btnOrder").classList.add("on");
+    else if(m==="undone")$("btnUndone").classList.add("on");
+    else if(m==="basket")$("btnBasket").classList.add("on");
+    reload();
+  }
+  function pool(){
+    var t=$("selTopic").value;
+    var base=ALL.filter(function(it){
+      if(t && it["专题"]!==t) return false;
+      if(mode==="basket") return basket.indexOf(it.id)>=0;
+      if(mode==="undone") return !done[it.id];
+      return true;
+    });
+    if(mode==="shuffle"){
+      var arr=base.slice(); for(var i=arr.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=arr[i];arr[i]=arr[j];arr[j]=tmp;}
+      return arr;
+    }
+    return base;
+  }
+  function answerIndex(it){
+    var ans=String(it["答案"]||"").trim();
+    if(/^[A-H]$/.test(ans)) return ans.charCodeAt(0)-65;
+    if(it["选项"]&&it["选项"].length) return it["选项"].indexOf(ans);
+    return -1;
+  }
+  function stats(){
+    var doneN=Object.keys(done).length;
+    $("nTotal").textContent=ALL.length;
+    $("nDone").textContent=doneN;
+    $("nLeft").textContent=list.length;
+    $("nBasket").textContent=basket.length;
+    renderBasket();
+  }
+  function renderBasket(){
+    var box=$("basketList");
+    if(!basket.length){ box.innerHTML='<span style="color:var(--sub)">暂无错题。做题时点「做错了·记入错题」即可入篮。</span>'; return; }
+    var html="";
+    basket.forEach(function(id){
+      var it=null; ALL.forEach(function(x){ if(x.id===id) it=x; });
+      if(!it) return;
+      html+='<div><span>'+escHtml((it["题型"]||"")+" · "+it["题目"]).replace(/<span>.*?<\/span>/g,"")+'</span><button data-rm="'+id+'">移除</button></div>';
+    });
+    box.innerHTML=html;
+    box.querySelectorAll("button[data-rm]").forEach(function(b){
+      b.addEventListener("click",function(){ basket=basket.filter(function(x){return x!==b.getAttribute("data-rm");}); save(); reload(); stats(); });
+    });
+  }
+  function show(){
+    var box=$("card");
+    if(!list.length){
+      box.innerHTML='<div class="empty">当前范围没有题目。<br>换一个专题 / 模式，或点击「重置进度」重新开始。</div>';
+      $("btnShowA").style.visibility="hidden"; $("btnOK").style.visibility="hidden"; $("btnNO").style.visibility="hidden";
+      $("btnPrev").style.visibility="hidden"; $("btnNext").style.visibility="hidden";
+      return;
+    }
+    ["btnShowA","btnOK","btnNO","btnPrev","btnNext"].forEach(function(id){ var el=$(id); if(el) el.style.visibility="visible"; });
+    var it=list[idx];
+    revealed=false; answered=false;
+    var html='<div class="meta">';
+    html+='<span class="tag qid">'+escHtml(it.id)+'</span><span class="tag">'+escHtml(it["专题"])+'</span><span class="tag">'+escHtml(it["题型"]||"")+'</span><span class="tag src">'+escHtml(it["来源"]||"")+'</span>';
+    if(done[it.id]) html+='<span class="tag" style="background:rgba(82,196,26,0.14);color:#3E8C13;">已完成</span>';
+    if(basket.indexOf(it.id)>=0) html+='<span class="tag" style="background:rgba(234,102,104,0.14);color:#B44244;">已入篮</span>';
+    html+='</div>';
+    if(it["材料"]) html+='<div class="material">'+renderMath(it["材料"])+'</div>';
+    html+='<div class="qtext">'+renderMath(it["题目"])+'</div>';
+    if(it["选项"]&&it["选项"].length){
+      html+='<ul class="opts">';
+      var letters="ABCDEFGH";
+      it["选项"].forEach(function(o,i){
+        html+='<li data-i="'+i+'"><span class="opt-letter">'+letters[i]+'</span>'+renderMath(String(o).replace(/^[A-Z][\.、]\s*/, ''))+'</li>';
+      });
+      html+='</ul>';
+    }
+    html+='<div class="feedback" id="fb"></div>';
+    html+='<div class="answer" id="ans"></div>';
+    html+='<div class="btns">';
+    html+='<button id="btnShowA">显示答案 / 解析</button>';
+    html+='<button id="btnOK" class="g" style="display:none;">做对了 ✔</button>';
+    html+='<button id="btnNO" class="r" style="display:none;">做错了 · 记入错题</button>';
+    html+='<button id="btnSkip">跳过</button>';
+    html+='</div>';
+    html+='<div class="nav"><button id="btnPrev">‹ 上一题</button><span style="font-size:12px;color:var(--sub);align-self:center;">'+(idx+1)+' / '+list.length+'</span><button id="btnNext">下一题 ›</button></div>';
+    box.innerHTML=html;
+
+    var ansBox=$("ans"), fb=$("fb");
+    function renderAnswer(){
+      var a="<div class='k'>答案："+renderMath(it["答案"])+"</div>";
+      if(it["解析"]) a+="<br>"+renderMath(it["解析"]);
+      if(it["来源"]) a+="<br><span style='color:var(--sub)'>来源："+escHtml(it["来源"])+"</span>";
+      ansBox.innerHTML=a;
+      ansBox.style.display="block";
+    }
+    function markOK(){
+      done[it.id]=1; answered=true; save();
+      // 同步更新复习进度：标记为已掌握，今日学习不再显示
+      try{
+        var rkey="英语_cuowuji_v2";
+        var rsaved=JSON.parse(localStorage.getItem(rkey)||"{}")||{};
+        var rpm=rsaved.pm||{}, rst=rsaved.st||{}, rrv=rsaved.rv||{};
+        var old=rpm[it.id]||{}, level=Math.min((Number(old.level)||0)+1,4);
+        var days=[7,7,14,30,45][level];
+        var now=new Date(); var y=now.getFullYear(), m=String(now.getMonth()+1).padStart(2,"0"), d=String(now.getDate()).padStart(2,"0");
+        var today=y+"-"+m+"-"+d;
+        var nd=new Date(now.getTime()+days*86400000);
+        var next=nd.getFullYear()+"-"+String(nd.getMonth()+1).padStart(2,"0")+"-"+String(nd.getDate()).padStart(2,"0");
+        rpm[it.id]={last:today,next:next,level:level};
+        rst[it.id]="已掌握"; rrv[it.id]=today;
+        localStorage.setItem(rkey,JSON.stringify({st:rst,rv:rrv,pm:rpm}));
+      }catch(e){}
+      fb.innerHTML="✔ 答对了"; fb.className="feedback ok"; fb.style.display="block";
+      $("btnOK").style.display="none"; $("btnNO").style.display="none";
+      if(basket.indexOf(it.id)>=0){ basket=basket.filter(function(x){return x!==it.id;}); save(); stats(); }
+      stats();
+    }
+    function markNO(){
+      if(basket.indexOf(it.id)<0) basket.push(it.id);
+      save(); stats();
+      fb.innerHTML="已记入错题篮子（可点下方「存入错题本」批量入库）"; fb.className="feedback no"; fb.style.display="block";
+      $("btnNO").style.display="none"; $("btnOK").style.display="none";
+    }
+    // 选择题作答
+    var opts=box.querySelectorAll(".opts li");
+    if(opts.length){
+      var multi=(it["题型"]==="多选");
+      if(multi){
+        // 多选题：点选 toggle，提交时与答案集合比较
+        opts.forEach(function(li){
+          li.addEventListener("click",function(){
+            if(answered||revealed) return;
+            li.classList.toggle("sel");
+          });
+        });
+        var subBtn=document.createElement("button");
+        subBtn.id="btnSubmit"; subBtn.textContent="提交答案"; subBtn.className="m";
+        var btns=box.querySelector(".btns");
+        btns.insertBefore(subBtn, btns.firstChild);
+        subBtn.addEventListener("click",function(){
+          if(answered||revealed) return;
+          var selSet=[];
+          opts.forEach(function(o,i){ if(o.classList.contains("sel")) selSet.push(i); });
+          var ans=String(it["答案"]||"").trim(), okSet=[];
+          for(var k=0;k<ans.length;k++){ var c=ans.charCodeAt(k)-65; if(c>=0&&c<opts.length) okSet.push(c); }
+          var correct=selSet.length===okSet.length && okSet.every(function(x){return selSet.indexOf(x)>=0;});
+          opts.forEach(function(o,i){
+            o.classList.remove("sel");
+            if(okSet.indexOf(i)>=0) o.classList.add("right");
+            else if(selSet.indexOf(i)>=0) o.classList.add("wrong");
+          });
+          if(correct){
+            markOK(); renderAnswer();
+          }else{
+            fb.innerHTML="✘ 答错了，正确答案是 "+String(it["答案"])+"。"; fb.className="feedback no"; fb.style.display="block";
+            revealed=true; answered=true; renderAnswer();
+            $("btnNO").style.display="inline-block";
+          }
+        });
+      }else{
+      opts.forEach(function(li){
+        li.addEventListener("click",function(){
+          if(answered||revealed) return;
+          var ai=answerIndex(it), sel=parseInt(li.getAttribute("data-i"),10);
+          if(sel===ai){
+            li.classList.add("right");
+            fb.innerHTML="✔ 答对了！"; fb.className="feedback ok"; fb.style.display="block";
+            revealed=true; answered=true; markOK();
+            renderAnswer();
+          }else{
+            li.classList.add("wrong");
+            opts.forEach(function(o){ if(parseInt(o.getAttribute("data-i"),10)===ai) o.classList.add("right"); });
+            fb.innerHTML="✘ 答错了，正确答案是 "+String(it["答案"])+"。"; fb.className="feedback no"; fb.style.display="block";
+            revealed=true; answered=true;
+            renderAnswer();
+            $("btnNO").style.display="inline-block";
+          }
+        });
+      });
+      }
+      $("btnShowA").addEventListener("click",function(){
+        if(revealed) return;
+        revealed=true; renderAnswer();
+        $("btnOK").style.display="inline-block";
+        $("btnNO").style.display="inline-block";
+      });
+    }else{
+      // 无选项题：显示答案后判定
+      $("btnShowA").addEventListener("click",function(){
+        if(revealed) return;
+        revealed=true; renderAnswer();
+        $("btnOK").style.display="inline-block";
+        $("btnNO").style.display="inline-block";
+      });
+    }
+    $("btnOK").addEventListener("click",markOK);
+    $("btnNO").addEventListener("click",markNO);
+    $("btnSkip").addEventListener("click",function(){ if(idx<list.length-1){idx++;show();} else {idx=0;show();} });
+    $("btnPrev").addEventListener("click",function(){ idx=(idx-1+list.length)%list.length; show(); });
+    $("btnNext").addEventListener("click",function(){ idx=(idx+1)%list.length; show(); });
+    stats();
+  }
+  function reload(){
+    list=pool(); idx=0; show();
+  }
+
+  $("selTopic").addEventListener("change",reload);
+  $("btnShuffle").addEventListener("click",function(){setMode("shuffle");});
+  $("btnOrder").addEventListener("click",function(){setMode("order");});
+  $("btnUndone").addEventListener("click",function(){setMode("undone");});
+  $("btnBasket").addEventListener("click",function(){setMode("basket");});
+  $("btnReset").addEventListener("click",function(){
+    // 两次点击确认（避免原生弹窗在 file:// 下的不稳定）
+    if(this._arm){
+      done={}; basket=[]; nextId=BASE_QID; save();
+      this._arm=false; this.textContent="重置进度";
+      showToast("已重置本学科刷题进度。");
+      reload();
+    }else{
+      this._arm=true; this.textContent="再点一次确认重置";
+      var self=this;
+      setTimeout(function(){ self._arm=false; self.textContent="重置进度"; }, 3000);
+    }
+  });
+  $("btnClearBasket").addEventListener("click",function(){
+    if(!basket.length) return;
+    basket=[]; save(); reload(); stats();
+  });
+  // 导出
+  function fmtDate(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+  function buildExport(){
+    var out="";
+    basket.forEach(function(id){
+      var it=null; ALL.forEach(function(x){ if(x.id===id) it=x; });
+      if(!it) return;
+      out+="## Q-"+String(nextId).padStart(3,"0")+"\n";
+      out+="- 章节："+escHtml(it["章节"]||"99-综合")+"\n";
+      out+="- 日期："+fmtDate(new Date())+"\n";
+      out+="- 状态：待复习\n";
+      out+="- 题型："+(it["题型"]||"选择")+"\n";
+      var q=it["题目"]; if(it["材料"]) q=(it["材料"]+"\n\n"+q);
+      out+="- 题目："+q+"\n";
+      if(it["选项"]&&it["选项"].length){
+        var letters="ABCDEFGH";
+        var optsStr=it["选项"].map(function(o,i){return letters[i]+". "+o;}).join(" / ");
+        out+="- 选项："+optsStr+"\n";
+      }
+      out+="- 答案："+it["答案"]+"\n";
+      var jx=it["解析"]||"";
+      if(it["来源"]&&it["来源"]!=="自编") jx=(jx?jx+" ":"")+"（来源："+it["来源"]+"）";
+      out+="- 解析："+jx+"\n\n";
+      nextId++;
+    });
+    return out.trim();
+  }
+  function showManualExport(txt){
+    var box=$("expBox"), ta=$("expText");
+    ta.value=txt;
+    box.style.display="block";
+    ta.select();
+    ta.setSelectionRange(0, txt.length);
+    var copied=copyText(txt);
+    basket=[]; save(); reload(); stats();
+    showToast(copied ? "已复制到剪贴板。请粘贴到《错题本.md》末尾后运行 build.py。" :
+      "错题文本已生成，请全选复制后粘贴到《错题本.md》末尾。", 6000);
+  }
+  $("btnExport").addEventListener("click",async function(){
+    if(!basket.length){ showToast("错题篮子为空，先做题并把错题记入篮子。"); return; }
+    var txt=buildExport();
+    var button=this;
+    button.disabled=true; button.textContent="正在存入…";
+    // 构建本地错题JSON（手机APK/离线环境用）
+    var localErrors=[];
+    var todayStr=new Date().toISOString().slice(0,10);
+    basket.forEach(function(qid){
+      var it=ALL.find(function(x){return x.id===qid;});
+      if(it){
+        localErrors.push({
+          id:"L-"+qid, 题目:it.题目||"", 选项:it.选项||[],
+          答案:it.答案||"", 解析:it.解析||"",
+          章节:it.章节||it.专题||"综合", 题型:it.题型||"单选",
+          来源:it.来源||"题库", 状态:"待复习", 日期:todayStr
+        });
+      }
+    });
+    // 方式1：尝试server API（电脑端）
+    var serverOk=false;
+    try{
+      var res=await fetch("/api/append-error", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({subject:"英语", text:txt})
+      });
+      var data=await res.json();
+      if(res.ok){ nextId=parseInt(data.nextId,10)||nextId; serverOk=true; }
+    }catch(e){}
+    // 方式2：server成功则清空本地错题（已写入错题本.md）；失败才写入localStorage
+    try{
+      var lkey="英语_errorbook_local";
+      if(serverOk){
+        localStorage.removeItem(lkey);
+      }else{
+        var existing=JSON.parse(localStorage.getItem(lkey)||"[]");
+        localErrors.forEach(function(ne){
+          // 按答案+章节+题型去重（题目文本可能因阅读材料长短不同而不完全一致）
+          var found=existing.find(function(e){return e.答案===ne.答案 && e.章节===ne.章节 && e.题型===ne.题型;});
+          if(found){ found.错误次数=(found.错误次数||1)+1; }
+          else{ existing.push(ne); }
+        });
+        localStorage.setItem(lkey, JSON.stringify(existing));
+      }
+    }catch(e){}
+    basket=[]; save(); reload(); stats();
+    $("expBox").style.display="none";
+    if(serverOk){
+      showToast("已存入错题本，复习页已更新。", 4000);
+    }else{
+      showToast("已存入本地错题本（"+localErrors.length+"题），复习页自动读取。", 4000);
+    }
+    button.disabled=false; button.textContent="存入错题本";
+  });
+  // 初始
+  setMode("shuffle");
+})();
+</script>
+</body>
+</html>

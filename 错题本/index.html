@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#22304A">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>专升本错题本</title>
+<style>
+:root{--text:#1A1B1C;--sub:#6B7280;--bg:#F4F3EE;--card:#FFFFFF;--border:#E4E3DD;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Roboto','PingFang SC','Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);padding:16px;line-height:1.6;}
+.wrap{max-width:720px;margin:0 auto;}
+h1{font-size:20px;font-weight:700;margin-bottom:2px;}
+.sub{font-size:12px;color:var(--sub);margin-bottom:16px;}
+.grid{display:flex;gap:12px;flex-wrap:wrap;}
+.sc{flex:1 1 200px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;text-decoration:none;color:var(--text);display:block;}
+.sc:hover{border-color:var(--c);}
+.sc.sc2{border-style:dashed;}
+.sc-icon{width:38px;height:38px;border-radius:10px;background:var(--c);color:#22304A;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+.sc-name{font-size:16px;font-weight:700;margin-bottom:4px;}
+.sc-desc{font-size:12px;color:var(--sub);margin-bottom:8px;}
+.sc-stat{font-size:12px;font-weight:600;color:#33475C;}
+.h2{font-size:13px;font-weight:700;margin:18px 0 8px;color:var(--sub);}
+.note{font-size:12px;color:var(--sub);margin-top:20px;line-height:1.8;background:var(--card);border:1px dashed var(--border);border-radius:12px;padding:12px 14px;}
+.daily-total{font-size:13px;color:var(--sub);margin-bottom:8px;}
+.daily-total b{font-size:18px;color:var(--text);margin:0 3px;}
+.daily-empty{font-size:12px;color:var(--sub);padding:10px 0;}
+.daily-card{position:relative;}
+.daily-count{font-size:20px;font-weight:700;margin:2px 0;}
+.daily-focus{font-size:12px;color:var(--sub);}
+.quality{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-top:18px;font-size:12px;}
+.quality-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px;}
+.quality-head strong{font-size:13px;}
+.quality-ok{color:#3E8C13;font-weight:600;}
+.quality-bad{color:#B44244;font-weight:600;}
+.quality-list{margin-top:8px;max-height:260px;overflow:auto;}
+.quality-list div{padding:4px 0;border-top:1px solid var(--border);}
+.quality-list .error{color:#B44244;}
+.quality-list .warning{color:#8A5B00;}
+/* 移动端适配 */
+@media (max-width:480px){
+  #btnSync{min-height:40px;font-size:13px;padding:6px 14px;}
+  .sc{min-height:80px;}
+  .sc-name{font-size:15px;}
+  .sc-stat{font-size:13px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>专升本错题本 · 总入口 <button id="btnSync" style="font-size:12px;padding:4px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card);cursor:pointer;margin-left:8px;vertical-align:middle;">☁ 同步更新</button></h1>
+  <div class="sub">三科错题统一管理 · 数据在各自学科《错题集》目录 · 由 错题本/build.py 生成</div>
+  <div class="h2">错题复习</div>
+  <div class="grid">
+  <a class="sc" href="../计算机/错题集/复习页.html" style="--c:#9BBBF4;">
+    <div class="sc-icon">CS</div>
+    <div class="sc-name">计算机</div>
+    <div class="sc-desc">进制 / 操作系统 / Office / 网络 / 数据结构</div>
+    <div class="sc-stat" id="stat-计算机">题数 13 · 待复习 13</div>
+  </a>
+
+  <a class="sc" href="../高数/错题集/复习页.html" style="--c:#94D8C3;">
+    <div class="sc-icon">Σ</div>
+    <div class="sc-name">高等数学</div>
+    <div class="sc-desc">极限 / 导数 / 积分 / 微分方程 / 级数</div>
+    <div class="sc-stat" id="stat-高数">题数 3 · 待复习 3</div>
+  </a>
+
+  <a class="sc" href="../英语/错题集/复习页.html" style="--c:#C9A7E8;">
+    <div class="sc-icon">EN</div>
+    <div class="sc-name">英语</div>
+    <div class="sc-desc">语法 / 阅读 / 词汇错题 + 单词本 / 生词本</div>
+    <div class="sc-stat" id="stat-英语">题数 2 · 待复习 2</div>
+  </a>
+  </div>
+  <div class="h2">今日学习</div>
+  <div class="daily-total">今天需要复习 <b id="dailyTotal">0</b> 题</div>
+  <div class="grid" id="dailyList"></div>
+  <div class="h2">题库刷题（做错 → 一键入篮 → 自动存入错题本）</div>
+  <div class="grid">
+  <a class="sc sc2" href="../计算机/题库页.html" style="--c:#9BBBF4;">
+    <div class="sc-icon">CS</div>
+    <div class="sc-name">计算机 · 刷题库</div>
+    <div class="sc-desc">答题判对错 · 做错一键入篮存入</div>
+    <div class="sc-stat">共 181 题</div>
+  </a>
+
+  <a class="sc sc2" href="../高数/题库页.html" style="--c:#94D8C3;">
+    <div class="sc-icon">Σ</div>
+    <div class="sc-name">高等数学 · 刷题库</div>
+    <div class="sc-desc">答题判对错 · 做错一键入篮存入</div>
+    <div class="sc-stat">共 79 题</div>
+  </a>
+
+  <a class="sc sc2" href="../英语/题库页.html" style="--c:#C9A7E8;">
+    <div class="sc-icon">EN</div>
+    <div class="sc-name">英语 · 刷题库</div>
+    <div class="sc-desc">答题判对错 · 做错一键入篮存入</div>
+    <div class="sc-stat">共 127 题</div>
+  </a>
+  </div>
+  <div class="h2">英语单词</div>
+  <div class="grid">
+  <a class="sc sc2" href="../英语/错题集/单词本.html" style="--c:#9BBBF4;">
+    <div class="sc-icon">EN</div>
+    <div class="sc-name">英语 · 单词本</div>
+    <div class="sc-desc">5210 词 · 翻卡记忆 · 标星生词 · 通用/四级区分</div>
+    <div class="sc-stat">浏览 / 搜索 / 翻卡</div>
+  </a>
+  <a class="sc sc2" href="../英语/错题集/生词本.html" style="--c:#EAA7B2;">
+    <div class="sc-icon">★</div>
+    <div class="sc-name">英语 · 生词本</div>
+    <div class="sc-desc">标星生词 + 手动记录 · 翻卡复习</div>
+    <div class="sc-stat">导出 / 复制 W- 格式</div>
+  </a>
+  </div>
+  <div class="h2">共建题库</div>
+  <div class="grid">
+    <a href="contribute.html" class="card sc" style="text-decoration:none;color:inherit;display:block;">
+      <div class="sc-icon" style="font-size:28px;">✍</div>
+      <div class="sc-name" style="font-size:16px;font-weight:600;margin:6px 0;">贡献题目</div>
+      <div class="sc-desc" style="font-size:12px;color:var(--sub);">填写题目 → 生成标准格式 → 复制发给站长 → 审核后加入题库</div>
+    </a>
+  </div>
+  <div class="quality">
+    <div class="quality-head"><strong>题库质量检查</strong><span id="qualitySummary"></span></div>
+    <div id="qualitySubjects"></div>
+    <div class="quality-list" id="qualityIssues"></div>
+  </div>
+  <div class="note">
+    使用流程：① 双击根目录的「启动错题本.bat」→ ② 在「题库刷题」里做题，做错的点「记入错题」入篮 → ③ 攒一批点「存入错题本」，系统自动写入并更新复习页 → ④ 从本页「错题复习」进入各科复习页，抽题翻卡、标记掌握。<br>
+    计算机与高数复习页/刷题页支持 LaTeX 公式（$...$ 行内、$$...$$ 块级），英语除错题外还有单词翻卡记忆。
+  </div>
+</div>
+<script>
+window.__DAILY__ = [
+ {
+  "name": "计算机",
+  "label": "计算机",
+  "color": "#9BBBF4",
+  "rel": "../计算机/错题集/复习页.html",
+  "items": [
+   {
+    "id": "001",
+    "章节": "01-计算机基础知识",
+    "错误次数": 0,
+    "最近复习": "",
+    "日期": "2026-09-05",
+    "状态": "待复习"
+   },
+   {
+    "id": "002",
+    "章节": "01-计算机基础知识",
+    "错误次数": 0,
+    "最近复习": "",
+    "日期": "2026-09-05",
+    "状态": "待复习"
+   },
+   {
+    "id": "003",
+    "章节": "03-Word 文字处理",
+    "错误次数": 0,
+    "最近复习": "",
+    "日期": "2026-09-05",
+    "状态": "待复习"
+   },
+   {
+    "id": "004",
+    "章节": "99-综合",
+    "错误次数": 0,
+    "最近复习": "",
+    "日期": "2026-09-05",
+    "状态": "待复习"
+   },
+   {
+    "id": "005",
+    "章节": "01-计算机基础知识",
+    "错误次数": 0,
+    "最近复习": "",
+    "日期": "2026-09-05",
+    "状态": "待复习"
+   },
+   {
+    "id": "006",
+    "章节": "01-计算机基础知识",
+    "错误次数": 0,
+    "最近复习": "",
+    "日期": "2026-09-05",
+    "状态": "待复习"
+   },
+   {
+    "id": "007",
+    "章节": "01-计算机基础知识",
+    "错误次数": 0,
+    "最近复习": "",
+    "日期": "2026-09-05",
+    "状态": "待复习"
+   },
+   {
+    "id": "008",
+    "章节": "01-计算机基础知识",
+    "错误次数": 0,
+    "最近复习": "",
+    "日期": "2026-09-05",
+    "状态": "待复习"
+   },
+   {
+    "id": "009",
+    "章节": "02-操作系统",
+    "错误次数": 0,
+    "最近复习": "",
+    "日期": "2026-09-05",
+    "状态": "待复习"
+   },
+   {
+    "id": "010",
+    "章节": "03-Word 文字处理",
+    "错误次数": 1,
+    "最近复习": "",
+    "日期": "2026-09-06",
+    "状态": "待复习"
+   },
+   {
+    "id": "011",
+    "章节": "01-计算机基础知识",
+    "错误次数": 0,
+    "最近复习": "",
+    "日期": "2026-09-06",
+    "状态": "待复习"
+   },
+   {
+    "id": "012",
+    "章节": "03-Word 文字处理",
+    "错误次数": 0,
+    "最近复习": "",
+    "日期": "2026-09-06",
+    "状态": "待复习"
+   },
+   {
+    "id": "013",
+    "章节": "02-操作系统",
+    "错误次数": 0,
+    "最近复习": "",
+    "日期": "2026-09-06",
+    "状态": "待复习"
+   }
+  ]
+ },
+ {
+  "name": "高数",
+  "label": "高等数学",
+  "color": "#94D8C3",
+  "rel": "../高数/错题集/复习页.html",
+  "items": [
+   {
+    "id": "001",
+    "章节": "01-函数与极限",
+    "错误次数": 0,
+    "最近复习": "",
+    "日期": "2026-09-06",
+    "状态": "待复习"
+   },
+   {
+    "id": "002",
+    "章节": "01-函数与极限",
+    "错误次数": 0,
+    "最近复习": "",
+    "日期": "2026-09-06",
+    "状态": "待复习"
+   },
+   {
+    "id": "003",
+    "章节": "02-导数与微分",
+    "错误次数": 0,
+    "最近复习": "",
+    "日期": "2026-09-06",
+    "状态": "待复习"
+   }
+  ]
+ },
+ {
+  "name": "英语",
+  "label": "英语",
+  "color": "#C9A7E8",
+  "rel": "../英语/错题集/复习页.html",
+  "items": [
+   {
+    "id": "001",
+    "章节": "03-阅读理解",
+    "错误次数": 0,
+    "最近复习": "",
+    "日期": "2026-09-06",
+    "状态": "待复习"
+   },
+   {
+    "id": "002",
+    "章节": "05-翻译",
+    "错误次数": 0,
+    "最近复习": "",
+    "日期": "2026-09-06",
+    "状态": "待复习"
+   }
+  ]
+ }
+];
+window.__QUALITY__ = {
+ "generatedAt": "2026-09-06",
+ "subjects": [
+  {
+   "name": "计算机",
+   "errorBook": 13,
+   "questionBank": 181
+  },
+  {
+   "name": "高数",
+   "errorBook": 3,
+   "questionBank": 79
+  },
+  {
+   "name": "英语",
+   "errorBook": 2,
+   "questionBank": 127
+  }
+ ],
+ "issues": [
+  {
+   "subject": "计算机",
+   "level": "warning",
+   "source": "错题本.md",
+   "item": "Q-010",
+   "message": "尚未记录错因"
+  },
+  {
+   "subject": "计算机",
+   "level": "warning",
+   "source": "错题本.md",
+   "item": "Q-011",
+   "message": "尚未记录错因"
+  },
+  {
+   "subject": "计算机",
+   "level": "warning",
+   "source": "错题本.md",
+   "item": "Q-012",
+   "message": "尚未记录错因"
+  },
+  {
+   "subject": "计算机",
+   "level": "warning",
+   "source": "错题本.md",
+   "item": "Q-013",
+   "message": "尚未记录错因"
+  },
+  {
+   "subject": "高数",
+   "level": "warning",
+   "source": "错题本.md",
+   "item": "Q-001",
+   "message": "尚未记录错因"
+  },
+  {
+   "subject": "高数",
+   "level": "warning",
+   "source": "错题本.md",
+   "item": "Q-002",
+   "message": "尚未记录错因"
+  },
+  {
+   "subject": "高数",
+   "level": "warning",
+   "source": "错题本.md",
+   "item": "Q-003",
+   "message": "尚未记录错因"
+  },
+  {
+   "subject": "英语",
+   "level": "warning",
+   "source": "错题本.md",
+   "item": "Q-001",
+   "message": "尚未记录错因"
+  },
+  {
+   "subject": "英语",
+   "level": "warning",
+   "source": "错题本.md",
+   "item": "Q-002",
+   "message": "尚未记录错因"
+  }
+ ],
+ "summary": {
+  "errors": 0,
+  "warnings": 9,
+  "questions": 387
+ }
+};
+(function(){
+  var subjects=window.__DAILY__||[];
+  function dateText(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+  function today(){ return dateText(new Date()); }
+  function due(item, plan){
+    var next=plan[item.id]&&plan[item.id].next;
+    return !next || next<=today();
+  }
+  var total=0, box=document.getElementById("dailyList");
+  subjects.forEach(function(subject){
+    // 合并本地存储的错题（手机APK/离线环境自动存入的）
+    try{
+      var _local=JSON.parse(localStorage.getItem(subject.name+"_errorbook_local")||"[]");
+      if(_local.length){
+        var _added=0;
+        _local.forEach(function(le){
+          // 按答案+章节+题型去重（题目文本可能因阅读材料长短不同而不完全一致）
+          var dup=subject.items.find(function(it){
+            return it["答案"]===le["答案"] && it["章节"]===le["章节"] && it["题型"]===le["题型"];
+          });
+          if(!dup){ subject.items.push(le); _added++; }
+        });
+        // 更新错题复习卡片的数字
+        var statEl=document.getElementById("stat-"+subject.name);
+        if(statEl&&_added){
+          var baseTotal=subject.items.length;
+          var baseReview=subject.items.filter(function(it){return it["状态"]!=="已掌握";}).length;
+          statEl.textContent="题数 "+baseTotal+" · 待复习 "+baseReview+"（含本地"+_added+"题）";
+        }
+      }
+    }catch(e){}
+    var saved={};
+    try{ saved=JSON.parse(localStorage.getItem(subject.name+"_cuowuji_v2")||"{}")||{}; }catch(e){}
+    var plan=saved.pm||{}, dueItems=subject.items.filter(function(item){ return due(item,plan); });
+    total+=dueItems.length;
+    var chapters={};
+    dueItems.forEach(function(item){ var chapter=item["章节"]||"未分类"; chapters[chapter]=(chapters[chapter]||0)+(Number(item["错误次数"])||0)+1; });
+    var focus=Object.keys(chapters).sort(function(a,b){ return chapters[b]-chapters[a]; })[0]||"暂无到期题";
+    var card=document.createElement("a");
+    card.className="sc daily-card"; card.href=subject.rel+"?mode=due"; card.style.setProperty("--c",subject.color);
+    card.innerHTML='<div class="sc-name">'+subject.label+' · 今日到期</div><div class="daily-count">'+dueItems.length+' 题</div><div class="daily-focus">优先：'+focus+'</div>';
+    box.appendChild(card);
+  });
+  document.getElementById("dailyTotal").textContent=total;
+  if(!subjects.length) box.innerHTML='<div class="daily-empty">暂无错题，先从题库开始练习。</div>';
+})();
+(function(){
+  var report=window.__QUALITY__||{}, summary=report.summary||{};
+  var total=(summary.errors||0)+(summary.warnings||0);
+  var summaryBox=document.getElementById("qualitySummary");
+  summaryBox.className=total?"quality-bad":"quality-ok";
+  summaryBox.textContent=total?(summary.errors+" 个错误，"+summary.warnings+" 个提醒"):"未发现问题";
+  document.getElementById("qualitySubjects").textContent=(report.subjects||[]).map(function(x){return x.name+"：错题"+x.errorBook+" 条，题库"+x.questionBank+" 题";}).join("　");
+  var box=document.getElementById("qualityIssues");
+  if(!total){ box.textContent="构建时间："+(report.generatedAt||""); return; }
+  box.innerHTML=(report.issues||[]).slice(0,80).map(function(x){return '<div class="'+x.level+'">['+x.subject+'] '+x.source+' '+(x.item||"")+'：'+x.message+'</div>';}).join("");
+})();
+(function(){
+  var btn=document.getElementById("btnSync");
+  if(!btn) return;
+  function toast(msg){
+    var t=document.createElement("div");
+    t.style.cssText="position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#22304A;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.2);";
+    t.textContent=msg; document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, 3000);
+  }
+  btn.addEventListener("click", function(){
+    var lastIp=localStorage.getItem("errorbook_sync_ip")||"127.0.0.1";
+    var ip=prompt("请输入电脑的局域网IP（启动错题本.bat窗口里有显示）：", lastIp);
+    if(!ip) return;
+    ip=ip.trim();
+    localStorage.setItem("errorbook_sync_ip", ip);
+    btn.textContent="同步中…"; btn.disabled=true;
+    fetch("http://"+ip+":8765/api/sync")
+      .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
+      .then(function(data){
+        localStorage.setItem("errorbook_sync", JSON.stringify(data));
+        var counts=[];
+        ["计算机","高数","英语"].forEach(function(s){ if(data[s]&&data[s].count) counts.push(s+data[s].count+"题"); });
+        if(data.英语&&data.英语.word_count) counts.push("单词"+data.英语.word_count);
+        toast("同步成功："+counts.join("，"));
+      })
+      .catch(function(e){
+        toast("同步失败："+e.message+"（检查IP和WiFi）");
+      })
+      .finally(function(){ btn.textContent="☁ 同步更新"; btn.disabled=false; });
+  });
+  // 显示上次同步时间
+  var last=localStorage.getItem("errorbook_sync");
+  if(last){
+    try{
+      var d=JSON.parse(last);
+      if(d.synced_at) btn.title="上次同步："+d.synced_at;
+    }catch(e){}
+  }
+})();
+</script>
+</body>
+</html>
