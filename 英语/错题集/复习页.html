@@ -1475,7 +1475,7 @@ window.__TIKU_SIMPLE__ = [
   function factorStat(){
     var map={}, total=0;
     ALL.forEach(function(it){
-      var r=it["错因"]||"未分类"; map[r]=(map[r]||0)+ (it["错误次数"]||0)+1; total++;
+      var r=it["错因"]||"未分类"; map[r]=(map[r]||0)+1; total++;
     });
     var keys=Object.keys(map).sort(function(a,b){return map[b]-map[a];});
     return {map:map, keys:keys, total:total};
