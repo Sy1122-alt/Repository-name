@@ -621,7 +621,17 @@ window.__DATA__ = __DATA_JSON__;
         var dup=ALL.find(function(it){
           return it["答案"]===le["答案"] && it["章节"]===le["章节"] && it["题型"]===le["题型"];
         });
-        if(!dup){ ALL.push(le); }
+        if(dup) return; // 匹配到题库里的题（有选项），跳过本地错题
+        // 本地错题无选项时，从题库按题目内容相似度补全选项
+        if(!le["选项"] || !le["选项"].length){
+          var qShort=(le["题目"]||"").replace(/\s/g,"").slice(0,25);
+          var match=ALL.find(function(it){
+            var itShort=(it["题目"]||"").replace(/\s/g,"").slice(0,25);
+            return itShort&&qShort&&(itShort.indexOf(qShort)>=0||qShort.indexOf(itShort)>=0);
+          });
+          if(match&&match["选项"]&&match["选项"].length) le["选项"]=match["选项"].slice();
+        }
+        ALL.push(le);
       });
     }
   }catch(e){}
@@ -1929,7 +1939,17 @@ window.__QUALITY__ = __QUALITY_JSON__;
           var dup=subject.items.find(function(it){
             return it["答案"]===le["答案"] && it["章节"]===le["章节"] && it["题型"]===le["题型"];
           });
-          if(!dup){ subject.items.push(le); _added++; }
+          if(dup) return;
+          // 本地错题无选项时，从题库按题目内容相似度补全选项
+          if(!le["选项"] || !le["选项"].length){
+            var qShort=(le["题目"]||"").replace(/\s/g,"").slice(0,25);
+            var match=subject.items.find(function(it){
+              var itShort=(it["题目"]||"").replace(/\s/g,"").slice(0,25);
+              return itShort&&qShort&&(itShort.indexOf(qShort)>=0||qShort.indexOf(itShort)>=0);
+            });
+            if(match&&match["选项"]&&match["选项"].length) le["选项"]=match["选项"].slice();
+          }
+          subject.items.push(le); _added++;
         });
         // 更新错题复习卡片的数字
         var statEl=document.getElementById("stat-"+subject.name);
