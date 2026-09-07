@@ -2392,13 +2392,21 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
   }
   function renderMath(s){
     var t=escHtml(s);
-    if(!MATH || typeof katex==="undefined") return t;
+    // 保护反引号代码块（如Excel公式 $A$1、Shell $var），避免被KaTeX当数学公式
+    var codes=[];
+    t=t.replace(/`([^`]*)`/g, function(_,c){ codes.push(c); return "\u0000CODE"+(codes.length-1)+"\u0000"; });
+    function restore(t){
+      return t.replace(/\u0000CODE(\d+)\u0000/g, function(_,i){
+        return '<code style="background:rgba(0,0,0,0.06);border-radius:4px;padding:1px 6px;font-family:Consolas,Monaco,monospace;font-size:0.9em;color:#B44244;white-space:pre-wrap;word-break:break-all;">'+(codes[+i]||"")+'</code>';
+      });
+    }
+    if(!MATH || typeof katex==="undefined") return restore(t);
     function unesc(x){ return x.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&quot;/g,'"'); }
     try{
       t=t.replace(/\$\$([\s\S]+?)\$\$/g,function(_,x){ return '<div class="math-inline" style="margin:6px 0;">'+katex.renderToString(unesc(x),{displayMode:true,throwOnError:false})+'</div>'; });
       t=t.replace(/\$([^$\n]+?)\$/g,function(_,x){ return '<span class="math-inline">'+katex.renderToString(unesc(x),{displayMode:false,throwOnError:false})+'</span>'; });
     }catch(e){}
-    return t;
+    return restore(t);
   }
   // 英语刷题：把文本中的英文单词标记为可点击，点击加入生词本
   var SHENGCI_KEY="yingyu_shengci_v1";
@@ -2417,17 +2425,23 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
   function markWords(text){
     if(!IS_EN) return renderMath(text);
     var t=escHtml(text);
+    // 反引号代码块不标记生词
+    var codes=[];
+    t=t.replace(/`([^`]*)`/g, function(_,c){ codes.push(c); return "\u0000CODE"+(codes.length-1)+"\u0000"; });
     // 匹配2个字母以上的英文单词（含连字符、撇号），不匹配纯数字
     t=t.replace(/\b([a-zA-Z][a-zA-Z'-]{1,})\b/g, function(m,w){
       var cls="word-clickable"+(isShengci(w)?" word-saved":"");
       return '<span class="'+cls+'" data-word="'+w.toLowerCase()+'">'+m+'</span>';
+    });
+    t=t.replace(/\u0000CODE(\d+)\u0000/g, function(_,i){
+      return '<code style="background:rgba(0,0,0,0.06);border-radius:4px;padding:1px 6px;font-family:Consolas,Monaco,monospace;font-size:0.9em;color:#B44244;white-space:pre-wrap;word-break:break-all;">'+(codes[+i]||"")+'</code>';
     });
     return t;
   }
 
   if(IS_EN){
     var hintEl=document.querySelector(".hint");
-    if(hintEl) hintEl.innerHTML+='<br><span style="color:#2B5A9E;">💡 英语刷题：点击题目/选项中的蓝色单词可加入生词本，粉色表示已加入。完形填空可点「查看本篇全文」看完整文章。</span>';
+    if(hintEl) hintEl.innerHTML+='<br><span style="color:#2B5A9E;">💡 英语刷题：点击<b>题目/阅读材料</b>中的蓝色单词可加入生词本（粉色=已加入）；选项整体是答题按钮，点击选项直接作答。完形填空可点「查看本篇全文」看完整文章。</span>';
   }
   // 完形填空弹窗
   function openPassage(text){
@@ -2549,7 +2563,7 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
       html+='<ul class="opts">';
       var letters="ABCDEFGH";
       it["选项"].forEach(function(o,i){
-        html+='<li data-i="'+i+'"><span class="opt-letter">'+letters[i]+'</span>'+markWords(String(o).replace(/^[A-Z][\.、]\s*/, ''))+'</li>';
+        html+='<li data-i="'+i+'"><span class="opt-letter">'+letters[i]+'</span>'+renderMath(String(o).replace(/^[A-Z][\.、]\s*/, ''))+'</li>';
       });
       html+='</ul>';
     } else if(it["题型"]==="单选"||it["题型"]==="多选"){

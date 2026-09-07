@@ -1441,7 +1441,15 @@ window.__TIKU_SIMPLE__ = [
   }
   function renderMath(s){
     var t = escHtml(s).replace(/\\_/g,"_");
-    if(!MATH || typeof katex==="undefined") return t;
+    // 保护反引号代码块（如Excel公式 $A$1、Shell $var），避免被KaTeX当数学公式
+    var codes=[];
+    t=t.replace(/`([^`]*)`/g, function(_,c){ codes.push(c); return "\u0000CODE"+(codes.length-1)+"\u0000"; });
+    function restore(t){
+      return t.replace(/\u0000CODE(\d+)\u0000/g, function(_,i){
+        return '<code style="background:rgba(0,0,0,0.06);border-radius:4px;padding:1px 6px;font-family:Consolas,Monaco,monospace;font-size:0.9em;color:#B44244;white-space:pre-wrap;word-break:break-all;">'+(codes[+i]||"")+'</code>';
+      });
+    }
+    if(!MATH || typeof katex==="undefined") return restore(t);
     function unesc(x){ return x.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&quot;/g,'"'); }
     try{
       t = t.replace(/\$\$([\s\S]+?)\$\$/g, function(_,x){
@@ -1451,7 +1459,7 @@ window.__TIKU_SIMPLE__ = [
         return '<span class="math-inline">'+katex.renderToString(unesc(x),{displayMode:false,throwOnError:false})+'</span>';
       });
     }catch(e){}
-    return t;
+    return restore(t);
   }
 
   var chapters=[], reasons=[];
