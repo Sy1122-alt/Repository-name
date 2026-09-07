@@ -338,6 +338,8 @@ def parse_tiku(path, subject):
     items = []
     topic = "综合"
     material = []          # 阅读材料累积
+    passage_text = []      # 完形填空完整原文累积
+    is_cloze_passage = False
     cur = None
 
     def flush():
@@ -372,8 +374,16 @@ def parse_tiku(path, subject):
             # 完形填空的Passage不附加为材料（题目本身已带句子上下文，附加完整原文会泄露答案）
             if "完形" in mp.group(1):
                 material = []
+                passage_text = [mp.group(2).strip()] if mp.group(2).strip() else []
+                is_cloze_passage = True
             else:
                 material = [mp.group(2).strip()] if mp.group(2).strip() else []
+                passage_text = []
+                is_cloze_passage = False
+            continue
+        # 完形Passage正文续行累积
+        if is_cloze_passage and passage_text and not re.match(r"^\*\*(真题|练习|自编|多选)", s) and not s.lstrip().startswith("-"):
+            passage_text.append(s)
             continue
         # 材料累积（仅当正在读 Passage 时，且只累积不以"-"开头的正文续行，避免吞掉选项/答案/来源行）
         if material and not re.match(r"^\*\*(真题|练习|自编|多选)", s) and not s.lstrip().startswith("-"):
@@ -388,6 +398,7 @@ def parse_tiku(path, subject):
             is_judge = ("判断题" in s or "判断组" in s)
             is_multi = ("多选" in s)
             mat = "\n".join(material) if material else ""
+            passage = "\n".join(passage_text) if (is_cloze_passage and passage_text) else ""
             # 注意：不清空 material，使 Passage 材料持续附给该 Passage 下的所有题目
             cur = {
                 "id": "%s-%s" % (qtype, no),
@@ -395,6 +406,7 @@ def parse_tiku(path, subject):
                 "专题": topic,
                 "题型": "多选" if is_multi else ("判断" if is_judge else "单选"),
                 "材料": mat,
+                "passage": passage,
                 "题目": title,
                 "选项": [],
                 "答案": "",
@@ -1369,6 +1381,7 @@ __KATEX_CSS__
     <button id="btnUndone">只看未做</button>
     <button id="btnBasket">错题篮子</button>
     <button id="btnReset">重置进度</button>
+    <button id="btnClozeMode" style="display:none;background:#EAA7B2;color:#fff;">完形全文：关</button>
   </div>
 
   <div id="card"></div>
@@ -1388,6 +1401,14 @@ __KATEX_CSS__
   </div>
 
   <div id="toast"></div>
+  <div id="passageModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:9999;justify-content:center;align-items:center;padding:20px;">
+    <div style="background:#fff;border-radius:16px;max-width:700px;width:100%;max-height:85vh;overflow-y:auto;padding:24px;position:relative;">
+      <div id="passageClose" style="position:absolute;top:12px;right:16px;font-size:24px;cursor:pointer;color:#999;line-height:1;">×</div>
+      <h3 style="margin-bottom:14px;font-size:16px;">📖 完形填空 · 本篇全文</h3>
+      <div id="passageContent" style="font-size:14px;line-height:1.8;color:#333;white-space:pre-wrap;"></div>
+      <div style="margin-top:16px;font-size:12px;color:#999;">💡 点击文中蓝色单词可加入生词本</div>
+    </div>
+  </div>
 
   <div class="hint">
     操作：看题 → 点选答案判对错（或点「显示答案」）→ 按结果点「做对了」或「做错了·记入错题」→ 攒够一批点「存入错题本」。从“启动错题本”打开时，系统会自动写入并更新复习页。<br>
@@ -1467,14 +1488,47 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
 
   if(IS_EN){
     var hintEl=document.querySelector(".hint");
-    if(hintEl) hintEl.innerHTML+='<br><span style="color:#2B5A9E;">💡 英语刷题：点击题目/选项中的蓝色单词可加入生词本，粉色表示已加入。</span>';
+    if(hintEl) hintEl.innerHTML+='<br><span style="color:#2B5A9E;">💡 英语刷题：点击题目/选项中的蓝色单词可加入生词本，粉色表示已加入。完形填空可点「查看本篇全文」看完整文章。</span>';
   }
+  // 完形填空弹窗
+  function openPassage(text){
+    if(!text) return;
+    var modal=$("passageModal"), content=$("passageContent");
+    content.innerHTML=markWords(text);
+    modal.style.display="flex";
+    // 弹窗内单词点击加入生词本
+    content.querySelectorAll(".word-clickable").forEach(function(el){
+      el.addEventListener("click", function(e){
+        e.stopPropagation();
+        var w=el.getAttribute("data-word");
+        if(w && addShengci(w)) el.classList.add("word-saved");
+      });
+    });
+  }
+  function closePassage(){ $("passageModal").style.display="none"; }
+  var _pc=$("passageClose"); if(_pc) _pc.onclick=closePassage;
+  var _pm=$("passageModal"); if(_pm) _pm.addEventListener("click", function(e){ if(e.target===_pm) closePassage(); });
   var topics=[];
   ALL.forEach(function(it){ if(topics.indexOf(it["专题"])<0) topics.push(it["专题"]); });
   topics.sort();
   topics.forEach(function(t){ var o=document.createElement("option"); o.value=t; o.textContent=t; $("selTopic").appendChild(o); });
 
   var mode="shuffle"; // shuffle|order|undone|basket
+  var clozeFullMode=false;
+  try{ clozeFullMode=localStorage.getItem("yingyu_cloze_full")==="1"; }catch(e){}
+  if(IS_EN){
+    var btnCM=$("btnClozeMode");
+    if(btnCM){
+      btnCM.style.display="inline-block";
+      btnCM.textContent=clozeFullMode?"完形全文：开":"完形全文：关";
+      btnCM.onclick=function(){
+        clozeFullMode=!clozeFullMode;
+        try{ localStorage.setItem("yingyu_cloze_full", clozeFullMode?"1":"0"); }catch(e){}
+        btnCM.textContent=clozeFullMode?"完形全文：开":"完形全文：关";
+        show();
+      };
+    }
+  }
   var list=[], idx=0, revealed=false, answered=false;
   function setMode(m){
     mode=m;
@@ -1546,7 +1600,11 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     if(basket.indexOf(it.id)>=0) html+='<span class="tag" style="background:rgba(234,102,104,0.14);color:#B44244;">已入篮</span>';
     html+='</div>';
     if(it["材料"]) html+='<div class="material">'+markWords(it["材料"])+'</div>';
+    if(IS_EN && clozeFullMode && it["passage"]){
+      html+='<div class="material" style="border-left-color:#EAA7B2;max-height:300px;overflow-y:auto;">'+markWords(it["passage"])+'</div>';
+    }
     html+='<div class="qtext">'+markWords(it["题目"])+'</div>';
+    if(IS_EN && it["passage"]) html+='<div style="margin-bottom:10px;"><button id="btnPassage" style="background:#9BBBF4;color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;">📖 查看本篇全文</button></div>';
     if(it["选项"]&&it["选项"].length){
       html+='<ul class="opts">';
       var letters="ABCDEFGH";
@@ -1578,6 +1636,9 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
           }
         });
       });
+      // 完形填空：查看本篇全文
+      var btnP=$("btnPassage");
+      if(btnP) btnP.onclick=function(){ openPassage(it["passage"]); };
     }
 
     var ansBox=$("ans"), fb=$("fb");

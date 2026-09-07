@@ -103,6 +103,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
     <button id="btnUndone">只看未做</button>
     <button id="btnBasket">错题篮子</button>
     <button id="btnReset">重置进度</button>
+    <button id="btnClozeMode" style="display:none;background:#EAA7B2;color:#fff;">完形全文：关</button>
   </div>
 
   <div id="card"></div>
@@ -122,6 +123,14 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
   </div>
 
   <div id="toast"></div>
+  <div id="passageModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:9999;justify-content:center;align-items:center;padding:20px;">
+    <div style="background:#fff;border-radius:16px;max-width:700px;width:100%;max-height:85vh;overflow-y:auto;padding:24px;position:relative;">
+      <div id="passageClose" style="position:absolute;top:12px;right:16px;font-size:24px;cursor:pointer;color:#999;line-height:1;">×</div>
+      <h3 style="margin-bottom:14px;font-size:16px;">📖 完形填空 · 本篇全文</h3>
+      <div id="passageContent" style="font-size:14px;line-height:1.8;color:#333;white-space:pre-wrap;"></div>
+      <div style="margin-top:16px;font-size:12px;color:#999;">💡 点击文中蓝色单词可加入生词本</div>
+    </div>
+  </div>
 
   <div class="hint">
     操作：看题 → 点选答案判对错（或点「显示答案」）→ 按结果点「做对了」或「做错了·记入错题」→ 攒够一批点「存入错题本」。从“启动错题本”打开时，系统会自动写入并更新复习页。<br>
@@ -138,6 +147,7 @@ window.__TIKU__ = [
   "专题": "极限",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "$\\lim_{n\\to\\infty}\\sqrt[n]{3^n+5^n+7^n}=(\\ )$",
   "选项": [
    "0",
@@ -155,6 +165,7 @@ window.__TIKU__ = [
   "专题": "极限",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "$\\lim_{x\\to0}\\left(x\\sin\\frac1x+\\frac1x\\sin x\\right)=(\\ )$",
   "选项": [
    "0",
@@ -172,6 +183,7 @@ window.__TIKU__ = [
   "专题": "极限",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "$\\lim_{x\\to0}\\frac{\\sin x}{x}+\\lim_{x\\to\\infty}\\frac{\\sin x}{x}=(\\ )$",
   "选项": [
    "0",
@@ -189,6 +201,7 @@ window.__TIKU__ = [
   "专题": "极限",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "数列 $\\{\\sin(3n+1)\\}$ 是（ ）",
   "选项": [
    "有界的单调增数列",
@@ -206,6 +219,7 @@ window.__TIKU__ = [
   "专题": "极限",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "下列数列 $\\{a_n\\}$ 中，具有收敛子列的是（ ）",
   "选项": [
    "$a_n=\\arctan(3n)$",
@@ -223,6 +237,7 @@ window.__TIKU__ = [
   "专题": "极限",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "当 $x\\to0$ 时，下列无穷小量与 $x$ 等价的是（ ）",
   "选项": [
    "$1-\\cos x$",
@@ -240,6 +255,7 @@ window.__TIKU__ = [
   "专题": "极限",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "下列极限计算正确的是（ ）",
   "选项": [
    "$\\lim_{x\\to\\infty}\\frac{\\sin 2x}{x}=2$",
@@ -257,6 +273,7 @@ window.__TIKU__ = [
   "专题": "极限",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "当 $x\\to0$ 时，$x^2-\\sin x$ 是关于 $x$ 的（ ）",
   "选项": [
    "高阶无穷小",
@@ -274,6 +291,7 @@ window.__TIKU__ = [
   "专题": "极限",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "计算 $\\lim_{x\\to0}\\left(\\frac1x-\\frac{1}{e^x-1}\\right)$",
   "选项": [],
   "答案": "$\\dfrac12$",
@@ -286,6 +304,7 @@ window.__TIKU__ = [
   "专题": "极限",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "计算 $\\lim_{x\\to0}\\frac{e^x-e^{-x}-2x}{x-\\sin x}$",
   "选项": [],
   "答案": "$2$",
@@ -298,6 +317,7 @@ window.__TIKU__ = [
   "专题": "极限",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "求 $\\lim_{x\\to+\\infty}\\left(\\cos\\frac1x\\right)^x$",
   "选项": [],
   "答案": "$1$",
@@ -310,6 +330,7 @@ window.__TIKU__ = [
   "专题": "极限",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "求 $\\lim_{x\\to1}\\frac{\\int_x^1(1-t+\\ln t)\\,dt}{(x-1)^3}$",
   "选项": [],
   "答案": "$-\\dfrac16$",
@@ -322,6 +343,7 @@ window.__TIKU__ = [
   "专题": "极限",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "计算 $\\lim_{x\\to0}\\frac{\\sin 3x}{2x}$",
   "选项": [],
   "答案": "$\\dfrac32$",
@@ -334,6 +356,7 @@ window.__TIKU__ = [
   "专题": "极限",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "计算 $\\lim_{x\\to\\infty}\\frac{3x^2+2x-1}{2x^2-x+5}$",
   "选项": [],
   "答案": "$\\dfrac32$",
@@ -346,6 +369,7 @@ window.__TIKU__ = [
   "专题": "一元函数微分学",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "设 $y=x^2-3x-3$，在曲线某点处的切线平行于直线 $y=x$（斜率 1），求该切点坐标。",
   "选项": [],
   "答案": "$(2,-5)$",
@@ -358,6 +382,7 @@ window.__TIKU__ = [
   "专题": "一元函数微分学",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "求曲线 $y=x^3$ 在点 $(1,1)$ 处的切线方程。",
   "选项": [],
   "答案": "$y=3x-2$",
@@ -370,6 +395,7 @@ window.__TIKU__ = [
   "专题": "一元函数微分学",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "求函数 $y=x^3-3x+1$ 的单调增区间和极值。",
   "选项": [],
   "答案": "增区间 $(-\\infty,-1)\\cup(1,+\\infty)$，减区间 $(-1,1)$；极大值 $y(-1)=3$，极小值 $y(1)=-1$。",
@@ -382,6 +408,7 @@ window.__TIKU__ = [
   "专题": "一元函数微分学",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "用洛必达法则求 $\\lim_{x\\to0}\\frac{1-\\cos x}{x^2}$。",
   "选项": [],
   "答案": "$\\dfrac12$",
@@ -394,6 +421,7 @@ window.__TIKU__ = [
   "专题": "一元函数积分学",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "计算不定积分 $\\int (x^2+1)\\,dx$",
   "选项": [],
   "答案": "$\\dfrac{x^3}{3}+x+C$",
@@ -406,6 +434,7 @@ window.__TIKU__ = [
   "专题": "一元函数积分学",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "计算定积分 $\\int_0^1(2x+1)\\,dx$",
   "选项": [],
   "答案": "$2$",
@@ -418,6 +447,7 @@ window.__TIKU__ = [
   "专题": "一元函数积分学",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "用换元法计算 $\\int_0^1 xe^{x^2}\\,dx$",
   "选项": [],
   "答案": "$\\dfrac12(e-1)$",
@@ -430,6 +460,7 @@ window.__TIKU__ = [
   "专题": "一元函数积分学",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "用分部积分法计算 $\\int x e^x\\,dx$",
   "选项": [],
   "答案": "$(x-1)e^x+C$",
@@ -442,6 +473,7 @@ window.__TIKU__ = [
   "专题": "一元函数积分学",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "求变限积分函数 $F(x)=\\int_0^x t^2\\,dt$ 的导数 $F'(x)$。",
   "选项": [],
   "答案": "$x^2$",
@@ -454,6 +486,7 @@ window.__TIKU__ = [
   "专题": "多元函数与二重积分",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "设 $z=x^2y$，求 $\\dfrac{\\partial z}{\\partial x}$ 和 $\\dfrac{\\partial z}{\\partial y}$。",
   "选项": [],
   "答案": "$\\dfrac{\\partial z}{\\partial x}=2xy$，$\\dfrac{\\partial z}{\\partial y}=x^2$",
@@ -466,6 +499,7 @@ window.__TIKU__ = [
   "专题": "多元函数与二重积分",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "计算二重积分 $\\iint_D x\\,d\\sigma$，其中 $D$ 为 $0\\le x\\le1,0\\le y\\le2$。",
   "选项": [],
   "答案": "$1$",
@@ -478,6 +512,7 @@ window.__TIKU__ = [
   "专题": "无穷级数",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "判断级数 $\\sum_{n=1}^\\infty \\frac{1}{n^2}$ 的敛散性。",
   "选项": [],
   "答案": "收敛",
@@ -490,6 +525,7 @@ window.__TIKU__ = [
   "专题": "无穷级数",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "求幂级数 $\\sum_{n=0}^\\infty \\frac{x^n}{n!}$ 的收敛半径。",
   "选项": [],
   "答案": "$R=+\\infty$",
@@ -502,6 +538,7 @@ window.__TIKU__ = [
   "专题": "常微分方程",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "求微分方程 $\\dfrac{dy}{dx}=2xy$ 的通解。",
   "选项": [],
   "答案": "$y=Ce^{x^2}$",
@@ -514,6 +551,7 @@ window.__TIKU__ = [
   "专题": "常微分方程",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "求二阶常系数齐次方程 $y''-3y'+2y=0$ 的通解。",
   "选项": [],
   "答案": "$y=C_1e^x+C_2e^{2x}$",
@@ -526,6 +564,7 @@ window.__TIKU__ = [
   "专题": "线性代数",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "行列式 $\\begin{vmatrix}2&0&2&5\\\\0&0&-2&2\\\\5&-2&2&2\\\\0&0&0&-5\\end{vmatrix}$ 的值为（ ）",
   "选项": [
    "-40",
@@ -543,6 +582,7 @@ window.__TIKU__ = [
   "专题": "线性代数",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "计算行列式 $\\begin{vmatrix}1&2\\\\3&4\\end{vmatrix}$",
   "选项": [],
   "答案": "$-2$",
@@ -555,6 +595,7 @@ window.__TIKU__ = [
   "专题": "线性代数",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "求矩阵 $A=\\begin{pmatrix}1&2\\\\3&4\\end{pmatrix}$ 的逆矩阵。",
   "选项": [],
   "答案": "$A^{-1}=\\begin{pmatrix}-2&1\\\\ \\frac32&-\\frac12\\end{pmatrix}$",
@@ -567,6 +608,7 @@ window.__TIKU__ = [
   "专题": "线性代数",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "判断齐次线性方程组 $\\begin{cases}x_1+2x_2=0\\\\2x_1+4x_2=0\\end{cases}$ 是否有非零解。",
   "选项": [],
   "答案": "有",
@@ -579,6 +621,7 @@ window.__TIKU__ = [
   "专题": "模拟卷精选",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "函数 $f(x)=\\ln(x+\\sqrt{x^2+1})$ 的定义域是（ ）",
   "选项": [
    "$(-\\infty,+\\infty)$",
@@ -596,6 +639,7 @@ window.__TIKU__ = [
   "专题": "模拟卷精选",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "求极限 $\\lim_{x\\to2}\\frac{x^2-4}{x-2}$（ ）",
   "选项": [
    "0",
@@ -613,6 +657,7 @@ window.__TIKU__ = [
   "专题": "模拟卷精选",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "曲线 $y=e^{-x}$ 在点 $(0,1)$ 处的切线方程是（ ）",
   "选项": [
    "$y=x+1$",
@@ -630,6 +675,7 @@ window.__TIKU__ = [
   "专题": "模拟卷精选",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "不定积分 $\\int\\frac{x^2+1}{x^2-1}\\,dx$ 等于（ ）",
   "选项": [
    "$x+\\ln|x^2-1|+C$",
@@ -647,6 +693,7 @@ window.__TIKU__ = [
   "专题": "模拟卷精选",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "若级数 $\\sum a_n$ 收敛，则级数 $\\sum a_n^2$ 的敛散性是（ ）",
   "选项": [
    "一定收敛",
@@ -664,6 +711,7 @@ window.__TIKU__ = [
   "专题": "模拟卷精选",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "求极限 $\\lim_{x\\to0}\\frac{\\sin3x}{x}$。",
   "选项": [],
   "答案": "3",
@@ -676,6 +724,7 @@ window.__TIKU__ = [
   "专题": "模拟卷精选",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "求不定积分 $\\int\\frac{1}{1+x^2}\\,dx$。",
   "选项": [],
   "答案": "$\\arctan x+C$",
@@ -688,6 +737,7 @@ window.__TIKU__ = [
   "专题": "模拟卷精选",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "微分方程 $y''-y=0$ 的特征方程为____。",
   "选项": [],
   "答案": "$r^2-1=0$",
@@ -700,6 +750,7 @@ window.__TIKU__ = [
   "专题": "模拟卷精选",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "矩阵 $A=\\begin{pmatrix}1&0\\\\0&2\\end{pmatrix}$ 的行列式 $|A|=$____。",
   "选项": [],
   "答案": "2",
@@ -712,6 +763,7 @@ window.__TIKU__ = [
   "专题": "模拟卷精选",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "向量 $\\alpha=(1,2,3)$，$\\beta=(4,5,6)$，则内积 $\\alpha\\cdot\\beta=$____。",
   "选项": [],
   "答案": "32",
@@ -724,6 +776,7 @@ window.__TIKU__ = [
   "专题": "模拟卷精选",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "求微分方程 $y'-2y=e^{2x}$ 的通解。",
   "选项": [],
   "答案": "$y=(x+C)e^{2x}$",
@@ -736,6 +789,7 @@ window.__TIKU__ = [
   "专题": "证明与应用专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（证明） 设函数 $f(x)$ 在 $[0,1]$ 上连续，在 $(0,1)$ 内可导，且 $f(0)=0$，$f(1)=1$。证明：存在 $\\xi\\in(0,1)$，使得 $f'(\\xi)=2\\xi$。",
   "选项": [],
   "答案": "构造 $F(x)=f(x)-x^2$。则 $F(0)=0-0=0$，$F(1)=1-1=0$，$F(x)$ 在 $[0,1]$ 连续、$(0,1)$ 可导。由罗尔定理，存在 $\\xi\\in(0,1)$ 使 $F'(\\xi)=0$，即 $f'(\\xi)-2\\xi=0$，故 $f'(\\xi)=2\\xi$。",
@@ -748,6 +802,7 @@ window.__TIKU__ = [
   "专题": "证明与应用专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（证明） 设 $f(x)=e^x$。证明：对任意 $a<b$，存在 $\\xi\\in(a,b)$，使得 $e^b-e^a=e^\\xi(b-a)$。",
   "选项": [],
   "答案": "$f$ 在 $[a,b]$ 连续、$(a,b)$ 可导。由拉格朗日中值定理，存在 $\\xi\\in(a,b)$ 使 $f'(\\xi)=\\frac{f(b)-f(a)}{b-a}=\\frac{e^b-e^a}{b-a}$。又 $f'(x)=e^x$，故 $e^\\xi=\\frac{e^b-e^a}{b-a}$，即 $e^b-e^a=e^\\xi(b-a)$。",
@@ -760,6 +815,7 @@ window.__TIKU__ = [
   "专题": "证明与应用专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（证明） 证明：当 $x>0$ 时，$\\frac{x}{1+x}<\\ln(1+x)<x$。",
   "选项": [],
   "答案": "令 $f(t)=\\ln(1+t)$，在 $[0,x]$ 上用拉格朗日中值定理：$\\ln(1+x)-\\ln1=f'(\\xi)x=\\frac{x}{1+\\xi}$（$0<\\xi<x$）。因 $\\frac{1}{1+x}<\\frac{1}{1+\\xi}<1$，故 $\\frac{x}{1+x}<\\ln(1+x)<x$。",
@@ -772,6 +828,7 @@ window.__TIKU__ = [
   "专题": "证明与应用专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（应用） 用边长为 $a$ 的正方形铁皮，四角各截去一个同样大小的正方形，做成无盖方盒。问截去的小正方形边长 $x$ 多大时，盒的容积最大？",
   "选项": [],
   "答案": "$V(x)=x(a-2x)^2$，$0<x<\\frac a2$。$V'(x)=(a-2x)(a-6x)$，令 $V'=0$ 得 $x=\\frac a6$（$x=\\frac a2$ 不合）。$V''(\\frac a6)<0$，为极大值即最大值。故 $x=\\frac a6$ 时容积最大。（例如 $a=12$ 时 $x=2$）",
@@ -784,6 +841,7 @@ window.__TIKU__ = [
   "专题": "证明与应用专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（应用） 已知某商品需求函数 $q=100-2p$（$q$ 需求量、$p$ 价格），总成本函数 $C(q)=50+20q$。求使利润最大的价格与需求量，并求最大利润。",
   "选项": [],
   "答案": "收入 $R=pq=100p-2p^2$，成本 $C=50+20(100-2p)=2050-40p$。利润 $L=R-C=140p-2p^2-2050$。$L'=140-4p=0\\Rightarrow p=35$，$L''=-4<0$ 取最大。$q=100-70=30$，$L_{\\max}=140\\times35-2\\times35^2-2050=400$。",
@@ -796,6 +854,7 @@ window.__TIKU__ = [
   "专题": "证明与应用专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（应用） 求曲线 $y=x^2$ 与 $y=x$ 所围成的平面图形的面积。",
   "选项": [],
   "答案": "两曲线交点 $x=0,\\ 1$。$S=\\int_0^1(x-x^2)\\,dx=\\big[\\frac{x^2}{2}-\\frac{x^3}{3}\\big]_0^1=\\frac12-\\frac13=\\frac16$。",
@@ -808,6 +867,7 @@ window.__TIKU__ = [
   "专题": "证明与应用专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（应用） 用围墙围成面积为 $216\\,m^2$ 的矩形场地，并在正中用一堵隔墙将其分成两块。问长、宽各为多少时，所用材料最省？",
   "选项": [],
   "答案": "设宽 $x$、长 $y$，$xy=216$。材料总长 $L=2(x+y)+x=3x+2y=3x+\\frac{432}{x}$。$L'=3-\\frac{432}{x^2}=0\\Rightarrow x=12$，$L''=\\frac{864}{x^3}>0$ 取最小。$y=216/12=18$。故宽 $12\\,m$、长 $18\\,m$。",
@@ -820,6 +880,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（线代·计算） 计算行列式 $\\begin{vmatrix}1&2&3\\\\4&5&6\\\\7&8&9\\end{vmatrix}$。",
   "选项": [],
   "答案": "0",
@@ -832,6 +893,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（线代·计算） 计算行列式 $\\begin{vmatrix}1&2\\\\3&4\\end{vmatrix}$。",
   "选项": [],
   "答案": "$-2$",
@@ -844,6 +906,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（线代·计算） 计算上三角行列式 $\\begin{vmatrix}1&2&3\\\\0&4&5\\\\0&0&6\\end{vmatrix}$。",
   "选项": [],
   "答案": "24",
@@ -856,6 +919,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（线代·计算） 已知矩阵 $A=\\begin{pmatrix}1&2\\\\3&4\\end{pmatrix}$，矩阵 $B=\\begin{pmatrix}5&6\\\\7&8\\end{pmatrix}$，求 $AB$。",
   "选项": [],
   "答案": "$\\begin{pmatrix}19&22\\\\43&50\\end{pmatrix}$",
@@ -868,6 +932,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（线代·概念） 矩阵 $A=\\begin{pmatrix}1&2&3\\\\4&5&6\\end{pmatrix}$ 的转置 $A^T$ 的阶数是（ ）\n- 选项：A. $2\\times3$ / B. $3\\times2$ / C. $2\\times2$ / D. $3\\times3$",
   "选项": [],
   "答案": "B",
@@ -880,6 +945,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（线代·计算） 解线性方程组 $\\begin{cases}x+y+z=6\\\\2x-y+z=3\\\\x+2y-z=2\\end{cases}$。",
   "选项": [],
   "答案": "$(x,y,z)=(1,2,3)$",
@@ -892,6 +958,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（线代·概念） 方阵 $A$ 可逆的充要条件是（ ）\n- 选项：A. $|A|=0$ / B. $|A|\\ne0$ / C. $A$ 是零矩阵 / D. $A$ 是对称矩阵",
   "选项": [],
   "答案": "B",
@@ -904,6 +971,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（线代·概念） 矩阵 $A$ 的秩是指（ ）",
   "选项": [],
   "答案": "$A$ 中不等于零的子式的最高阶数。",
@@ -916,6 +984,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（线代·计算） 求对角矩阵 $A=\\begin{pmatrix}2&0\\\\0&3\\end{pmatrix}$ 的特征值。",
   "选项": [],
   "答案": "$\\lambda_1=2,\\ \\lambda_2=3$",
@@ -928,6 +997,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（线代·概念） 设 $n$ 阶矩阵 $A$ 的特征值为 $\\lambda_1,\\lambda_2,\\dots,\\lambda_n$，下列说法正确的是（ ）\n- 选项：A. $\\lambda_1+\\lambda_2+\\dots+\\lambda_n=|A|$ / B. $\\lambda_1\\lambda_2\\cdots\\lambda_n=|A|$ / C. $\\lambda_1\\lambda_2\\cdots\\lambda_n=\\text{tr}(A)$ / D. 特征值互不相同",
   "选项": [],
   "答案": "B",
@@ -940,6 +1010,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（线代·计算） 求 $A=\\begin{pmatrix}1&2\\\\3&4\\end{pmatrix}$ 的逆矩阵 $A^{-1}$。",
   "选项": [],
   "答案": "$\\begin{pmatrix}-2&1\\\\\\frac32&-\\frac12\\end{pmatrix}$",
@@ -952,6 +1023,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（线代·概念） 齐次线性方程组 $AX=0$ 有非零解的充要条件是（ ）\n- 选项：A. $|A|\\ne0$ / B. $|A|=0$ / C. 常数项全为 $0$ / D. 方程个数多于未知数个数",
   "选项": [],
   "答案": "B",
@@ -964,6 +1036,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（极限·计算） 求 $\\lim\\limits_{x\\to0}\\dfrac{\\sin3x}{x}$。",
   "选项": [],
   "答案": "3",
@@ -976,6 +1049,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（极限·计算） 求 $\\lim\\limits_{x\\to\\infty}\\left(1+\\dfrac1x\\right)^{x}$。",
   "选项": [],
   "答案": "$e$",
@@ -988,6 +1062,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（极限·计算） 求 $\\lim\\limits_{x\\to0}\\dfrac{1-\\cos x}{x^2}$。",
   "选项": [],
   "答案": "$\\frac12$",
@@ -1000,6 +1075,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（极限·计算） 求 $\\lim\\limits_{x\\to0}\\dfrac{e^x-1}{x}$。",
   "选项": [],
   "答案": "1",
@@ -1012,6 +1088,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（极限·计算） 求 $\\lim\\limits_{x\\to\\infty}\\dfrac{2x^2+1}{3x^2-x+1}$。",
   "选项": [],
   "答案": "$\\frac23$",
@@ -1024,6 +1101,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（极限·计算） 求 $\\lim\\limits_{x\\to0}x\\sin\\dfrac1x$。",
   "选项": [],
   "答案": "0",
@@ -1036,6 +1114,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（积分·计算） 求不定积分 $\\int x^2\\,dx$。",
   "选项": [],
   "答案": "$\\frac{x^3}{3}+C$",
@@ -1048,6 +1127,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（积分·计算） 求不定积分 $\\int e^{2x}\\,dx$。",
   "选项": [],
   "答案": "$\\frac12e^{2x}+C$",
@@ -1060,6 +1140,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（积分·计算） 求不定积分 $\\int\\dfrac{1}{1+x^2}\\,dx$。",
   "选项": [],
   "答案": "$\\arctan x+C$",
@@ -1072,6 +1153,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（积分·计算） 求定积分 $\\int_0^1 x\\,dx$。",
   "选项": [],
   "答案": "$\\frac12$",
@@ -1084,6 +1166,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（积分·计算） 求不定积分 $\\int xe^x\\,dx$。",
   "选项": [],
   "答案": "$(x-1)e^x+C$",
@@ -1096,6 +1179,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（积分·计算） 求定积分 $\\int_0^\\pi \\sin x\\,dx$。",
   "选项": [],
   "答案": "2",
@@ -1108,6 +1192,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（多元·计算） 设 $z=x^2y+y^3$，求 $\\dfrac{\\partial z}{\\partial x}$。",
   "选项": [],
   "答案": "$2xy$",
@@ -1120,6 +1205,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（多元·计算） 设 $z=\\ln(x^2+y^2)$，求 $\\dfrac{\\partial z}{\\partial x}$。",
   "选项": [],
   "答案": "$\\dfrac{2x}{x^2+y^2}$",
@@ -1132,6 +1218,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（多元·概念） 函数 $z=f(x,y)$ 在点 $(x_0,y_0)$ 处的全微分公式是（ ）\n- 选项：A. $dz=f_x(x_0,y_0)dx+f_y(x_0,y_0)dy$ / B. $dz=f(x_0,y_0)(dx+dy)$ / C. $dz=f_x'(x_0)dx$ / D. $dz=0$",
   "选项": [],
   "答案": "A",
@@ -1144,6 +1231,7 @@ window.__TIKU__ = [
   "专题": "计算专项",
   "题型": "简答",
   "材料": "",
+  "passage": "",
   "题目": "（多元·计算） 求二重积分 $\\iint\\limits_D x\\,d\\sigma$，其中 $D$ 为 $0\\le x\\le1,\\ 0\\le y\\le1$。",
   "选项": [],
   "答案": "$\\frac12$",
@@ -1220,14 +1308,47 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
 
   if(IS_EN){
     var hintEl=document.querySelector(".hint");
-    if(hintEl) hintEl.innerHTML+='<br><span style="color:#2B5A9E;">💡 英语刷题：点击题目/选项中的蓝色单词可加入生词本，粉色表示已加入。</span>';
+    if(hintEl) hintEl.innerHTML+='<br><span style="color:#2B5A9E;">💡 英语刷题：点击题目/选项中的蓝色单词可加入生词本，粉色表示已加入。完形填空可点「查看本篇全文」看完整文章。</span>';
   }
+  // 完形填空弹窗
+  function openPassage(text){
+    if(!text) return;
+    var modal=$("passageModal"), content=$("passageContent");
+    content.innerHTML=markWords(text);
+    modal.style.display="flex";
+    // 弹窗内单词点击加入生词本
+    content.querySelectorAll(".word-clickable").forEach(function(el){
+      el.addEventListener("click", function(e){
+        e.stopPropagation();
+        var w=el.getAttribute("data-word");
+        if(w && addShengci(w)) el.classList.add("word-saved");
+      });
+    });
+  }
+  function closePassage(){ $("passageModal").style.display="none"; }
+  var _pc=$("passageClose"); if(_pc) _pc.onclick=closePassage;
+  var _pm=$("passageModal"); if(_pm) _pm.addEventListener("click", function(e){ if(e.target===_pm) closePassage(); });
   var topics=[];
   ALL.forEach(function(it){ if(topics.indexOf(it["专题"])<0) topics.push(it["专题"]); });
   topics.sort();
   topics.forEach(function(t){ var o=document.createElement("option"); o.value=t; o.textContent=t; $("selTopic").appendChild(o); });
 
   var mode="shuffle"; // shuffle|order|undone|basket
+  var clozeFullMode=false;
+  try{ clozeFullMode=localStorage.getItem("yingyu_cloze_full")==="1"; }catch(e){}
+  if(IS_EN){
+    var btnCM=$("btnClozeMode");
+    if(btnCM){
+      btnCM.style.display="inline-block";
+      btnCM.textContent=clozeFullMode?"完形全文：开":"完形全文：关";
+      btnCM.onclick=function(){
+        clozeFullMode=!clozeFullMode;
+        try{ localStorage.setItem("yingyu_cloze_full", clozeFullMode?"1":"0"); }catch(e){}
+        btnCM.textContent=clozeFullMode?"完形全文：开":"完形全文：关";
+        show();
+      };
+    }
+  }
   var list=[], idx=0, revealed=false, answered=false;
   function setMode(m){
     mode=m;
@@ -1299,7 +1420,11 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     if(basket.indexOf(it.id)>=0) html+='<span class="tag" style="background:rgba(234,102,104,0.14);color:#B44244;">已入篮</span>';
     html+='</div>';
     if(it["材料"]) html+='<div class="material">'+markWords(it["材料"])+'</div>';
+    if(IS_EN && clozeFullMode && it["passage"]){
+      html+='<div class="material" style="border-left-color:#EAA7B2;max-height:300px;overflow-y:auto;">'+markWords(it["passage"])+'</div>';
+    }
     html+='<div class="qtext">'+markWords(it["题目"])+'</div>';
+    if(IS_EN && it["passage"]) html+='<div style="margin-bottom:10px;"><button id="btnPassage" style="background:#9BBBF4;color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;">📖 查看本篇全文</button></div>';
     if(it["选项"]&&it["选项"].length){
       html+='<ul class="opts">';
       var letters="ABCDEFGH";
@@ -1331,6 +1456,9 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
           }
         });
       });
+      // 完形填空：查看本篇全文
+      var btnP=$("btnPassage");
+      if(btnP) btnP.onclick=function(){ openPassage(it["passage"]); };
     }
 
     var ansBox=$("ans"), fb=$("fb");

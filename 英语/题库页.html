@@ -103,6 +103,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
     <button id="btnUndone">只看未做</button>
     <button id="btnBasket">错题篮子</button>
     <button id="btnReset">重置进度</button>
+    <button id="btnClozeMode" style="display:none;background:#EAA7B2;color:#fff;">完形全文：关</button>
   </div>
 
   <div id="card"></div>
@@ -122,6 +123,14 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
   </div>
 
   <div id="toast"></div>
+  <div id="passageModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:9999;justify-content:center;align-items:center;padding:20px;">
+    <div style="background:#fff;border-radius:16px;max-width:700px;width:100%;max-height:85vh;overflow-y:auto;padding:24px;position:relative;">
+      <div id="passageClose" style="position:absolute;top:12px;right:16px;font-size:24px;cursor:pointer;color:#999;line-height:1;">×</div>
+      <h3 style="margin-bottom:14px;font-size:16px;">📖 完形填空 · 本篇全文</h3>
+      <div id="passageContent" style="font-size:14px;line-height:1.8;color:#333;white-space:pre-wrap;"></div>
+      <div style="margin-top:16px;font-size:12px;color:#999;">💡 点击文中蓝色单词可加入生词本</div>
+    </div>
+  </div>
 
   <div class="hint">
     操作：看题 → 点选答案判对错（或点「显示答案」）→ 按结果点「做对了」或「做错了·记入错题」→ 攒够一批点「存入错题本」。从“启动错题本”打开时，系统会自动写入并更新复习页。<br>
@@ -138,6 +147,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "I'm leaving in \\_\\_\\_\\_ minute. In \\_\\_\\_\\_ fact, I'll leave when I turn off the lights.",
   "选项": [
    "/; the",
@@ -155,6 +165,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "Please turn to Page \\_\\_\\_\\_, and look at the \\_\\_\\_\\_ picture.",
   "选项": [
    "Two; second",
@@ -172,6 +183,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "The kids learned that light \\_\\_\\_\\_ faster than sound.",
   "选项": [
    "travel",
@@ -189,6 +201,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "The photo exhibition was held to \\_\\_\\_\\_ people's environmental awareness.",
   "选项": [
    "rise",
@@ -206,6 +219,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "The famous lawyer made a speech \\_\\_\\_\\_ the education law.",
   "选项": [
    "in",
@@ -223,6 +237,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "— We need a drink. — \\_\\_\\_\\_! Let's have one.",
   "选项": [
    "Greatly",
@@ -240,6 +255,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "Neither you nor I am the expert on this issue, \\_\\_\\_\\_?",
   "选项": [
    "are we",
@@ -257,6 +273,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "The hall was named after the professor \\_\\_\\_\\_ had made a great contribution to the university.",
   "选项": [
    "which",
@@ -274,6 +291,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "Hardly had I put down my cellphone \\_\\_\\_\\_ it rang again.",
   "选项": [
    "as",
@@ -291,6 +309,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "Peter won first prize in the Chinese Speech Competition. He \\_\\_\\_\\_ have studied very hard.",
   "选项": [
    "may",
@@ -308,6 +327,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "The AI engineer, as well as his team members, \\_\\_\\_\\_ to attend the seminar on ChatGPT last month.",
   "选项": [
    "was invited",
@@ -325,6 +345,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "The teacher explained it again \\_\\_\\_\\_ he could make himself better understood.",
   "选项": [
    "now that",
@@ -342,6 +363,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "The \\_\\_\\_\\_ of blood always makes her frightened.",
   "选项": [
    "sight",
@@ -359,6 +381,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "As we arrived too early, \\_\\_\\_\\_ of the rooms were ready.",
   "选项": [
    "all",
@@ -376,6 +399,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "When he was a child, the scientist was \\_\\_\\_\\_ about how life on earth began.",
   "选项": [
    "curious",
@@ -393,6 +417,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "— Have you completed your report yet? — No, but I \\_\\_\\_\\_ on it all day yesterday.",
   "选项": [
    "would work",
@@ -410,6 +435,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "\\_\\_\\_\\_ I know, they will go to Chengdu to watch the World University Games this summer.",
   "选项": [
    "As though",
@@ -427,6 +453,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "Never in my life \\_\\_\\_\\_ such a wonderful lion dance.",
   "选项": [
    "have I seen",
@@ -444,6 +471,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "The school \\_\\_\\_\\_ great importance to students' mental health.",
   "选项": [
    "attaches",
@@ -461,6 +489,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "They gave a(n) \\_\\_\\_\\_ broadcast while the talent show was going on.",
   "选项": [
    "living",
@@ -478,6 +507,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "\\_\\_\\_\\_ it was only 5 p.m., the street lights in the northeast of the city were already on.",
   "选项": [
    "Although",
@@ -495,6 +525,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "Lily has made an \\_\\_\\_\\_ to meet her science teacher next Monday.",
   "选项": [
    "attention",
@@ -512,6 +543,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "It is high time you \\_\\_\\_\\_ smoking.",
   "选项": [
    "give up",
@@ -529,6 +561,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "Weather \\_\\_\\_\\_, the foreign guests will visit the Panda Base.",
   "选项": [
    "permits",
@@ -546,6 +579,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "The manager had his assistant \\_\\_\\_\\_ a presentation for the meeting with the clients.",
   "选项": [
    "preparing",
@@ -563,6 +597,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "\\_\\_\\_\\_ finds the lost car will get a gift as a reward.",
   "选项": [
    "Whomever",
@@ -580,6 +615,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "We were excited to learn Prof. Tu Youyou became the \\_\\_\\_\\_ scientist that won the Nobel Prize.",
   "选项": [
    "Chinese woman first",
@@ -597,6 +633,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "I'd like to take \\_\\_\\_\\_ of this opportunity to thank you for your support.",
   "选项": [
    "care",
@@ -614,6 +651,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "Traveling is becoming \\_\\_\\_\\_ popular in China as more and more people have their own cars.\n### B. 备考练习（库课）",
   "选项": [
    "importantly",
@@ -631,6 +669,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "— I'm afraid I can't finish the work on time. — \\_\\_\\_\\_. I will help you.",
   "选项": [
    "Don't worry",
@@ -648,6 +687,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "The film \\_\\_\\_\\_ for ten minutes when we got to the cinema.",
   "选项": [
    "has been on",
@@ -665,6 +705,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "She is the only one of the students who \\_\\_\\_\\_ good at French.",
   "选项": [
    "is",
@@ -682,6 +723,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "It is necessary for us \\_\\_\\_\\_ English well.",
   "选项": [
    "learn",
@@ -699,6 +741,7 @@ window.__TIKU__ = [
   "专题": "词汇与语法结构",
   "题型": "单选",
   "材料": "",
+  "passage": "",
   "题目": "The doctor suggested that he \\_\\_\\_\\_ a rest at once.",
   "选项": [
    "takes",
@@ -716,6 +759,7 @@ window.__TIKU__ = [
   "专题": "阅读理解",
   "题型": "单选",
   "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.",
+  "passage": "",
   "题目": "How long had Deng been preparing for the space mission?",
   "选项": [
    "Nearly 56 years",
@@ -733,6 +777,7 @@ window.__TIKU__ = [
   "专题": "阅读理解",
   "题型": "单选",
   "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.",
+  "passage": "",
   "题目": "The underlined word \"cherish\" is closest in meaning to \\_\\_\\_\\_.",
   "选项": [
    "value",
@@ -750,6 +795,7 @@ window.__TIKU__ = [
   "专题": "阅读理解",
   "题型": "单选",
   "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.",
+  "passage": "",
   "题目": "Who was Deng especially grateful to?",
   "选项": [
    "The people who chose him",
@@ -767,6 +813,7 @@ window.__TIKU__ = [
   "专题": "阅读理解",
   "题型": "单选",
   "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.",
+  "passage": "",
   "题目": "Which of the following can best describe Deng?",
   "选项": [
    "Generous",
@@ -784,6 +831,7 @@ window.__TIKU__ = [
   "专题": "阅读理解",
   "题型": "单选",
   "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.",
+  "passage": "",
   "题目": "The text is mainly about \\_\\_\\_\\_.",
   "选项": [
    "an engineer who kept working hard",
@@ -801,6 +849,7 @@ window.__TIKU__ = [
   "专题": "2022 四川专升本真题",
   "题型": "单选",
   "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "passage": "",
   "题目": "It is reported that ___ president will have dinner with ___ President O'Connor tomorrow.",
   "选项": [
    "the; the",
@@ -818,6 +867,7 @@ window.__TIKU__ = [
   "专题": "2022 四川专升本真题",
   "题型": "单选",
   "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "passage": "",
   "题目": "It's only ___ from my school, so I can go on foot.",
   "选项": [
    "ten minute's walk",
@@ -835,6 +885,7 @@ window.__TIKU__ = [
   "专题": "2022 四川专升本真题",
   "题型": "单选",
   "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "passage": "",
   "题目": "Put on your coat, ___ you will catch a cold.",
   "选项": [
    "and",
@@ -852,6 +903,7 @@ window.__TIKU__ = [
   "专题": "2022 四川专升本真题",
   "题型": "单选",
   "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "passage": "",
   "题目": "It is said that the author ___ by the end of this year.",
   "选项": [
    "will finish",
@@ -869,6 +921,7 @@ window.__TIKU__ = [
   "专题": "2022 四川专升本真题",
   "题型": "单选",
   "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "passage": "",
   "题目": "If you had done your homework yesterday, you ___ how to answer the question now.",
   "选项": [
    "know",
@@ -886,6 +939,7 @@ window.__TIKU__ = [
   "专题": "2022 四川专升本真题",
   "题型": "单选",
   "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "passage": "",
   "题目": "They must have met with their guests last night, ___?",
   "选项": [
    "haven't they",
@@ -903,6 +957,7 @@ window.__TIKU__ = [
   "专题": "2022 四川专升本真题",
   "题型": "单选",
   "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "passage": "",
   "题目": "No sooner had he sat down ___ somebody knocked on the door.",
   "选项": [
    "when",
@@ -920,6 +975,7 @@ window.__TIKU__ = [
   "专题": "2022 四川专升本真题",
   "题型": "单选",
   "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "passage": "",
   "题目": "The manager together with some workers ___ visiting the new company now.",
   "选项": [
    "are",
@@ -937,6 +993,7 @@ window.__TIKU__ = [
   "专题": "2022 四川专升本真题",
   "题型": "单选",
   "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "passage": "",
   "题目": "Some mountain areas, ___ the terrible road condition, are hard to arrive.",
   "选项": [
    "but for",
@@ -954,6 +1011,7 @@ window.__TIKU__ = [
   "专题": "2022 四川专升本真题",
   "题型": "单选",
   "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "passage": "",
   "题目": "Poor ___ she was, she never accepted anything for nothing.",
   "选项": [
    "although",
@@ -971,6 +1029,7 @@ window.__TIKU__ = [
   "专题": "2022 四川专升本真题",
   "题型": "简答",
   "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "passage": "",
   "题目": "翻译：Please believe that the last thing I want to do is to be late and offend you and the guests from the head office.",
   "选项": [],
   "答案": "请你相信，我最不愿意做的事情就是迟到并冒犯您和总部来的客人。",
@@ -983,6 +1042,7 @@ window.__TIKU__ = [
   "专题": "2022 四川专升本真题",
   "题型": "简答",
   "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "passage": "",
   "题目": "翻译：He realized that leaving the bird there was equal to signing its death sentence, because it might be eaten by predators.",
   "选项": [],
   "答案": "他意识到，把鸟留在那里无异于让它等死，因为它可能会被食肉动物吃掉。",
@@ -995,6 +1055,7 @@ window.__TIKU__ = [
   "专题": "2022 四川专升本真题",
   "题型": "简答",
   "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "passage": "",
   "题目": "翻译：Young people's attitudes towards side jobs are not all the same.",
   "选项": [],
   "答案": "年轻人对副业的态度不尽相同。",
@@ -1007,6 +1068,7 @@ window.__TIKU__ = [
   "专题": "2022 四川专升本真题",
   "题型": "简答",
   "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "passage": "",
   "题目": "翻译：In space, the astronauts carried out experiments to demonstrate interesting physical phenomena, such as \"disappearing buoyancy\" and \"water ball\".",
   "选项": [],
   "答案": "在太空中，宇航员通过实验展示了有趣的物理现象，如\"浮力消失\"和\"水球\"。",
@@ -1019,6 +1081,7 @@ window.__TIKU__ = [
   "专题": "2022 四川专升本真题",
   "题型": "简答",
   "材料": "（节选）：Deng Qingming said he never lost sight of his \"space dream\" while waiting, training and preparing for almost a quarter of a century to take part in a space mission. ... \"When I was told that I had been chosen for the Shenzhou XV mission, I was pretty calm. What I was thinking about was that I must cherish this opportunity and train harder.\" ... Deng said his gratitude went to a lot of people, especially the scientists, engineers and other workers in China's space industry.\n**万能结构模板**\n[开头] Nowadays, there is a growing concern about the issue of ________.\nDifferent people hold different opinions. (引出话题)\n[中间] On the one hand, some people argue that ________. (观点一+理由)\nOn the other hand, others believe that ________. (观点二+理由)\nBesides, ________. (补充论证)\n[结尾] In my opinion, ________. Only in this way can we ________. (我的观点+号召)\n**高频句型（开头）**\n**高频句型（中间/结尾）**\n**常考话题参考**：online learning（在线学习）、environmental protection（环保）、part-time jobs（兼职）、college life（大学生活）、sports（运动）、healthy lifestyle（健康生活）",
+  "passage": "",
   "题目": "写作：假设你是李夏，是第 31 届世界大学生运动会的志愿者，组委会安排你给来自世界各地的运动员写一封英文信，推荐四川的一个知名景点。内容包括：①景点介绍 ②推荐理由 ③注意事项。参考词汇：volunteer, recommend, scenic spot。",
   "选项": [],
   "答案": "（参考范文）： Dear friends, Welcome to Chengdu! I am a volunteer for the 31st World University Games. The organizing committee has asked me to recommend a famous scenic spot to you. One I strongly recommend is the Research Base of Giant Panda Breeding, since Chengdu is the home to pandas. There you can closely observe pandas and even watch female pandas nursing their cubs, which can further your understanding of how to protect these beautiful but endangered creatures. Besides, you'd better go there early in the morning, because it is very hot at noon and pandas will go to sleep inside the house then. May you have a good day!",
@@ -1031,6 +1094,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：My father often works very hard. And he has little time to see a film. Here I'll tell you a funny story about him. One afternoon, when he finished his work and was about to go home, he found a film ticket under the glass on his desk. He thought he happened to have not much work to do that day and it was quite wonderful to pass the evening at the cinema. So he came back home and quickly finished his supper. Then he said good-bye to us and left. But to our surprise, he came back about half an hour later. I asked him what was the matter. He smiled and told us about a funny thing that had happened at the cinema. When my father was sitting in his seat, a woman came to my father's and said that the seat was hers. My father was surprised. He took out the ticket and looked at it carefully. It was Row 17, Seat 3. And then he looked at the seat. It was the same. So he asked her to show her ticket. She took out the ticket at once and the seat shown in it was Row 17, Seat 3. Why? What's the matter with all this? While they were wondering, suddenly the woman said, \"The colors of the tickets are different.\" So they looked at the tickets more carefully. After a while, my father said, \"Oh, I'm sorry, I made a mistake. My ticket is for the film a month ago. Take this seat, please.\" With these words, he left the cinema.",
   "题目": "完形：My father often works very hard. And he has ___ to see a film.",
   "选项": [
    "little money",
@@ -1048,6 +1112,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：My father often works very hard. And he has little time to see a film. Here I'll tell you a funny story about him. One afternoon, when he finished his work and was about to go home, he found a film ticket under the glass on his desk. He thought he happened to have not much work to do that day and it was quite wonderful to pass the evening at the cinema. So he came back home and quickly finished his supper. Then he said good-bye to us and left. But to our surprise, he came back about half an hour later. I asked him what was the matter. He smiled and told us about a funny thing that had happened at the cinema. When my father was sitting in his seat, a woman came to my father's and said that the seat was hers. My father was surprised. He took out the ticket and looked at it carefully. It was Row 17, Seat 3. And then he looked at the seat. It was the same. So he asked her to show her ticket. She took out the ticket at once and the seat shown in it was Row 17, Seat 3. Why? What's the matter with all this? While they were wondering, suddenly the woman said, \"The colors of the tickets are different.\" So they looked at the tickets more carefully. After a while, my father said, \"Oh, I'm sorry, I made a mistake. My ticket is for the film a month ago. Take this seat, please.\" With these words, he left the cinema.",
   "题目": "完形：Here I'll tell you ___ about him.",
   "选项": [
    "a funny story",
@@ -1065,6 +1130,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：My father often works very hard. And he has little time to see a film. Here I'll tell you a funny story about him. One afternoon, when he finished his work and was about to go home, he found a film ticket under the glass on his desk. He thought he happened to have not much work to do that day and it was quite wonderful to pass the evening at the cinema. So he came back home and quickly finished his supper. Then he said good-bye to us and left. But to our surprise, he came back about half an hour later. I asked him what was the matter. He smiled and told us about a funny thing that had happened at the cinema. When my father was sitting in his seat, a woman came to my father's and said that the seat was hers. My father was surprised. He took out the ticket and looked at it carefully. It was Row 17, Seat 3. And then he looked at the seat. It was the same. So he asked her to show her ticket. She took out the ticket at once and the seat shown in it was Row 17, Seat 3. Why? What's the matter with all this? While they were wondering, suddenly the woman said, \"The colors of the tickets are different.\" So they looked at the tickets more carefully. After a while, my father said, \"Oh, I'm sorry, I made a mistake. My ticket is for the film a month ago. Take this seat, please.\" With these words, he left the cinema.",
   "题目": "完形：One afternoon, when he finished his work and ___ go home...",
   "选项": [
    "was to",
@@ -1082,6 +1148,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：My father often works very hard. And he has little time to see a film. Here I'll tell you a funny story about him. One afternoon, when he finished his work and was about to go home, he found a film ticket under the glass on his desk. He thought he happened to have not much work to do that day and it was quite wonderful to pass the evening at the cinema. So he came back home and quickly finished his supper. Then he said good-bye to us and left. But to our surprise, he came back about half an hour later. I asked him what was the matter. He smiled and told us about a funny thing that had happened at the cinema. When my father was sitting in his seat, a woman came to my father's and said that the seat was hers. My father was surprised. He took out the ticket and looked at it carefully. It was Row 17, Seat 3. And then he looked at the seat. It was the same. So he asked her to show her ticket. She took out the ticket at once and the seat shown in it was Row 17, Seat 3. Why? What's the matter with all this? While they were wondering, suddenly the woman said, \"The colors of the tickets are different.\" So they looked at the tickets more carefully. After a while, my father said, \"Oh, I'm sorry, I made a mistake. My ticket is for the film a month ago. Take this seat, please.\" With these words, he left the cinema.",
   "题目": "完形：...he found a film ticket under the ___ on his desk.",
   "选项": [
    "box",
@@ -1099,6 +1166,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：My father often works very hard. And he has little time to see a film. Here I'll tell you a funny story about him. One afternoon, when he finished his work and was about to go home, he found a film ticket under the glass on his desk. He thought he happened to have not much work to do that day and it was quite wonderful to pass the evening at the cinema. So he came back home and quickly finished his supper. Then he said good-bye to us and left. But to our surprise, he came back about half an hour later. I asked him what was the matter. He smiled and told us about a funny thing that had happened at the cinema. When my father was sitting in his seat, a woman came to my father's and said that the seat was hers. My father was surprised. He took out the ticket and looked at it carefully. It was Row 17, Seat 3. And then he looked at the seat. It was the same. So he asked her to show her ticket. She took out the ticket at once and the seat shown in it was Row 17, Seat 3. Why? What's the matter with all this? While they were wondering, suddenly the woman said, \"The colors of the tickets are different.\" So they looked at the tickets more carefully. After a while, my father said, \"Oh, I'm sorry, I made a mistake. My ticket is for the film a month ago. Take this seat, please.\" With these words, he left the cinema.",
   "题目": "完形：He thought he ___ to have not much work to do that day...",
   "选项": [
    "happened",
@@ -1116,6 +1184,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：My father often works very hard. And he has little time to see a film. Here I'll tell you a funny story about him. One afternoon, when he finished his work and was about to go home, he found a film ticket under the glass on his desk. He thought he happened to have not much work to do that day and it was quite wonderful to pass the evening at the cinema. So he came back home and quickly finished his supper. Then he said good-bye to us and left. But to our surprise, he came back about half an hour later. I asked him what was the matter. He smiled and told us about a funny thing that had happened at the cinema. When my father was sitting in his seat, a woman came to my father's and said that the seat was hers. My father was surprised. He took out the ticket and looked at it carefully. It was Row 17, Seat 3. And then he looked at the seat. It was the same. So he asked her to show her ticket. She took out the ticket at once and the seat shown in it was Row 17, Seat 3. Why? What's the matter with all this? While they were wondering, suddenly the woman said, \"The colors of the tickets are different.\" So they looked at the tickets more carefully. After a while, my father said, \"Oh, I'm sorry, I made a mistake. My ticket is for the film a month ago. Take this seat, please.\" With these words, he left the cinema.",
   "题目": "完形：...and ___ was quite wonderful to pass the ___ at the cinema.",
   "选项": [
    "it; evening",
@@ -1133,6 +1202,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：My father often works very hard. And he has little time to see a film. Here I'll tell you a funny story about him. One afternoon, when he finished his work and was about to go home, he found a film ticket under the glass on his desk. He thought he happened to have not much work to do that day and it was quite wonderful to pass the evening at the cinema. So he came back home and quickly finished his supper. Then he said good-bye to us and left. But to our surprise, he came back about half an hour later. I asked him what was the matter. He smiled and told us about a funny thing that had happened at the cinema. When my father was sitting in his seat, a woman came to my father's and said that the seat was hers. My father was surprised. He took out the ticket and looked at it carefully. It was Row 17, Seat 3. And then he looked at the seat. It was the same. So he asked her to show her ticket. She took out the ticket at once and the seat shown in it was Row 17, Seat 3. Why? What's the matter with all this? While they were wondering, suddenly the woman said, \"The colors of the tickets are different.\" So they looked at the tickets more carefully. After a while, my father said, \"Oh, I'm sorry, I made a mistake. My ticket is for the film a month ago. Take this seat, please.\" With these words, he left the cinema.",
   "题目": "完形：So he came back home and ___ finished his supper.",
   "选项": [
    "early",
@@ -1150,6 +1220,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：My father often works very hard. And he has little time to see a film. Here I'll tell you a funny story about him. One afternoon, when he finished his work and was about to go home, he found a film ticket under the glass on his desk. He thought he happened to have not much work to do that day and it was quite wonderful to pass the evening at the cinema. So he came back home and quickly finished his supper. Then he said good-bye to us and left. But to our surprise, he came back about half an hour later. I asked him what was the matter. He smiled and told us about a funny thing that had happened at the cinema. When my father was sitting in his seat, a woman came to my father's and said that the seat was hers. My father was surprised. He took out the ticket and looked at it carefully. It was Row 17, Seat 3. And then he looked at the seat. It was the same. So he asked her to show her ticket. She took out the ticket at once and the seat shown in it was Row 17, Seat 3. Why? What's the matter with all this? While they were wondering, suddenly the woman said, \"The colors of the tickets are different.\" So they looked at the tickets more carefully. After a while, my father said, \"Oh, I'm sorry, I made a mistake. My ticket is for the film a month ago. Take this seat, please.\" With these words, he left the cinema.",
   "题目": "完形：Then he said ___ to us and left.",
   "选项": [
    "hello",
@@ -1167,6 +1238,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：My father often works very hard. And he has little time to see a film. Here I'll tell you a funny story about him. One afternoon, when he finished his work and was about to go home, he found a film ticket under the glass on his desk. He thought he happened to have not much work to do that day and it was quite wonderful to pass the evening at the cinema. So he came back home and quickly finished his supper. Then he said good-bye to us and left. But to our surprise, he came back about half an hour later. I asked him what was the matter. He smiled and told us about a funny thing that had happened at the cinema. When my father was sitting in his seat, a woman came to my father's and said that the seat was hers. My father was surprised. He took out the ticket and looked at it carefully. It was Row 17, Seat 3. And then he looked at the seat. It was the same. So he asked her to show her ticket. She took out the ticket at once and the seat shown in it was Row 17, Seat 3. Why? What's the matter with all this? While they were wondering, suddenly the woman said, \"The colors of the tickets are different.\" So they looked at the tickets more carefully. After a while, my father said, \"Oh, I'm sorry, I made a mistake. My ticket is for the film a month ago. Take this seat, please.\" With these words, he left the cinema.",
   "题目": "完形：But to our ___, he came back about half an hour later.",
   "选项": [
    "disappointment",
@@ -1184,6 +1256,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：My father often works very hard. And he has little time to see a film. Here I'll tell you a funny story about him. One afternoon, when he finished his work and was about to go home, he found a film ticket under the glass on his desk. He thought he happened to have not much work to do that day and it was quite wonderful to pass the evening at the cinema. So he came back home and quickly finished his supper. Then he said good-bye to us and left. But to our surprise, he came back about half an hour later. I asked him what was the matter. He smiled and told us about a funny thing that had happened at the cinema. When my father was sitting in his seat, a woman came to my father's and said that the seat was hers. My father was surprised. He took out the ticket and looked at it carefully. It was Row 17, Seat 3. And then he looked at the seat. It was the same. So he asked her to show her ticket. She took out the ticket at once and the seat shown in it was Row 17, Seat 3. Why? What's the matter with all this? While they were wondering, suddenly the woman said, \"The colors of the tickets are different.\" So they looked at the tickets more carefully. After a while, my father said, \"Oh, I'm sorry, I made a mistake. My ticket is for the film a month ago. Take this seat, please.\" With these words, he left the cinema.",
   "题目": "完形：I ___ him what was the matter.",
   "选项": [
    "asked",
@@ -1201,6 +1274,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：My father often works very hard. And he has little time to see a film. Here I'll tell you a funny story about him. One afternoon, when he finished his work and was about to go home, he found a film ticket under the glass on his desk. He thought he happened to have not much work to do that day and it was quite wonderful to pass the evening at the cinema. So he came back home and quickly finished his supper. Then he said good-bye to us and left. But to our surprise, he came back about half an hour later. I asked him what was the matter. He smiled and told us about a funny thing that had happened at the cinema. When my father was sitting in his seat, a woman came to my father's and said that the seat was hers. My father was surprised. He took out the ticket and looked at it carefully. It was Row 17, Seat 3. And then he looked at the seat. It was the same. So he asked her to show her ticket. She took out the ticket at once and the seat shown in it was Row 17, Seat 3. Why? What's the matter with all this? While they were wondering, suddenly the woman said, \"The colors of the tickets are different.\" So they looked at the tickets more carefully. After a while, my father said, \"Oh, I'm sorry, I made a mistake. My ticket is for the film a month ago. Take this seat, please.\" With these words, he left the cinema.",
   "题目": "完形：He smiled and told us about ___ funny thing...",
   "选项": [
    "a",
@@ -1218,6 +1292,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：My father often works very hard. And he has little time to see a film. Here I'll tell you a funny story about him. One afternoon, when he finished his work and was about to go home, he found a film ticket under the glass on his desk. He thought he happened to have not much work to do that day and it was quite wonderful to pass the evening at the cinema. So he came back home and quickly finished his supper. Then he said good-bye to us and left. But to our surprise, he came back about half an hour later. I asked him what was the matter. He smiled and told us about a funny thing that had happened at the cinema. When my father was sitting in his seat, a woman came to my father's and said that the seat was hers. My father was surprised. He took out the ticket and looked at it carefully. It was Row 17, Seat 3. And then he looked at the seat. It was the same. So he asked her to show her ticket. She took out the ticket at once and the seat shown in it was Row 17, Seat 3. Why? What's the matter with all this? While they were wondering, suddenly the woman said, \"The colors of the tickets are different.\" So they looked at the tickets more carefully. After a while, my father said, \"Oh, I'm sorry, I made a mistake. My ticket is for the film a month ago. Take this seat, please.\" With these words, he left the cinema.",
   "题目": "完形：When my father was sitting in his seat, a ___ came to my father's...",
   "选项": [
    "man",
@@ -1235,6 +1310,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：My father often works very hard. And he has little time to see a film. Here I'll tell you a funny story about him. One afternoon, when he finished his work and was about to go home, he found a film ticket under the glass on his desk. He thought he happened to have not much work to do that day and it was quite wonderful to pass the evening at the cinema. So he came back home and quickly finished his supper. Then he said good-bye to us and left. But to our surprise, he came back about half an hour later. I asked him what was the matter. He smiled and told us about a funny thing that had happened at the cinema. When my father was sitting in his seat, a woman came to my father's and said that the seat was hers. My father was surprised. He took out the ticket and looked at it carefully. It was Row 17, Seat 3. And then he looked at the seat. It was the same. So he asked her to show her ticket. She took out the ticket at once and the seat shown in it was Row 17, Seat 3. Why? What's the matter with all this? While they were wondering, suddenly the woman said, \"The colors of the tickets are different.\" So they looked at the tickets more carefully. After a while, my father said, \"Oh, I'm sorry, I made a mistake. My ticket is for the film a month ago. Take this seat, please.\" With these words, he left the cinema.",
   "题目": "完形：...and said that the seat was ___.",
   "选项": [
    "hers",
@@ -1252,6 +1328,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：My father often works very hard. And he has little time to see a film. Here I'll tell you a funny story about him. One afternoon, when he finished his work and was about to go home, he found a film ticket under the glass on his desk. He thought he happened to have not much work to do that day and it was quite wonderful to pass the evening at the cinema. So he came back home and quickly finished his supper. Then he said good-bye to us and left. But to our surprise, he came back about half an hour later. I asked him what was the matter. He smiled and told us about a funny thing that had happened at the cinema. When my father was sitting in his seat, a woman came to my father's and said that the seat was hers. My father was surprised. He took out the ticket and looked at it carefully. It was Row 17, Seat 3. And then he looked at the seat. It was the same. So he asked her to show her ticket. She took out the ticket at once and the seat shown in it was Row 17, Seat 3. Why? What's the matter with all this? While they were wondering, suddenly the woman said, \"The colors of the tickets are different.\" So they looked at the tickets more carefully. After a while, my father said, \"Oh, I'm sorry, I made a mistake. My ticket is for the film a month ago. Take this seat, please.\" With these words, he left the cinema.",
   "题目": "完形：He took out the ticket ___ looked at it carefully.",
   "选项": [
    "and",
@@ -1269,6 +1346,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：My father often works very hard. And he has little time to see a film. Here I'll tell you a funny story about him. One afternoon, when he finished his work and was about to go home, he found a film ticket under the glass on his desk. He thought he happened to have not much work to do that day and it was quite wonderful to pass the evening at the cinema. So he came back home and quickly finished his supper. Then he said good-bye to us and left. But to our surprise, he came back about half an hour later. I asked him what was the matter. He smiled and told us about a funny thing that had happened at the cinema. When my father was sitting in his seat, a woman came to my father's and said that the seat was hers. My father was surprised. He took out the ticket and looked at it carefully. It was Row 17, Seat 3. And then he looked at the seat. It was the same. So he asked her to show her ticket. She took out the ticket at once and the seat shown in it was Row 17, Seat 3. Why? What's the matter with all this? While they were wondering, suddenly the woman said, \"The colors of the tickets are different.\" So they looked at the tickets more carefully. After a while, my father said, \"Oh, I'm sorry, I made a mistake. My ticket is for the film a month ago. Take this seat, please.\" With these words, he left the cinema.",
   "题目": "完形：It was Row 17, ___.",
   "选项": [
    "Seat 1",
@@ -1286,6 +1364,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：My father often works very hard. And he has little time to see a film. Here I'll tell you a funny story about him. One afternoon, when he finished his work and was about to go home, he found a film ticket under the glass on his desk. He thought he happened to have not much work to do that day and it was quite wonderful to pass the evening at the cinema. So he came back home and quickly finished his supper. Then he said good-bye to us and left. But to our surprise, he came back about half an hour later. I asked him what was the matter. He smiled and told us about a funny thing that had happened at the cinema. When my father was sitting in his seat, a woman came to my father's and said that the seat was hers. My father was surprised. He took out the ticket and looked at it carefully. It was Row 17, Seat 3. And then he looked at the seat. It was the same. So he asked her to show her ticket. She took out the ticket at once and the seat shown in it was Row 17, Seat 3. Why? What's the matter with all this? While they were wondering, suddenly the woman said, \"The colors of the tickets are different.\" So they looked at the tickets more carefully. After a while, my father said, \"Oh, I'm sorry, I made a mistake. My ticket is for the film a month ago. Take this seat, please.\" With these words, he left the cinema.",
   "题目": "完形：So he asked her ___ her ticket.",
   "选项": [
    "it bring",
@@ -1303,6 +1382,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：My father often works very hard. And he has little time to see a film. Here I'll tell you a funny story about him. One afternoon, when he finished his work and was about to go home, he found a film ticket under the glass on his desk. He thought he happened to have not much work to do that day and it was quite wonderful to pass the evening at the cinema. So he came back home and quickly finished his supper. Then he said good-bye to us and left. But to our surprise, he came back about half an hour later. I asked him what was the matter. He smiled and told us about a funny thing that had happened at the cinema. When my father was sitting in his seat, a woman came to my father's and said that the seat was hers. My father was surprised. He took out the ticket and looked at it carefully. It was Row 17, Seat 3. And then he looked at the seat. It was the same. So he asked her to show her ticket. She took out the ticket at once and the seat shown in it was Row 17, Seat 3. Why? What's the matter with all this? While they were wondering, suddenly the woman said, \"The colors of the tickets are different.\" So they looked at the tickets more carefully. After a while, my father said, \"Oh, I'm sorry, I made a mistake. My ticket is for the film a month ago. Take this seat, please.\" With these words, he left the cinema.",
   "题目": "完形：___? What's the matter with all this?",
   "选项": [
    "Why",
@@ -1320,6 +1400,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：My father often works very hard. And he has little time to see a film. Here I'll tell you a funny story about him. One afternoon, when he finished his work and was about to go home, he found a film ticket under the glass on his desk. He thought he happened to have not much work to do that day and it was quite wonderful to pass the evening at the cinema. So he came back home and quickly finished his supper. Then he said good-bye to us and left. But to our surprise, he came back about half an hour later. I asked him what was the matter. He smiled and told us about a funny thing that had happened at the cinema. When my father was sitting in his seat, a woman came to my father's and said that the seat was hers. My father was surprised. He took out the ticket and looked at it carefully. It was Row 17, Seat 3. And then he looked at the seat. It was the same. So he asked her to show her ticket. She took out the ticket at once and the seat shown in it was Row 17, Seat 3. Why? What's the matter with all this? While they were wondering, suddenly the woman said, \"The colors of the tickets are different.\" So they looked at the tickets more carefully. After a while, my father said, \"Oh, I'm sorry, I made a mistake. My ticket is for the film a month ago. Take this seat, please.\" With these words, he left the cinema.",
   "题目": "完形：The ___ of the tickets are different.",
   "选项": [
    "designs",
@@ -1337,6 +1418,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：My father often works very hard. And he has little time to see a film. Here I'll tell you a funny story about him. One afternoon, when he finished his work and was about to go home, he found a film ticket under the glass on his desk. He thought he happened to have not much work to do that day and it was quite wonderful to pass the evening at the cinema. So he came back home and quickly finished his supper. Then he said good-bye to us and left. But to our surprise, he came back about half an hour later. I asked him what was the matter. He smiled and told us about a funny thing that had happened at the cinema. When my father was sitting in his seat, a woman came to my father's and said that the seat was hers. My father was surprised. He took out the ticket and looked at it carefully. It was Row 17, Seat 3. And then he looked at the seat. It was the same. So he asked her to show her ticket. She took out the ticket at once and the seat shown in it was Row 17, Seat 3. Why? What's the matter with all this? While they were wondering, suddenly the woman said, \"The colors of the tickets are different.\" So they looked at the tickets more carefully. After a while, my father said, \"Oh, I'm sorry, I made a mistake. My ticket is for the film a month ago. Take this seat, please.\" With these words, he left the cinema.",
   "题目": "完形：Oh, ___, I made a mistake.",
   "选项": [
    "I'm sad",
@@ -1354,6 +1436,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：Getting plenty of exercise is very important. I enjoy swimming very much. Last summer I went to the seaside every day. I plan to go there this summer too, but I may not be able to. I have a new job; sometimes I have to work until late at night. Although I now work more hours than I used to, yet I do receive a larger salary. I didn't receive much pay on my old job. I like my new job, but had I known that it would take up so much of my free time, I would not have taken it. I prefer swimming to making more money. I have heard that riding a bike is good exercise. Maybe I will be able to save enough money to buy a bike. My neighbor, Ms Wilson, has a bicycle that I could borrow, but I would rather own my own bike. If I used hers, I would worry about destroying it. Since I make more money now, I think that I can afford to buy my own. Getting a bike is really a good idea, because while I'm riding to and from, I will be getting exercise at the same time. It is easier to get to the seaside on a bike, too. I might be able to go swimming every day after all. This new job is great! I'm very excited. This will be a summer full of exercise.",
   "题目": "完形：Last summer I went to the ___ every day.",
   "选项": [
    "playground",
@@ -1371,6 +1454,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：Getting plenty of exercise is very important. I enjoy swimming very much. Last summer I went to the seaside every day. I plan to go there this summer too, but I may not be able to. I have a new job; sometimes I have to work until late at night. Although I now work more hours than I used to, yet I do receive a larger salary. I didn't receive much pay on my old job. I like my new job, but had I known that it would take up so much of my free time, I would not have taken it. I prefer swimming to making more money. I have heard that riding a bike is good exercise. Maybe I will be able to save enough money to buy a bike. My neighbor, Ms Wilson, has a bicycle that I could borrow, but I would rather own my own bike. If I used hers, I would worry about destroying it. Since I make more money now, I think that I can afford to buy my own. Getting a bike is really a good idea, because while I'm riding to and from, I will be getting exercise at the same time. It is easier to get to the seaside on a bike, too. I might be able to go swimming every day after all. This new job is great! I'm very excited. This will be a summer full of exercise.",
   "题目": "完形：I have a new ___, sometimes I have to work until late at night.",
   "选项": [
    "office",
@@ -1388,6 +1472,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：Getting plenty of exercise is very important. I enjoy swimming very much. Last summer I went to the seaside every day. I plan to go there this summer too, but I may not be able to. I have a new job; sometimes I have to work until late at night. Although I now work more hours than I used to, yet I do receive a larger salary. I didn't receive much pay on my old job. I like my new job, but had I known that it would take up so much of my free time, I would not have taken it. I prefer swimming to making more money. I have heard that riding a bike is good exercise. Maybe I will be able to save enough money to buy a bike. My neighbor, Ms Wilson, has a bicycle that I could borrow, but I would rather own my own bike. If I used hers, I would worry about destroying it. Since I make more money now, I think that I can afford to buy my own. Getting a bike is really a good idea, because while I'm riding to and from, I will be getting exercise at the same time. It is easier to get to the seaside on a bike, too. I might be able to go swimming every day after all. This new job is great! I'm very excited. This will be a summer full of exercise.",
   "题目": "完形：I have to work until ___ at night.",
   "选项": [
    "far",
@@ -1405,6 +1490,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：Getting plenty of exercise is very important. I enjoy swimming very much. Last summer I went to the seaside every day. I plan to go there this summer too, but I may not be able to. I have a new job; sometimes I have to work until late at night. Although I now work more hours than I used to, yet I do receive a larger salary. I didn't receive much pay on my old job. I like my new job, but had I known that it would take up so much of my free time, I would not have taken it. I prefer swimming to making more money. I have heard that riding a bike is good exercise. Maybe I will be able to save enough money to buy a bike. My neighbor, Ms Wilson, has a bicycle that I could borrow, but I would rather own my own bike. If I used hers, I would worry about destroying it. Since I make more money now, I think that I can afford to buy my own. Getting a bike is really a good idea, because while I'm riding to and from, I will be getting exercise at the same time. It is easier to get to the seaside on a bike, too. I might be able to go swimming every day after all. This new job is great! I'm very excited. This will be a summer full of exercise.",
   "题目": "完形：I didn't receive much pay on my ___ job.",
   "选项": [
    "favorite",
@@ -1422,6 +1508,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：Getting plenty of exercise is very important. I enjoy swimming very much. Last summer I went to the seaside every day. I plan to go there this summer too, but I may not be able to. I have a new job; sometimes I have to work until late at night. Although I now work more hours than I used to, yet I do receive a larger salary. I didn't receive much pay on my old job. I like my new job, but had I known that it would take up so much of my free time, I would not have taken it. I prefer swimming to making more money. I have heard that riding a bike is good exercise. Maybe I will be able to save enough money to buy a bike. My neighbor, Ms Wilson, has a bicycle that I could borrow, but I would rather own my own bike. If I used hers, I would worry about destroying it. Since I make more money now, I think that I can afford to buy my own. Getting a bike is really a good idea, because while I'm riding to and from, I will be getting exercise at the same time. It is easier to get to the seaside on a bike, too. I might be able to go swimming every day after all. This new job is great! I'm very excited. This will be a summer full of exercise.",
   "题目": "完形：I prefer ___ to making more money.",
   "选项": [
    "swimming",
@@ -1439,6 +1526,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：Getting plenty of exercise is very important. I enjoy swimming very much. Last summer I went to the seaside every day. I plan to go there this summer too, but I may not be able to. I have a new job; sometimes I have to work until late at night. Although I now work more hours than I used to, yet I do receive a larger salary. I didn't receive much pay on my old job. I like my new job, but had I known that it would take up so much of my free time, I would not have taken it. I prefer swimming to making more money. I have heard that riding a bike is good exercise. Maybe I will be able to save enough money to buy a bike. My neighbor, Ms Wilson, has a bicycle that I could borrow, but I would rather own my own bike. If I used hers, I would worry about destroying it. Since I make more money now, I think that I can afford to buy my own. Getting a bike is really a good idea, because while I'm riding to and from, I will be getting exercise at the same time. It is easier to get to the seaside on a bike, too. I might be able to go swimming every day after all. This new job is great! I'm very excited. This will be a summer full of exercise.",
   "题目": "完形：Maybe I will be able to ___ enough money to buy a bike.",
   "选项": [
    "save",
@@ -1456,6 +1544,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：Getting plenty of exercise is very important. I enjoy swimming very much. Last summer I went to the seaside every day. I plan to go there this summer too, but I may not be able to. I have a new job; sometimes I have to work until late at night. Although I now work more hours than I used to, yet I do receive a larger salary. I didn't receive much pay on my old job. I like my new job, but had I known that it would take up so much of my free time, I would not have taken it. I prefer swimming to making more money. I have heard that riding a bike is good exercise. Maybe I will be able to save enough money to buy a bike. My neighbor, Ms Wilson, has a bicycle that I could borrow, but I would rather own my own bike. If I used hers, I would worry about destroying it. Since I make more money now, I think that I can afford to buy my own. Getting a bike is really a good idea, because while I'm riding to and from, I will be getting exercise at the same time. It is easier to get to the seaside on a bike, too. I might be able to go swimming every day after all. This new job is great! I'm very excited. This will be a summer full of exercise.",
   "题目": "完形：My neighbor, Ms Wilson, has a bicycle that I could ___.",
   "选项": [
    "ride",
@@ -1473,6 +1562,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：Getting plenty of exercise is very important. I enjoy swimming very much. Last summer I went to the seaside every day. I plan to go there this summer too, but I may not be able to. I have a new job; sometimes I have to work until late at night. Although I now work more hours than I used to, yet I do receive a larger salary. I didn't receive much pay on my old job. I like my new job, but had I known that it would take up so much of my free time, I would not have taken it. I prefer swimming to making more money. I have heard that riding a bike is good exercise. Maybe I will be able to save enough money to buy a bike. My neighbor, Ms Wilson, has a bicycle that I could borrow, but I would rather own my own bike. If I used hers, I would worry about destroying it. Since I make more money now, I think that I can afford to buy my own. Getting a bike is really a good idea, because while I'm riding to and from, I will be getting exercise at the same time. It is easier to get to the seaside on a bike, too. I might be able to go swimming every day after all. This new job is great! I'm very excited. This will be a summer full of exercise.",
   "题目": "完形：...while I'm riding to and from, I will be getting ___ at the same time.",
   "选项": [
    "enjoyment",
@@ -1490,6 +1580,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：Getting plenty of exercise is very important. I enjoy swimming very much. Last summer I went to the seaside every day. I plan to go there this summer too, but I may not be able to. I have a new job; sometimes I have to work until late at night. Although I now work more hours than I used to, yet I do receive a larger salary. I didn't receive much pay on my old job. I like my new job, but had I known that it would take up so much of my free time, I would not have taken it. I prefer swimming to making more money. I have heard that riding a bike is good exercise. Maybe I will be able to save enough money to buy a bike. My neighbor, Ms Wilson, has a bicycle that I could borrow, but I would rather own my own bike. If I used hers, I would worry about destroying it. Since I make more money now, I think that I can afford to buy my own. Getting a bike is really a good idea, because while I'm riding to and from, I will be getting exercise at the same time. It is easier to get to the seaside on a bike, too. I might be able to go swimming every day after all. This new job is great! I'm very excited. This will be a summer full of exercise.",
   "题目": "完形：This new job is great! I'm very ___.",
   "选项": [
    "moved",
@@ -1507,6 +1598,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：Getting plenty of exercise is very important. I enjoy swimming very much. Last summer I went to the seaside every day. I plan to go there this summer too, but I may not be able to. I have a new job; sometimes I have to work until late at night. Although I now work more hours than I used to, yet I do receive a larger salary. I didn't receive much pay on my old job. I like my new job, but had I known that it would take up so much of my free time, I would not have taken it. I prefer swimming to making more money. I have heard that riding a bike is good exercise. Maybe I will be able to save enough money to buy a bike. My neighbor, Ms Wilson, has a bicycle that I could borrow, but I would rather own my own bike. If I used hers, I would worry about destroying it. Since I make more money now, I think that I can afford to buy my own. Getting a bike is really a good idea, because while I'm riding to and from, I will be getting exercise at the same time. It is easier to get to the seaside on a bike, too. I might be able to go swimming every day after all. This new job is great! I'm very excited. This will be a summer full of exercise.",
   "题目": "完形：This will be a summer full of ___.",
   "选项": [
    "exercise",
@@ -1524,6 +1616,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "完形：A quick temper has ___ me with plenty of opportunities to make them.",
   "选项": [
    "provided",
@@ -1541,6 +1634,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "完形：In one of my earliest ___...",
   "选项": [
    "dreams",
@@ -1558,6 +1652,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "完形：\"Don't watch the ___ when you say 'I'm sorry'.\"",
   "选项": [
    "side",
@@ -1575,6 +1670,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "完形：Hold your head up and look the person in the ___.",
   "选项": [
    "mind",
@@ -1592,6 +1688,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "完形：...so he'll know you ___ it.",
   "选项": [
    "imagine",
@@ -1609,6 +1706,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "完形：My mother thus made the key point of a(n) ___ apology: it must be direct.",
   "选项": [
    "useful",
@@ -1626,6 +1724,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "完形：You must never ___ to be doing something else.",
   "选项": [
    "pretend",
@@ -1643,6 +1742,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "完形：You do not ___ a pile of letters while apologizing...",
   "选项": [
    "hold on",
@@ -1660,6 +1760,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "完形：...while apologizing to a person ___ in position...",
   "选项": [
    "poorer",
@@ -1677,6 +1778,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "完形：...after blaming him or her for a mistake that turned out to be your ___.",
   "选项": [
    "fault",
@@ -1694,6 +1796,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "完形：You do not apologize to a hostess, whose guest of honor you treat ___...",
   "选项": [
    "cruelly",
@@ -1711,6 +1814,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "完形：...by sending flowers the next day without mentioning your bad ___.",
   "选项": [
    "manners",
@@ -1728,6 +1832,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "完形：One of the important things you should do for an ___ apology...",
   "选项": [
    "active",
@@ -1745,6 +1850,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "完形：...is readiness to ___ the responsibility for our careless mistakes.",
   "选项": [
    "raise",
@@ -1762,6 +1868,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "完形：We are used to making excuses, which leaves no ___ for the other person to ___ us.",
   "选项": [
    "situation; advise",
@@ -1779,6 +1886,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "完形：Since most people are open-hearted, the no-excuse apology leaves both parties feeling ___ about themselves.",
   "选项": [
    "wiser",
@@ -1796,6 +1904,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "完形：That, after all, is the ___ of every apology.",
   "选项": [
    "purpose",
@@ -1813,6 +1922,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "完形：It ___ little whether the apologizer is wholly or only partly at fault...",
   "选项": [
    "cares",
@@ -1830,6 +1940,7 @@ window.__TIKU__ = [
   "专题": "完形填空专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "完形：...answering for one's ___ encourages others to take their share of the blame.",
   "选项": [
    "facts",
@@ -1847,6 +1958,7 @@ window.__TIKU__ = [
   "专题": "翻译专项",
   "题型": "简答",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（汉译英） 各吹各的号，各唱各的调。",
   "选项": [],
   "答案": "Each does things in his own way.",
@@ -1859,6 +1971,7 @@ window.__TIKU__ = [
   "专题": "翻译专项",
   "题型": "简答",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（汉译英） 有这么多人的关心，在国外的最初几个月里，她感到非常幸福。",
   "选项": [],
   "答案": "With so many people caring about her, she feels very happy in the first few months abroad.",
@@ -1871,6 +1984,7 @@ window.__TIKU__ = [
   "专题": "翻译专项",
   "题型": "简答",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（汉译英） 假如你采用先进的措施，你就能获得事半功倍的效果。",
   "选项": [],
   "答案": "If you adopt the advanced method, you are able to achieve twice the result with half the effort.",
@@ -1883,6 +1997,7 @@ window.__TIKU__ = [
   "专题": "翻译专项",
   "题型": "简答",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（汉译英） 如果你束手无策，就顺其自然好了。",
   "选项": [],
   "答案": "You'd better leave things alone if you don't know how to deal with it.",
@@ -1895,6 +2010,7 @@ window.__TIKU__ = [
   "专题": "翻译专项",
   "题型": "简答",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（英译汉） Liberty is more important than life.",
   "选项": [],
   "答案": "自由比生命更重要。",
@@ -1907,6 +2023,7 @@ window.__TIKU__ = [
   "专题": "翻译专项",
   "题型": "简答",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（英译汉） He expressed the hope that he could visit the museum again.",
   "选项": [],
   "答案": "他表达了要再次参观博物馆的愿望。",
@@ -1919,6 +2036,7 @@ window.__TIKU__ = [
   "专题": "翻译专项",
   "题型": "简答",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（英译汉） Since you're not interested, I won't tell you about it.",
   "选项": [],
   "答案": "既然你不感兴趣，那我就不告诉你了。",
@@ -1931,6 +2049,7 @@ window.__TIKU__ = [
   "专题": "翻译专项",
   "题型": "简答",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（英译汉） Learning a foreign language has been a most trying experience for me, but one that I wouldn't trade for anything.",
   "选项": [],
   "答案": "学习外语对我来说是非常艰辛的经历，但它又无比珍贵。",
@@ -1943,6 +2062,7 @@ window.__TIKU__ = [
   "专题": "翻译专项",
   "题型": "简答",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（英译汉） The rapid development of artificial intelligence has significantly impacted various sectors of the modern economy, presenting both opportunities and challenges.",
   "选项": [],
   "答案": "人工智能的快速发展对现代经济的各个领域产生了显著影响，既带来了机遇也带来了挑战。",
@@ -1955,6 +2075,7 @@ window.__TIKU__ = [
   "专题": "语法单选 + 词汇辨析专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（语法·时态） She ______ in this company since 2010.",
   "选项": [
    "worked",
@@ -1972,6 +2093,7 @@ window.__TIKU__ = [
   "专题": "语法单选 + 词汇辨析专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（语法·时态） By the time he arrived, the meeting ______.",
   "选项": [
    "began",
@@ -1989,6 +2111,7 @@ window.__TIKU__ = [
   "专题": "语法单选 + 词汇辨析专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（语法·虚拟） If I ______ you, I would accept the offer.",
   "选项": [
    "am",
@@ -2006,6 +2129,7 @@ window.__TIKU__ = [
   "专题": "语法单选 + 词汇辨析专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（语法·虚拟） I wish I ______ more time yesterday.",
   "选项": [
    "have",
@@ -2023,6 +2147,7 @@ window.__TIKU__ = [
   "专题": "语法单选 + 词汇辨析专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（语法·非谓语） ______ from the top of the mountain, the city looks beautiful.",
   "选项": [
    "See",
@@ -2040,6 +2165,7 @@ window.__TIKU__ = [
   "专题": "语法单选 + 词汇辨析专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（语法·非谓语） He had his car ______ yesterday.",
   "选项": [
    "repair",
@@ -2057,6 +2183,7 @@ window.__TIKU__ = [
   "专题": "语法单选 + 词汇辨析专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（语法·定语从句） The book ______ cover is red is mine.",
   "选项": [
    "which",
@@ -2074,6 +2201,7 @@ window.__TIKU__ = [
   "专题": "语法单选 + 词汇辨析专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（语法·定语从句） This is the factory ______ we visited last year.",
   "选项": [
    "where",
@@ -2091,6 +2219,7 @@ window.__TIKU__ = [
   "专题": "语法单选 + 词汇辨析专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（语法·倒装） Never ______ I seen such a beautiful scene.",
   "选项": [
    "have",
@@ -2108,6 +2237,7 @@ window.__TIKU__ = [
   "专题": "语法单选 + 词汇辨析专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（语法·倒装） Only by working hard ______ you succeed.",
   "选项": [
    "you will",
@@ -2125,6 +2255,7 @@ window.__TIKU__ = [
   "专题": "语法单选 + 词汇辨析专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（语法·主谓一致） The number of students in our school ______ increasing.",
   "选项": [
    "are",
@@ -2142,6 +2273,7 @@ window.__TIKU__ = [
   "专题": "语法单选 + 词汇辨析专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（语法·主谓一致） A number of students ______ playing on the playground.",
   "选项": [
    "is",
@@ -2159,6 +2291,7 @@ window.__TIKU__ = [
   "专题": "语法单选 + 词汇辨析专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（词汇·辨析） Hurry up! There is ______ time left.",
   "选项": [
    "few",
@@ -2176,6 +2309,7 @@ window.__TIKU__ = [
   "专题": "语法单选 + 词汇辨析专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（词汇·辨析） The sun ______ in the east every morning.",
   "选项": [
    "raises",
@@ -2193,6 +2327,7 @@ window.__TIKU__ = [
   "专题": "语法单选 + 词汇辨析专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（词汇·辨析） Everyone went to the party ______ Tom, who was ill.",
   "选项": [
    "besides",
@@ -2210,6 +2345,7 @@ window.__TIKU__ = [
   "专题": "语法单选 + 词汇辨析专项",
   "题型": "单选",
   "材料": "",
+  "passage": "：I consider myself something of an expert on apologies. A quick temper has ___(85) me with plenty of opportunities to make them. In one of my earliest ___(86), my mother is telling me, \"Don't watch the ___(87) when you say 'I'm sorry'. Hold your head up and look the person in the ___(88), so he'll know you ___(89) it.\" My mother thus made the key point of a(n) ___(90) apology: it must be direct. You must never pretend to be doing something else. You do not look through a pile of letters while apologizing to a person lower in position after blaming him or her for a mistake that turned out to be your fault. You do not apologize to a hostess, whose guest of honor you treat roughly, by sending flowers the next day without mentioning your bad manners. One of the important things you should do for an effective apology is readiness to bear the responsibility for our careless mistakes. We are used to making excuses, which leaves no room for the other person to forgive us. Since most people are open-hearted, the no-excuse apology leaves both parties feeling better about themselves. That, after all, is the purpose of every apology. It matters little whether the apologizer is wholly or only partly at fault: answering for one's actions encourages others to take their share of the blame.",
   "题目": "（词汇·辨析） I will call you ______ next week to discuss the plan.",
   "选项": [
    "sometime",
@@ -2291,14 +2427,47 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
 
   if(IS_EN){
     var hintEl=document.querySelector(".hint");
-    if(hintEl) hintEl.innerHTML+='<br><span style="color:#2B5A9E;">💡 英语刷题：点击题目/选项中的蓝色单词可加入生词本，粉色表示已加入。</span>';
+    if(hintEl) hintEl.innerHTML+='<br><span style="color:#2B5A9E;">💡 英语刷题：点击题目/选项中的蓝色单词可加入生词本，粉色表示已加入。完形填空可点「查看本篇全文」看完整文章。</span>';
   }
+  // 完形填空弹窗
+  function openPassage(text){
+    if(!text) return;
+    var modal=$("passageModal"), content=$("passageContent");
+    content.innerHTML=markWords(text);
+    modal.style.display="flex";
+    // 弹窗内单词点击加入生词本
+    content.querySelectorAll(".word-clickable").forEach(function(el){
+      el.addEventListener("click", function(e){
+        e.stopPropagation();
+        var w=el.getAttribute("data-word");
+        if(w && addShengci(w)) el.classList.add("word-saved");
+      });
+    });
+  }
+  function closePassage(){ $("passageModal").style.display="none"; }
+  var _pc=$("passageClose"); if(_pc) _pc.onclick=closePassage;
+  var _pm=$("passageModal"); if(_pm) _pm.addEventListener("click", function(e){ if(e.target===_pm) closePassage(); });
   var topics=[];
   ALL.forEach(function(it){ if(topics.indexOf(it["专题"])<0) topics.push(it["专题"]); });
   topics.sort();
   topics.forEach(function(t){ var o=document.createElement("option"); o.value=t; o.textContent=t; $("selTopic").appendChild(o); });
 
   var mode="shuffle"; // shuffle|order|undone|basket
+  var clozeFullMode=false;
+  try{ clozeFullMode=localStorage.getItem("yingyu_cloze_full")==="1"; }catch(e){}
+  if(IS_EN){
+    var btnCM=$("btnClozeMode");
+    if(btnCM){
+      btnCM.style.display="inline-block";
+      btnCM.textContent=clozeFullMode?"完形全文：开":"完形全文：关";
+      btnCM.onclick=function(){
+        clozeFullMode=!clozeFullMode;
+        try{ localStorage.setItem("yingyu_cloze_full", clozeFullMode?"1":"0"); }catch(e){}
+        btnCM.textContent=clozeFullMode?"完形全文：开":"完形全文：关";
+        show();
+      };
+    }
+  }
   var list=[], idx=0, revealed=false, answered=false;
   function setMode(m){
     mode=m;
@@ -2370,7 +2539,11 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     if(basket.indexOf(it.id)>=0) html+='<span class="tag" style="background:rgba(234,102,104,0.14);color:#B44244;">已入篮</span>';
     html+='</div>';
     if(it["材料"]) html+='<div class="material">'+markWords(it["材料"])+'</div>';
+    if(IS_EN && clozeFullMode && it["passage"]){
+      html+='<div class="material" style="border-left-color:#EAA7B2;max-height:300px;overflow-y:auto;">'+markWords(it["passage"])+'</div>';
+    }
     html+='<div class="qtext">'+markWords(it["题目"])+'</div>';
+    if(IS_EN && it["passage"]) html+='<div style="margin-bottom:10px;"><button id="btnPassage" style="background:#9BBBF4;color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;">📖 查看本篇全文</button></div>';
     if(it["选项"]&&it["选项"].length){
       html+='<ul class="opts">';
       var letters="ABCDEFGH";
@@ -2402,6 +2575,9 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
           }
         });
       });
+      // 完形填空：查看本篇全文
+      var btnP=$("btnPassage");
+      if(btnP) btnP.onclick=function(){ openPassage(it["passage"]); };
     }
 
     var ansBox=$("ans"), fb=$("fb");
