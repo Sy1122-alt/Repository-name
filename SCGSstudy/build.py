@@ -371,13 +371,15 @@ def parse_tiku(path, subject):
         # 阅读材料：**Passage（标题）**：内容
         mp = re.match(r"^\*\*Passage[（(]([^）)]*)[）)]\*\*(.*)$", s)
         if mp:
+            # 去掉标题后的孤立中文/英文冒号
+            body = mp.group(2).strip().lstrip("：:").strip()
             # 完形填空的Passage不附加为材料（题目本身已带句子上下文，附加完整原文会泄露答案）
             if "完形" in mp.group(1):
                 material = []
-                passage_text = [mp.group(2).strip()] if mp.group(2).strip() else []
+                passage_text = [body] if body else []
                 is_cloze_passage = True
             else:
-                material = [mp.group(2).strip()] if mp.group(2).strip() else []
+                material = [body] if body else []
                 passage_text = []
                 is_cloze_passage = False
             continue
@@ -711,7 +713,7 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
     ALL.forEach(function(it){
       var reason=it["错因"]||"未记录错因", chapter=it["章节"]||"未分类";
       var key=chapter+"｜"+reason;
-      map[key]=(map[key]||0)+(Number(it["错误次数"])||0)+1;
+      map[key]=(map[key]||0)+1;
     });
     var keys=Object.keys(map).sort(function(a,b){return map[b]-map[a];}).slice(0,5);
     $("weakList").innerHTML=keys.length?keys.map(function(k){return '<div class="frow"><span class="nm" style="flex-basis:180px">'+escHtml(k.replace("｜"," · "))+'</span><span class="ct">'+map[k]+' 次</span></div>';}).join(""): "暂无数据";
@@ -1403,7 +1405,7 @@ __KATEX_CSS__
   <div id="toast"></div>
   <div id="passageModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:9999;justify-content:center;align-items:center;padding:20px;">
     <div style="background:#fff;border-radius:16px;max-width:700px;width:100%;max-height:85vh;overflow-y:auto;padding:24px;position:relative;">
-      <div id="passageClose" style="position:absolute;top:12px;right:16px;font-size:24px;cursor:pointer;color:#999;line-height:1;">×</div>
+      <button id="passageClose" aria-label="关闭全文" style="position:absolute;top:12px;right:16px;font-size:22px;cursor:pointer;color:#999;line-height:1;background:none;border:none;padding:6px;">×</button>
       <h3 style="margin-bottom:14px;font-size:16px;">📖 完形填空 · 本篇全文</h3>
       <div id="passageContent" style="font-size:14px;line-height:1.8;color:#333;white-space:pre-wrap;"></div>
       <div style="margin-top:16px;font-size:12px;color:#999;">💡 点击文中蓝色单词可加入生词本</div>
@@ -1508,6 +1510,7 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
   function closePassage(){ $("passageModal").style.display="none"; }
   var _pc=$("passageClose"); if(_pc) _pc.onclick=closePassage;
   var _pm=$("passageModal"); if(_pm) _pm.addEventListener("click", function(e){ if(e.target===_pm) closePassage(); });
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape" && $("passageModal") && $("passageModal").style.display==="flex") closePassage(); });
   var topics=[];
   ALL.forEach(function(it){ if(topics.indexOf(it["专题"])<0) topics.push(it["专题"]); });
   topics.sort();
@@ -1673,6 +1676,7 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     }
     function markNO(){
       if(basket.indexOf(it.id)<0) basket.push(it.id);
+      done[it.id]=1; // 答错也算已完成（做过了），避免"只看未做"重复显示
       save(); stats();
       fb.innerHTML="已记入错题篮子（可点下方「存入错题本」批量入库）"; fb.className="feedback no"; fb.style.display="block";
       $("btnNO").style.display="none"; $("btnOK").style.display="none";

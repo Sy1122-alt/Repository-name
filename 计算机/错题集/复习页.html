@@ -1711,7 +1711,7 @@ window.__TIKU_SIMPLE__ = [
     ALL.forEach(function(it){
       var reason=it["错因"]||"未记录错因", chapter=it["章节"]||"未分类";
       var key=chapter+"｜"+reason;
-      map[key]=(map[key]||0)+(Number(it["错误次数"])||0)+1;
+      map[key]=(map[key]||0)+1;
     });
     var keys=Object.keys(map).sort(function(a,b){return map[b]-map[a];}).slice(0,5);
     $("weakList").innerHTML=keys.length?keys.map(function(k){return '<div class="frow"><span class="nm" style="flex-basis:180px">'+escHtml(k.replace("｜"," · "))+'</span><span class="ct">'+map[k]+' 次</span></div>';}).join(""): "暂无数据";
