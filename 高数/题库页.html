@@ -28,6 +28,9 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
 .tag.qid{background:rgba(0,0,0,0.06);color:var(--sub);}
 .tag.src{background:rgba(0,0,0,0.05);color:var(--sub);}
 .material{background:rgba(0,0,0,0.035);border-left:3px solid var(--accent);padding:10px 12px;border-radius:0 8px 8px 0;margin-bottom:10px;font-size:13px;white-space:pre-wrap;}
+.word-clickable{cursor:pointer;border-bottom:1px dashed #9BBBF4;color:#2B5A9E;padding:0 1px;border-radius:2px;transition:background .15s;}
+.word-clickable:hover{background:rgba(155,187,244,0.18);}
+.word-clickable.word-saved{background:rgba(234,167,178,0.18);border-bottom-color:#EAA7B2;color:#B44244;}
 .qtext{font-size:15px;font-weight:600;margin-bottom:10px;white-space:pre-wrap;}
 .opts{list-style:none;margin-bottom:10px;}
 .opts li{font-size:13.5px;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;margin-bottom:8px;background:#FBFBF8;cursor:pointer;transition:all .18s ease;position:relative;user-select:none;-webkit-tap-highlight-color:transparent;}
@@ -1153,6 +1156,8 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
 (function(){
   "use strict";
   var MATH = true;
+  var SUBJECT = "高数";
+  var IS_EN = SUBJECT === "英语";
   var ALL = (window.__TIKU__||[]).slice();
   var BASE_QID = parseInt((window.__TIKU_META__&&window.__TIKU_META__.baseQid)||1,10);
   var storeKey = "高数_tiku_v1";
@@ -1188,7 +1193,35 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     }catch(e){}
     return t;
   }
+  // 英语刷题：把文本中的英文单词标记为可点击，点击加入生词本
+  var SHENGCI_KEY="yingyu_shengci_v1";
+  function loadShengci(){ try{ return JSON.parse(localStorage.getItem(SHENGCI_KEY)||"{}")||{}; }catch(e){ return {}; } }
+  function saveShengci(obj){ try{ localStorage.setItem(SHENGCI_KEY,JSON.stringify(obj)); }catch(e){} }
+  function isShengci(word){ var sc=loadShengci(); return !!sc[word.toLowerCase()]; }
+  function addShengci(word){
+    var w=word.toLowerCase();
+    var sc=loadShengci();
+    if(sc[w]){ showToast("「"+word+"」已在生词本中"); return false; }
+    sc[w]={t:new Date().toISOString().slice(0,10),s:""};
+    saveShengci(sc);
+    showToast("已加入生词本："+word);
+    return true;
+  }
+  function markWords(text){
+    if(!IS_EN) return renderMath(text);
+    var t=escHtml(text);
+    // 匹配2个字母以上的英文单词（含连字符、撇号），不匹配纯数字
+    t=t.replace(/\b([a-zA-Z][a-zA-Z'-]{1,})\b/g, function(m,w){
+      var cls="word-clickable"+(isShengci(w)?" word-saved":"");
+      return '<span class="'+cls+'" data-word="'+w.toLowerCase()+'">'+m+'</span>';
+    });
+    return t;
+  }
 
+  if(IS_EN){
+    var hintEl=document.querySelector(".hint");
+    if(hintEl) hintEl.innerHTML+='<br><span style="color:#2B5A9E;">💡 英语刷题：点击题目/选项中的蓝色单词可加入生词本，粉色表示已加入。</span>';
+  }
   var topics=[];
   ALL.forEach(function(it){ if(topics.indexOf(it["专题"])<0) topics.push(it["专题"]); });
   topics.sort();
@@ -1265,13 +1298,13 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     if(done[it.id]) html+='<span class="tag" style="background:rgba(82,196,26,0.14);color:#3E8C13;">已完成</span>';
     if(basket.indexOf(it.id)>=0) html+='<span class="tag" style="background:rgba(234,102,104,0.14);color:#B44244;">已入篮</span>';
     html+='</div>';
-    if(it["材料"]) html+='<div class="material">'+renderMath(it["材料"])+'</div>';
-    html+='<div class="qtext">'+renderMath(it["题目"])+'</div>';
+    if(it["材料"]) html+='<div class="material">'+markWords(it["材料"])+'</div>';
+    html+='<div class="qtext">'+markWords(it["题目"])+'</div>';
     if(it["选项"]&&it["选项"].length){
       html+='<ul class="opts">';
       var letters="ABCDEFGH";
       it["选项"].forEach(function(o,i){
-        html+='<li data-i="'+i+'"><span class="opt-letter">'+letters[i]+'</span>'+renderMath(String(o).replace(/^[A-Z][\.、]\s*/, ''))+'</li>';
+        html+='<li data-i="'+i+'"><span class="opt-letter">'+letters[i]+'</span>'+markWords(String(o).replace(/^[A-Z][\.、]\s*/, ''))+'</li>';
       });
       html+='</ul>';
     } else if(it["题型"]==="单选"||it["题型"]==="多选"){
@@ -1287,6 +1320,18 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     html+='</div>';
     html+='<div class="nav"><button id="btnPrev">‹ 上一题</button><span style="font-size:12px;color:var(--sub);align-self:center;">'+(idx+1)+' / '+list.length+'</span><button id="btnNext">下一题 ›</button></div>';
     box.innerHTML=html;
+    // 英语刷题：点击单词加入生词本
+    if(IS_EN){
+      box.querySelectorAll(".word-clickable").forEach(function(el){
+        el.addEventListener("click", function(e){
+          e.stopPropagation();
+          var w=el.getAttribute("data-word");
+          if(w && addShengci(w)){
+            el.classList.add("word-saved");
+          }
+        });
+      });
+    }
 
     var ansBox=$("ans"), fb=$("fb");
     function renderAnswer(){
