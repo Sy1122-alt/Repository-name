@@ -482,8 +482,8 @@ def parse_tiku(path, subject):
         if cur is not None and re.match(r"^-\s*来源\s*[:：]", s):
             cur["来源"] = re.sub(r"^-\s*来源\s*[:：]\s*", "", s).strip()
             continue
-        # 标题行（## 开头）：作为题目块的结束，flush当前题目
-        if s.startswith("## ") and cur is not None:
+        # 标题行（#/##/###/#### 开头）：作为题目块的结束，flush当前题目
+        if re.match(r"^#{1,4}\s", s) and cur is not None:
             if cur.get("_proof_mode"):
                 del cur["_proof_mode"]
             flush()
