@@ -13,3 +13,6 @@ Thumbs.db
 _backup_errorbook/
 *.bak
 *.backup
+SCGSstudy/.cf_token
+SCGSstudy/_tmp_*
+SCGSstudy/_test_*

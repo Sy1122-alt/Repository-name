@@ -1756,6 +1756,9 @@ window.__TIKU_SIMPLE__ = [
 .ai-bot{align-self:flex-start;background:#fff;border:1px solid #E4E3DD;border-bottom-left-radius:4px;color:#1A1B1C;}
 .ai-bot.err{color:#B44244;background:#FDF0EF;}
 .ai-typing{color:#6B7280;font-style:italic;}
+.ai-msg .ai-math{display:inline-block;margin:2px 2px;}
+.ai-msg .ai-math-plain{font-family:Consolas,Monaco,monospace;font-size:0.92em;background:rgba(79,124,247,0.07);border-radius:4px;padding:0 4px;}
+.ai-msg strong{font-weight:700;}
 #aiInputRow{display:flex;gap:8px;padding:10px;border-top:1px solid #E4E3DD;background:#fff;}
 #aiInput{flex:1;border:1px solid #D8D6CF;border-radius:10px;padding:8px 11px;font-size:14px;outline:none;min-width:0;}
 #aiInput:focus{border-color:#4F7CF7;}
@@ -1764,7 +1767,7 @@ window.__TIKU_SIMPLE__ = [
 </style>
 <script>
 (function(){
-  var API="https://zsb-ai-proxy.fanenyu7536.workers.dev";
+  var API="https://ai.scgsstudy.top";
   var fab=document.getElementById("aiFab");
   var panel=document.getElementById("aiPanel");
   var msgs=document.getElementById("aiMsgs");
@@ -1780,10 +1783,50 @@ window.__TIKU_SIMPLE__ = [
   }
   fab.addEventListener("click",function(){ toggle(); });
   if(close) close.addEventListener("click",function(){ toggle(false); });
+  function escAI(x){ return String(x).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function plainMath(x){
+    return String(x)
+      .replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g,function(_,a,b){ return "("+a+"/"+b+")"; })
+      .replace(/\\sqrt(\[[^{}\]]*\])?\{([^{}]+)\}/g,function(_,r,b){ return r?"("+b+")^(1/"+String(r).replace(/[\[\]]/g,"")+")":"√("+b+")"; })
+      .replace(/\\dfrac\{([^{}]+)\}\{([^{}]+)\}/g,function(_,a,b){ return "("+a+"/"+b+")"; })
+      .replace(/\\lim_?\{?([^{}]*)\}?/g,"lim→$1")
+      .replace(/\\infty/g,"∞").replace(/\\to/g,"→").replace(/\\rightarrow/g,"→")
+      .replace(/\\cdot/g,"·").replace(/\\times/g,"×").replace(/\\pm/g,"±")
+      .replace(/\\le/g,"≤").replace(/\\ge/g,"≥").replace(/\\ne/g,"≠").replace(/\\approx/g,"≈")
+      .replace(/\\left/g,"").replace(/\\right/g,"")
+      .replace(/\\big|\\Big/g,"").replace(/\\([a-zA-Z]+)/g,"$1")
+      .replace(/\\,/g," ").replace(/\\ /g," ")
+      .replace(/[{}]/g,"");
+  }
+  function renderAI(text){
+    if(!text) return "";
+    var t=escAI(text);
+    // 代码块先保护
+    var codes=[];
+    t=t.replace(/`([^`]*)`/g,function(_,c){ codes.push(c); return "\u0000C"+(codes.length-1)+"\u0000"; });
+    function fmt(x,display){
+      try{
+        if(typeof katex!=="undefined"&&katex.renderToString){
+          return '<span class="ai-math">'+katex.renderToString(x,{displayMode:display,throwOnError:false})+'</span>';
+        }
+      }catch(e){}
+      return '<span class="ai-math-plain">'+plainMath(x)+'</span>';
+    }
+    t=t.replace(/\$\$([\s\S]+?)\$\$/g,function(_,x){ return fmt(x,true); });
+    t=t.replace(/\\\[([\s\S]+?)\\\]/g,function(_,x){ return fmt(x,true); });
+    t=t.replace(/\$([^$\n]+?)\$/g,function(_,x){ return fmt(x,false); });
+    t=t.replace(/\\\(([^\\]+?)\\\)/g,function(_,x){ return fmt(x,false); });
+    t=t.replace(/\*\*([^*\n]+)\*\*/g,"<strong>$1</strong>");
+    t=t.replace(/\u0000C(\d+)\u0000/g,function(_,i){
+      return '<code style="background:rgba(0,0,0,0.06);border-radius:4px;padding:1px 5px;font-family:Consolas,Monaco,monospace;font-size:0.9em;color:#B44244;white-space:pre-wrap;word-break:break-all;">'+escAI(codes[+i]||"")+'</code>';
+    });
+    return t;
+  }
   function append(role,text,cls){
     var d=document.createElement("div");
     d.className="ai-msg "+(role==="user"?"ai-user":"ai-bot")+(cls?" "+cls:"");
-    d.textContent=text;
+    if(role==="bot"&&!cls){ d.innerHTML=renderAI(text); }
+    else{ d.textContent=text; }
     if(msgs) msgs.appendChild(d);
     if(msgs) msgs.scrollTop=msgs.scrollHeight;
     return d;
@@ -1795,7 +1838,10 @@ window.__TIKU_SIMPLE__ = [
     append("user",finalQ);
     var typing=append("bot","思考中…","ai-typing");
     fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({messages:[{role:"user",content:finalQ}],max_tokens:700})})
+      body:JSON.stringify({messages:[
+        {role:"system",content:"你是四川专升本学习助手，回答要清晰分点、面向专升本考生。数学公式请用LaTeX：行内用 $...$，独立公式用 $$...$$。"},
+        {role:"user",content:finalQ}
+      ],max_tokens:700})})
       .then(function(r){
         if(!r.ok) return r.text().then(function(t){ throw new Error("服务返回 "+r.status+(t.length<150?": "+t:"")); });
         return r.json();
@@ -1803,7 +1849,7 @@ window.__TIKU_SIMPLE__ = [
       .then(function(j){
         var c=(j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content)||"(空回复)";
         typing.className="ai-msg ai-bot";
-        typing.textContent=c;
+        typing.innerHTML=renderAI(c);
       })
       .catch(function(e){
         typing.className="ai-msg ai-bot err";

@@ -2,6 +2,10 @@ name = "zsb-ai-proxy"
 main = "worker.js"
 compatibility_date = "2026-09-03"
 
+routes = [
+  { pattern = "ai.scgsstudy.top/*", zone_id = "8ea2e0f97f7cc41531be2fa0b0d21e20" }
+]
+
 [vars]
 AI_MODEL = "grok-chat-fast"
 AI_DAILY_LIMIT = "15"
