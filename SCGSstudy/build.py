@@ -384,15 +384,15 @@ def parse_tiku(path, subject):
                 is_cloze_passage = False
             continue
         # 完形Passage正文续行累积
-        if is_cloze_passage and passage_text and not re.match(r"^\*\*(真题|练习|自编|多选)", s) and not s.lstrip().startswith("-"):
+        if is_cloze_passage and passage_text and not re.match(r"^\*\*(真题|练习|自编|多选|模拟卷)", s) and not s.lstrip().startswith("-"):
             passage_text.append(s)
             continue
         # 材料累积（仅当正在读 Passage 时，且只累积不以"-"开头的正文续行，避免吞掉选项/答案/来源行）
-        if material and not re.match(r"^\*\*(真题|练习|自编|多选)", s) and not s.lstrip().startswith("-"):
+        if material and not re.match(r"^\*\*(真题|练习|自编|多选|模拟卷)", s) and not s.lstrip().startswith("-"):
             material.append(s)
             continue
         # 题目块起始
-        mb = re.match(r"^\*\*(真题|练习|自编|多选)\s*([\d-]+)[.、]?\*{0,2}\s*(.*)$", s)
+        mb = re.match(r"^\*\*(真题|练习|自编|多选|模拟卷)[\s\-]*(.+?)[.、]\*{0,2}\s*(.*)$", s)
         if mb:
             flush()
             qtype, no = mb.group(1), mb.group(2)
