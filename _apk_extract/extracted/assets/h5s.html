@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+            <title>人为什么要吃饭？</title>
+            <style>
+                video {
+                    width: 100%;
+                }
+            video::-webkit-media-controls-panel {
+                display: block;
+                height: 50px;
+                overflow: hidden;
+            }
+            video::-webkit-media-controls-fullscreen-button {
+                /*display: none;*/
+                width: 14%;
+                height: 50px;
+                float: left;
+            }
+            video::-webkit-media-controls-play-button {
+                /*display: none;*/
+                width: 14%;
+                height: 50px;
+                float: left;
+            }
+            video::-webkit-media-controls-timeline {
+                /*display: none;*/
+                width: 55%;
+                max-width: 55%;
+                
+                float: left;
+                margin-top: 24px;
+            }
+            video::-webkit-media-controls-current-time-display{
+                width: 6%;
+                height: 50px;
+                /*display: none;*/
+                float: left;
+            }
+            video::-webkit-media-controls-time-remaining-display {
+                display: none;
+                
+            }
+            video::-webkit-media-controls-mute-button {
+                display: none;
+            }
+            video::-webkit-media-controls-toggle-closed-captions-button {
+                display: none;
+            }
+            video::-webkit-media-controls-volume-slider {
+                display: none;
+            }
+            video::-internal-media-controls-download-button {
+                display: none;
+            }
+            </style>
+            
+            <style>
+                .audio-wrapper {
+                    background-color: rgba(255,94,13,0.03);
+                    margin: 10px auto;
+                    max-width: 320px;
+                    height: 34px;
+                    border-radius: 14px;
+                    border: 1px solid rgba(255,94,13,0.1);
+                }
+            .audio-wrapper .button {
+                float: left;
+                width: 20px;
+                height: 20px;
+                box-sizing: border-box;
+                margin-top: 7px;
+                margin-right: 18px;
+                margin-left: 18px;
+                border-radius: 50%;
+                background: url('https://atpub.oss-cn-beijing.aliyuncs.com/static/play.png');
+                background-size: 20px;
+            }
+            .audio-wrapper .bar {
+                float: left;
+                width: 200px;
+                height: 8px;
+                border-radius: 3px;
+                border: 1px solid rgba(255,94,13,0.4);
+                background: #ffffff;
+                margin-top: 13px;
+                box-sizing: border-box;
+                position: relative;
+            }
+            .audio-wrapper .bar .progress {
+                position: absolute;
+                top: 0;
+                left: -1px;
+                width: 0px;
+                height: 6px;
+                border-radius: 3px;
+                background: rgba(255,94,13,0.4);
+            }
+            .audio-wrapper .bar .progress .dot {
+                position: absolute;
+                top: -3px;
+                right: -6px;
+                width: 12px;
+                height: 12px;
+                background: rgba(255,94,13,0.8);
+                box-shadow: 0 0 0 2px #ffffff inset;
+                border-radius: 50%;
+            }
+            .audio-wrapper .time {
+                float: left;
+                width: 60px;
+                font-size: 12px;
+                color: rgb(255,94,13);
+                padding-top: 9px;
+                text-align: center;
+            }
+            
+                </style>
+    </head>
+    <body>
+        <p>虽然这个问题是个真理，回答他毫无意义。但是，我想说，问这个问题的是真 tm 闲，还不快去搬砖。<video class="edui-upload-video video-js vjs-default-skin video-js" controls="" width="420" height="280" src="https://osst.loveshangke.com/video/20180620/5b2a046dc5f67.mp4" poster="https://osst.loveshangke.com/video/20180620/5b2a046dc5f67.jpg" ></video>&nbsp;</p>
+        <!--
+         
+         <div class="audio-wrapper">
+         <audio class="audio my-audio" src="https://osst.loveshangke.com/video/20180611/5b1e4caa3c8a6.mp3">不支持音频</audio>
+         <div class="button"></div>
+         <div class="bar">
+         <div class="progress"><span class="dot"></span></div>
+         </div>
+         <div class="time">00:00</div>
+         </div>
+         <div class="audio-wrapper">
+         <audio class="audio my-audio" src="daini.mp3">不支持音频</audio>
+         <div class="button"></div>
+         <div class="bar">
+         <div class="progress"><span class="dot"></span></div>
+         </div>
+         <div class="time">00:00</div>
+         </div>
+         -->
+        <script type='text/javascript'>
+            window.onload = function(){
+                var img = document.getElementsByTagName('img');
+                var video = document.getElementsByTagName('video');
+                
+                for (var i = img.length - 1; i >= 0; i--) {
+                    
+                    img[i].style.width = '100%';
+                    img[i].style.height = 'auto';
+                    img[i].style.marginTop = 18;
+                };
+                
+                /*for (var i = video.length - 1; i >= 0; i--) {
+                    
+                    video[i].style.width = '100%';
+                    video[i].style.height = 'auto';
+                    video[i].style.marginTop = 18;
+                    
+                };*/
+            }
+        </script>
+        
+        <script>
+            var audios = document.getElementsByTagName('audio');
+            console.log(audios)
+            
+            for(var i=0; i<audios.length; i++) {
+                var audio = audios[i];
+                var audioWrapper = audio.parentNode;
+                var btn = audioWrapper.getElementsByClassName('button')[0];
+                
+                // 播放完毕
+                audio.addEventListener('ended', function() {
+                                       console.log("音频已播放完成");
+                                       btn.style.background = 'url(play.png) no-repeat center';
+                                       btn.style.backgroundSize = '20px';
+                                       },false);
+                                       
+                                       // 点击按钮
+                                       btn.addEventListener('click',function(event){
+                                                            console.log('clicked')
+                                                            var audioWrapper = this.parentNode;
+                                                            var audio = audioWrapper.getElementsByClassName('audio')[0];
+                                                            event.stopPropagation();//防止冒泡
+                                                            if(audio.paused){ //如果当前是暂停状态
+                                                            // 暂停其他正在播放的音频
+                                                            for (var i=0; i<audios.length; i++) {
+                                                            if (!audios[i].paused) {
+                                                            console.log(audios[i])
+                                                            audios[i].parentNode.getElementsByClassName('button')[0].style.backgroundImage = 'url(play.png)';
+                                                            audios[i].pause();
+                                                            }
+                                                            }
+                                                            this.style.backgroundImage = 'url(https://atpub.oss-cn-beijing.aliyuncs.com/static/pause.png)';
+                                                            audio.play(); //播放
+                                                            
+                                                            return;
+                                                            }else{//当前是播放状态
+                                                            this.style.backgroundImage = 'url(https://atpub.oss-cn-beijing.aliyuncs.com/static/play.png)';
+                                                            audio.pause(); //暂停
+                                                            return;
+                                                            }
+                                                            });
+                                                            
+                                                            // 监听音频播放时间并更新进度条
+                                                            audio.addEventListener('timeupdate', function () {
+                                                                                   updateProgress(this);
+                                                                                   });
+                                                                                   
+                                                                                   // 鼠标拖动进度点时可以调节进度
+                                                                                   // 只有音乐开始播放后才可以调节，已经播放过但暂停了的也可以
+                                                                                   // 鼠标按下时
+                                                                                   var dot = audioWrapper.getElementsByClassName('dot')[0];
+                                                                                   dot.addEventListener('touchstart', function(evnet) {
+                                                                                                        var audioWrapper = this.parentNode.parentNode.parentNode;
+                                                                                                        var audio = audioWrapper.getElementsByClassName('audio')[0];
+                                                                                                        var bar = audioWrapper.getElementsByClassName('bar')[0];
+                                                                                                        var progress = audioWrapper.getElementsByClassName('progress')[0];
+                                                                                                        if (!audio.paused || audio.currentTime != 0) {
+                                                                                                        var length = bar.offsetWidth;
+                                                                                                        var nowProgress = progress.offsetWidth;
+                                                                                                        var mouseX = event.touches[0].clientX;
+                                                                                                        var maxLeft = nowProgress; // 向左最大可拖动距离
+                                                                                                        var maxRight = length - nowProgress; // 向右最大可拖动距离
+                                                                                                        
+                                                                                                        // 禁止默认的选中事件（避免鼠标拖拽进度点的时候选中文字）
+                                                                                                        if (event.preventDefault) {
+                                                                                                        event.preventDefault();
+                                                                                                        } else {
+                                                                                                        event.returnValue = false;
+                                                                                                        }
+                                                                                                        
+                                                                                                        // 禁止事件冒泡
+                                                                                                        if (event && event.stopPropagation) {
+                                                                                                        event.stopPropagation();
+                                                                                                        } else {
+                                                                                                        window.event.cancelBubble = true;
+                                                                                                        }
+                                                                                                        // 开始拖动
+                                                                                                        this.addEventListener('touchmove', function(e) {
+                                                                                                                              var move = e.touches[0].clientX - mouseX;
+                                                                                                                              if (move > maxRight) {
+                                                                                                                              move = maxRight;
+                                                                                                                              } else if (move < -maxLeft) {
+                                                                                                                              move = -maxLeft;
+                                                                                                                              }
+                                                                                                                              var rate = (nowProgress + move) / length;
+                                                                                                                              audio.currentTime = audio.duration * rate;
+                                                                                                                              updateProgress(audio);
+                                                                                                                              });
+                                                                                                        
+                                                                                                        }
+                                                                                                        });
+            }
+        
+        // 更新进度条与当前播放时间
+        function updateProgress(audio) {
+            var audioWrapper = audio.parentNode;
+            var progress = audioWrapper.getElementsByClassName('progress')[0];
+            var time = audioWrapper.getElementsByClassName('time')[0];
+            var value = audio.currentTime / audio.duration;
+            progress.style.width = value * 100 + '%';
+            time.innerHTML = transTime(audio.currentTime);
+        }
+        // 时间转换
+        function transTime(value) {
+            var time = "";
+            var h = parseInt(value / 3600);
+            value %= 3600;
+            var m = parseInt(value / 60);
+            var s = parseInt(value % 60);
+            if (h > 0) {
+                time = formatTime(h + ":" + m + ":" + s);
+            } else {
+                time = formatTime(m + ":" + s);
+            }
+            return time;
+        }
+        /**
+         * 格式化时间显示，补零对齐
+         * eg：2:4  -->  02:04
+         * @param {string} value - 形如 h:m:s 的字符串
+         */
+        function formatTime(value) {
+            var time = "";
+            var s = value.split(':');
+            var i = 0;
+            for (; i < s.length - 1; i++) {
+                time += s[i].length == 1 ? ("0" + s[i]) : s[i];
+                time += ":";
+            }
+            time += s[i].length == 1 ? ("0" + s[i]) : s[i];
+            return time;
+        }
+        
+            </script>
+        
+    </body>
+</html>
+
+

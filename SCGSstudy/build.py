@@ -329,7 +329,10 @@ def split_options(line):
         p = p.strip()
         m = re.match(r"^([A-H])\.\s*(.*)$", p, flags=re.S)
         if m:
-            opts.append(m.group(2).strip())
+            opt = m.group(2).strip()
+            # 去掉选项末尾的"/"分隔符
+            opt = re.sub(r'\s*/\s*$', '', opt).strip()
+            opts.append(opt)
     return opts
 
 
@@ -442,9 +445,11 @@ def parse_tiku(path, subject):
                 }
                 items.append(item)
                 continue
-        # 选项行（支持同行多选项和每行一个选项两种格式）
-        if s.startswith("-") and re.match(r"^-\s*[A-H]\.", s):
-            opts = split_options(s)
+        # 选项行（支持"- 选项：A. xx / B. xx"和"- A. xx"两种格式）
+        if s.startswith("-") and (re.match(r"^-\s*选项\s*[:：]", s) or re.match(r"^-\s*[A-H]\.", s)):
+            # 提取选项内容（去掉"- 选项："前缀）
+            opt_body = re.sub(r"^-\s*选项\s*[:：]\s*", "", s)
+            opts = split_options(opt_body)
             if opts and cur is not None:
                 if cur.get("选项"):
                     # 已有选项则追加（处理每行一个选项的格式）
