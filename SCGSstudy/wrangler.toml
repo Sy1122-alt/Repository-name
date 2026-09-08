@@ -1,0 +1,7 @@
+name = "zsb-ai-proxy"
+main = "worker.js"
+compatibility_date = "2026-09-03"
+
+[vars]
+AI_MODEL = "grok-chat-fast"
+AI_DAILY_LIMIT = "15"

@@ -484,6 +484,99 @@ def parse_tiku(path, subject):
 
 
 # ============================================================
+# AI 学习助手（悬浮聊天 + 全局 AIAsk 供页面调用）
+# ============================================================
+AI_HTML = r"""
+<div id="aiFab" title="AI 学习助手">🤖</div>
+<div id="aiPanel" style="display:none;">
+  <div id="aiHead"><span>AI 学习助手</span><button id="aiClose" aria-label="关闭">×</button></div>
+  <div id="aiMsgs"></div>
+  <div id="aiInputRow">
+    <input id="aiInput" placeholder="问学习问题，或点题目的「AI讲题」…" maxlength="2000">
+    <button id="aiSend">发送</button>
+  </div>
+</div>
+<style>
+#aiFab{position:fixed;right:16px;bottom:16px;width:52px;height:52px;border-radius:50%;
+  background:linear-gradient(135deg,#4F7CF7,#6A5AF9);color:#fff;font-size:24px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:9999;
+  box-shadow:0 4px 14px rgba(79,124,247,.4);-webkit-tap-highlight-color:transparent;user-select:none;}
+#aiPanel{position:fixed;right:16px;bottom:80px;width:min(360px,calc(100vw - 32px));height:min(480px,calc(100vh - 120px));
+  background:#fff;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.18);z-index:9999;
+  display:flex;flex-direction:column;overflow:hidden;border:1px solid #E4E3DD;}
+#aiHead{background:linear-gradient(135deg,#4F7CF7,#6A5AF9);color:#fff;padding:10px 14px;
+  font-size:14px;font-weight:600;display:flex;justify-content:space-between;align-items:center;}
+#aiClose{background:rgba(255,255,255,.2);border:none;color:#fff;width:26px;height:26px;
+  border-radius:50%;font-size:16px;line-height:1;cursor:pointer;}
+#aiMsgs{flex:1;overflow-y:auto;padding:12px;background:#FAF9F6;display:flex;flex-direction:column;gap:8px;font-size:14px;}
+.ai-msg{max-width:88%;padding:8px 11px;border-radius:12px;white-space:pre-wrap;word-break:break-word;line-height:1.55;}
+.ai-user{align-self:flex-end;background:#4F7CF7;color:#fff;border-bottom-right-radius:4px;}
+.ai-bot{align-self:flex-start;background:#fff;border:1px solid #E4E3DD;border-bottom-left-radius:4px;color:#1A1B1C;}
+.ai-bot.err{color:#B44244;background:#FDF0EF;}
+.ai-typing{color:#6B7280;font-style:italic;}
+#aiInputRow{display:flex;gap:8px;padding:10px;border-top:1px solid #E4E3DD;background:#fff;}
+#aiInput{flex:1;border:1px solid #D8D6CF;border-radius:10px;padding:8px 11px;font-size:14px;outline:none;min-width:0;}
+#aiInput:focus{border-color:#4F7CF7;}
+#aiSend{background:#4F7CF7;color:#fff;border:none;border-radius:10px;padding:0 16px;font-size:14px;cursor:pointer;font-weight:600;}
+@media (max-width:480px){#aiPanel{right:8px;bottom:76px;width:calc(100vw - 16px);}}
+</style>
+<script>
+(function(){
+  var API="https://zsb-ai-proxy.fanenyu7536.workers.dev";
+  var fab=document.getElementById("aiFab");
+  var panel=document.getElementById("aiPanel");
+  var msgs=document.getElementById("aiMsgs");
+  var input=document.getElementById("aiInput");
+  var send=document.getElementById("aiSend");
+  var close=document.getElementById("aiClose");
+  if(!fab||!panel) return;
+  var open=false;
+  function toggle(force){
+    open=(typeof force==="boolean")?force:!open;
+    panel.style.display=open?"flex":"none";
+    if(open&&input) input.focus();
+  }
+  fab.addEventListener("click",function(){ toggle(); });
+  if(close) close.addEventListener("click",function(){ toggle(false); });
+  function append(role,text,cls){
+    var d=document.createElement("div");
+    d.className="ai-msg "+(role==="user"?"ai-user":"ai-bot")+(cls?" "+cls:"");
+    d.textContent=text;
+    if(msgs) msgs.appendChild(d);
+    if(msgs) msgs.scrollTop=msgs.scrollHeight;
+    return d;
+  }
+  function ask(q,title){
+    if(!q||!q.trim()) return;
+    toggle(true);
+    var finalQ=title?("【"+title+"】\n"+q):q;
+    append("user",finalQ);
+    var typing=append("bot","思考中…","ai-typing");
+    fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({messages:[{role:"user",content:finalQ}],max_tokens:700})})
+      .then(function(r){
+        if(!r.ok) return r.text().then(function(t){ throw new Error("服务返回 "+r.status+(t.length<150?": "+t:"")); });
+        return r.json();
+      })
+      .then(function(j){
+        var c=(j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content)||"(空回复)";
+        typing.className="ai-msg ai-bot";
+        typing.textContent=c;
+      })
+      .catch(function(e){
+        typing.className="ai-msg ai-bot err";
+        typing.textContent="请求失败："+e.message;
+      });
+  }
+  if(send) send.addEventListener("click",function(){ var v=input.value; if(v.trim()){ input.value=""; ask(v); } });
+  if(input) input.addEventListener("keydown",function(e){ if(e.key==="Enter"&&!e.shiftKey){ e.preventDefault(); var v=input.value; if(v.trim()){ input.value=""; ask(v); } } });
+  window.AIAsk=ask;
+})();
+</script>
+"""
+
+
+# ============================================================
 # 复习页模板（三科共用；math 模式额外引入 KaTeX）
 # ============================================================
 REVIEW_HTML = r"""<!DOCTYPE html>
@@ -837,6 +930,7 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
       +'<button id="btnAgain" class="u">没记住 · 明天</button>'
       +'<button id="btnHard" class="h">有点模糊 · 3 天后</button>'
       +'<button id="btnGood" class="m">掌握 · 延后复习</button>'
+      +'<button id="btnAITeach">AI 讲题</button>'
       +'</div>'
       +ansHtml
       +reasonHtml
@@ -921,6 +1015,21 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
   }
   function bind(){
     var s=$("btnShow"); if(s) s.onclick=function(){ revealed=true; show(); };
+    var ai=$("btnAITeach"); if(ai) ai.onclick=function(){
+      var q=list[idx];
+      if(!q){ return; }
+      var p="请帮我讲解这道专升本错题，讲清楚考点和解题思路：\n\n";
+      p+="【题型】"+(q["题型"]||"")+"\n";
+      p+="【题目】"+(q["题目"]||"")+"\n";
+      if(q["选项"]&&q["选项"].length){
+        var L="ABCDEFGH";
+        p+="【选项】\n"+q["选项"].map(function(o,i){ return L[i]+". "+o; }).join("\n");
+      }
+      p+="\n【答案】"+(q["答案"]||"")+"\n";
+      if(q["解析"]&&q["解析"]!=="（本题未附解析）") p+="【解析】"+q["解析"]+"\n";
+      p+="\n请分点讲解：1) 考点是什么；2) 为什么选这个答案；3) 其他选项错在哪。";
+      if(window.AIAsk){ window.AIAsk(p, "AI讲题 · Q-"+q.id); }
+    };
     var a=$("btnAgain"); if(a) a.onclick=function(){ schedule(list[idx],"again"); revealed=false; if(idx<list.length-1){idx++;} show(); renderStats(); };
     var h=$("btnHard"); if(h) h.onclick=function(){ schedule(list[idx],"hard"); revealed=false; if(idx<list.length-1){idx++;} show(); renderStats(); };
     var g=$("btnGood"); if(g) g.onclick=function(){ schedule(list[idx],"good"); revealed=false; if(idx<list.length-1){idx++;} show(); renderStats(); };
@@ -1204,6 +1313,7 @@ def build_review(sub):
             .replace("__INDEX__", "../../SCGSstudy/index.html"))
     html = html.replace("var MATH = __MATH_MODE__;",
                         "var MATH = %s;" % ("true" if mode == "math" else "false"))
+    html = html.replace("</body>", AI_HTML + "\n</body>")
     out = d / "复习页.html"
     out.write_text(html, encoding="utf-8")
     return items
@@ -1217,6 +1327,7 @@ def build_wordcard(sub):
     html = (WORD_HTML
             .replace("__WORDS_JSON__", js_safe(items))
             .replace("__INDEX__", "../../SCGSstudy/index.html"))
+    html = html.replace("</body>", AI_HTML + "\n</body>")
     out = d / "单词卡.html"
     out.write_text(html, encoding="utf-8")
     return items
@@ -1263,6 +1374,7 @@ def build_wordbook(sub):
     html = (tpl
             .replace("__WORDS_JSON__", js_safe(words))
             .replace("__INDEX__", "../../SCGSstudy/index.html"))
+    html = html.replace("</body>", AI_HTML + "\n</body>")
     out = d / "单词本.html"
     out.write_text(html, encoding="utf-8")
     return words
@@ -1278,6 +1390,7 @@ def build_shengci(sub):
             .replace("__WORDS_JSON__", js_safe(words))
             .replace("__MANUAL_JSON__", js_safe(manual))
             .replace("__INDEX__", "../../SCGSstudy/index.html"))
+    html = html.replace("</body>", AI_HTML + "\n</body>")
     out = d / "生词本.html"
     out.write_text(html, encoding="utf-8")
     return len(manual)
@@ -1647,6 +1760,7 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     html+='<button id="btnOK" class="g" style="display:none;">做对了 ✔</button>';
     html+='<button id="btnNO" class="r" style="display:none;">做错了 · 记入错题</button>';
     html+='<button id="btnSkip">跳过</button>';
+    html+='<button id="btnAITeach">AI 讲题</button>';
     html+='</div>';
     html+='<div class="nav"><button id="btnPrev">‹ 上一题</button><span style="font-size:12px;color:var(--sub);align-self:center;">'+(idx+1)+' / '+list.length+'</span><button id="btnNext">下一题 ›</button></div>';
     box.innerHTML=html;
@@ -1780,6 +1894,24 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     $("btnSkip").addEventListener("click",function(){ if(idx<list.length-1){idx++;show();} else {idx=0;show();} });
     $("btnPrev").addEventListener("click",function(){ idx=(idx-1+list.length)%list.length; show(); });
     $("btnNext").addEventListener("click",function(){ idx=(idx+1)%list.length; show(); });
+    var aiBtn=$("btnAITeach");
+    if(aiBtn) aiBtn.addEventListener("click",function(){
+      var it=list[idx];
+      if(!it){ showToast("暂无题目"); return; }
+      var p="请帮我讲解这道专升本题目，讲清楚考点和解题思路：\n\n";
+      p+="【题型】"+(it["题型"]||"")+"\n";
+      p+="【题目】"+(it["题目"]||"")+"\n";
+      if(it["材料"]) p+="【材料】"+it["材料"]+"\n";
+      if(it["选项"]&&it["选项"].length){
+        var L="ABCDEFGH";
+        p+="【选项】\n"+it["选项"].map(function(o,i){ return L[i]+". "+o; }).join("\n");
+      }
+      p+="\n【答案】"+(it["答案"]||"")+"\n";
+      if(it["解析"]&&it["解析"]!=="（本题未附解析）") p+="【解析】"+it["解析"]+"\n";
+      p+="\n请分点讲解：1) 考点是什么；2) 为什么选这个答案；3) 其他选项错在哪。";
+      if(window.AIAsk){ window.AIAsk(p, "AI讲题 · "+it.id); }
+      else{ showToast("AI 助手未加载，请刷新页面"); }
+    });
     stats();
   }
   function reload(){
@@ -1935,6 +2067,7 @@ def build_tiku(sub, base_qid):
             .replace("__INDEX__", "../SCGSstudy/index.html"))
     html = html.replace("var MATH = __MATH_MODE__;",
                         "var MATH = %s;" % ("true" if mode == "math" else "false"))
+    html = html.replace("</body>", AI_HTML + "\n</body>")
     out = d / "题库页.html"
     out.write_text(html, encoding="utf-8")
     return {"items": items, "out": out}
@@ -2001,6 +2134,7 @@ def build_index(per_subject, tiku_info):
             .replace("__WORD_CARDS__", word_cards)
             .replace("__DAILY_JSON__", js_safe(daily_data))
             .replace("__QUALITY_JSON__", js_safe(quality)))
+    html = html.replace("</body>", AI_HTML + "\n</body>")
     out = BASE / "index.html"
     out.write_text(html, encoding="utf-8")
 
