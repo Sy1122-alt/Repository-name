@@ -597,7 +597,7 @@ AI_HTML = r"""
     var typing=append("bot","思考中…","ai-typing");
     fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify({messages:[
-        {role:"system",content:"你是四川专升本学习助手，回答要清晰分点、面向专升本考生。数学公式请用LaTeX：行内用 $...$，独立公式用 $$...$$。"},
+        {role:"system",content:"你是四川专升本学习助手，擅长高等数学、计算机基础、大学英语。数学公式用LaTeX：行内 $...$，独立公式 $$...$$。解题铁律：1) 仔细审题，先明确题目问什么；2) 每一步计算必须准确，临界点、极值点等关键结果要代入验算；3) 只讲解与本题直接相关的内容，严禁添加与解题无关的表述（如多余的零点、无关性质、无关定理）；4) 术语严格准确：临界点=导数零点，零点=函数值为0的点，单调区间、极值、拐点等概念不可混用或并列；5) 不确定的地方明确说，不编造；6) 分点清晰，面向专升本考生，用中文。"},
         {role:"user",content:finalQ}
       ],max_tokens:700})})
       .then(function(r){
