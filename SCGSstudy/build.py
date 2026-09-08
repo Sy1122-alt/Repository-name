@@ -461,9 +461,25 @@ def parse_tiku(path, subject):
                 if len(seg) > 1:
                     cur["解析"] = seg[1].strip()
             continue
+        # 证明题格式（- **证明：** 开头，证明内容作为解析）
+        if cur is not None and re.match(r"^-\s*\*{0,2}证明\s*[:：]", s):
+            proof_text = re.sub(r"^-\s*\*{0,2}证明\s*[:：]\s*", "", s).replace("**", "").strip()
+            cur["答案"] = "证明见解析"
+            cur["解析"] = proof_text
+            cur["_proof_mode"] = True
+            continue
+        # 证明题续行（以空格开头，且当前处于证明模式）
+        if cur is not None and cur.get("_proof_mode") and s.startswith("  ") and not s.startswith("-"):
+            cur["解析"] += "\n" + s.strip()
+            continue
         # 独立解析行（题库同时支持“答案行同行解析”和单独的解析行）
         if cur is not None and re.match(r"^-\s*\*{0,2}解析\s*[:：]", s):
             cur["解析"] = re.sub(r"^-\s*\*{0,2}解析\s*[:：]\s*", "", s).replace("**", "").strip()
+            if cur.get("_proof_mode"):
+                del cur["_proof_mode"]
+        # 来源行时清除证明模式
+        if cur is not None and cur.get("_proof_mode"):
+            del cur["_proof_mode"]
             continue
         # 来源行
         if cur is not None and re.match(r"^-\s*来源\s*[:：]", s):
