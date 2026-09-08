@@ -442,11 +442,15 @@ def parse_tiku(path, subject):
                 }
                 items.append(item)
                 continue
-        # 选项行
+        # 选项行（支持同行多选项和每行一个选项两种格式）
         if s.startswith("-") and re.match(r"^-\s*[A-H]\.", s):
             opts = split_options(s)
             if opts and cur is not None:
-                cur["选项"] = opts
+                if cur.get("选项"):
+                    # 已有选项则追加（处理每行一个选项的格式）
+                    cur["选项"].extend(opts)
+                else:
+                    cur["选项"] = opts
             continue
         # 答案行（可能同行带解析，用全角空格/“解析”分隔）
         if cur is not None and "答案" in s and (s.startswith("- 答案") or s.startswith("- **答案")):
