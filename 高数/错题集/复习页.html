@@ -1135,52 +1135,85 @@ window.__TIKU_SIMPLE__ = [
       <div style="font-size:19px;font-weight:700;color:#1A1B1C;">📮 投稿题目</div>
       <div id="subClose" style="cursor:pointer;font-size:22px;color:#8a8f98;line-height:1;padding:2px 8px;">×</div>
     </div>
-    <div style="font-size:13px;color:#6B7280;margin-bottom:16px;line-height:1.6;">题目提交后由管理员审核入库，你的投稿会被认真对待。带 <span style="color:#e5484d;">*</span> 为必填。</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-      <div>
+    <div style="display:flex;gap:8px;margin-bottom:16px;border-bottom:2px solid #f0f0f0;padding-bottom:0;">
+      <button id="tabImage" type="button" style="flex:1;padding:10px;border:none;border-bottom:3px solid #4F7CF7;background:transparent;color:#4F7CF7;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:-2px;">📷 上传图片</button>
+      <button id="tabManual" type="button" style="flex:1;padding:10px;border:none;border-bottom:3px solid transparent;background:transparent;color:#6B7280;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:-2px;">✏️ 手动填写</button>
+    </div>
+
+    <!-- ===== 上传图片模式 ===== -->
+    <div id="panelImage">
+      <div style="font-size:13px;color:#6B7280;margin-bottom:10px;line-height:1.6;">拍照或上传题目图片，管理员会识别题目并整理入库。</div>
+      <div id="dropZone" style="border:2px dashed #d1d5db;border-radius:12px;padding:28px 16px;text-align:center;cursor:pointer;background:#fafafa;transition:all 0.2s;">
+        <div style="font-size:34px;margin-bottom:6px;">📷</div>
+        <div style="font-size:14px;color:#374151;font-weight:600;">点击选择图片 或 拖拽到这里</div>
+        <div style="font-size:12px;color:#9ca3af;margin-top:4px;">支持 JPG/PNG，可多选，总大小≤18MB</div>
+        <input type="file" id="fileInput" accept="image/*" multiple style="display:none;">
+      </div>
+      <div id="previewArea" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;"></div>
+      <div style="margin-top:14px;">
         <div style="font-size:13px;color:#374151;margin-bottom:5px;">科目 <span style="color:#e5484d;">*</span></div>
-        <select id="subSubject" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;background:#fff;">
+        <select id="subSubjectImg" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;background:#fff;">
           <option value="高数">高等数学</option>
           <option value="计算机">计算机基础</option>
           <option value="英语">大学英语</option>
         </select>
       </div>
-      <div>
-        <div style="font-size:13px;color:#374151;margin-bottom:5px;">题型</div>
-        <select id="subType" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;background:#fff;">
-          <option value="单选">单选题</option>
-          <option value="多选">多选题</option>
-          <option value="判断">判断题</option>
-          <option value="填空">填空题</option>
-          <option value="简答">简答题</option>
-          <option value="完形">完形填空</option>
-          <option value="翻译">翻译题</option>
-          <option value="其他">其他</option>
-        </select>
+      <div style="margin-top:12px;">
+        <div style="font-size:13px;color:#374151;margin-bottom:5px;">备注（可选）</div>
+        <textarea id="subNoteImg" rows="2" placeholder="如：2025年真题、第3页等" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;resize:vertical;font-family:inherit;line-height:1.5;"></textarea>
       </div>
     </div>
-    <div style="margin-bottom:12px;">
-      <div style="font-size:13px;color:#374151;margin-bottom:5px;">题目内容 <span style="color:#e5484d;">*</span></div>
-      <textarea id="subQuestion" rows="4" placeholder="题目内容，可含公式（用 $...$ 包裹，如 $\lim_{x\to0}\frac{\sin x}{x}$）" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;resize:vertical;font-family:inherit;line-height:1.5;"></textarea>
-    </div>
-    <div style="margin-bottom:12px;">
-      <div style="font-size:13px;color:#374151;margin-bottom:5px;">选项（每行一个，如 A.xxx）</div>
-      <textarea id="subOptions" rows="3" placeholder="A. 选项一&#10;B. 选项二&#10;C. 选项三&#10;D. 选项四" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;resize:vertical;font-family:inherit;line-height:1.5;"></textarea>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-      <div>
-        <div style="font-size:13px;color:#374151;margin-bottom:5px;">答案</div>
-        <input id="subAnswer" type="text" placeholder="如：B 或 具体答案" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;" />
+
+    <!-- ===== 手动填写模式 ===== -->
+    <div id="panelManual" style="display:none;">
+      <div style="font-size:13px;color:#6B7280;margin-bottom:14px;line-height:1.6;">手动填写题目信息，带 <span style="color:#e5484d;">*</span> 为必填。</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+        <div>
+          <div style="font-size:13px;color:#374151;margin-bottom:5px;">科目 <span style="color:#e5484d;">*</span></div>
+          <select id="subSubject" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;background:#fff;">
+            <option value="高数">高等数学</option>
+            <option value="计算机">计算机基础</option>
+            <option value="英语">大学英语</option>
+          </select>
+        </div>
+        <div>
+          <div style="font-size:13px;color:#374151;margin-bottom:5px;">题型</div>
+          <select id="subType" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;background:#fff;">
+            <option value="单选">单选题</option>
+            <option value="多选">多选题</option>
+            <option value="判断">判断题</option>
+            <option value="填空">填空题</option>
+            <option value="简答">简答题</option>
+            <option value="完形">完形填空</option>
+            <option value="翻译">翻译题</option>
+            <option value="其他">其他</option>
+          </select>
+        </div>
       </div>
-      <div>
-        <div style="font-size:13px;color:#374151;margin-bottom:5px;">题目来源</div>
-        <input id="subSource" type="text" placeholder="如：真题2025 / 自编 / 机构" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;" />
+      <div style="margin-bottom:12px;">
+        <div style="font-size:13px;color:#374151;margin-bottom:5px;">题目内容 <span style="color:#e5484d;">*</span></div>
+        <textarea id="subQuestion" rows="4" placeholder="题目内容，可含公式（用 $...$ 包裹）" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;resize:vertical;font-family:inherit;line-height:1.5;"></textarea>
+      </div>
+      <div style="margin-bottom:12px;">
+        <div style="font-size:13px;color:#374151;margin-bottom:5px;">选项（每行一个，如 A.xxx）</div>
+        <textarea id="subOptions" rows="3" placeholder="A. 选项一&#10;B. 选项二&#10;C. 选项三&#10;D. 选项四" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;resize:vertical;font-family:inherit;line-height:1.5;"></textarea>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+        <div>
+          <div style="font-size:13px;color:#374151;margin-bottom:5px;">答案</div>
+          <input id="subAnswer" type="text" placeholder="如：B 或 具体答案" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;" />
+        </div>
+        <div>
+          <div style="font-size:13px;color:#374151;margin-bottom:5px;">题目来源</div>
+          <input id="subSource" type="text" placeholder="如：真题2025 / 自编 / 机构" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;" />
+        </div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <div style="font-size:13px;color:#374151;margin-bottom:5px;">备注（可选）</div>
+        <textarea id="subNote" rows="2" placeholder="想补充的任何说明" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;resize:vertical;font-family:inherit;line-height:1.5;"></textarea>
       </div>
     </div>
-    <div style="margin-bottom:16px;">
-      <div style="font-size:13px;color:#374151;margin-bottom:5px;">备注（可选）</div>
-      <textarea id="subNote" rows="2" placeholder="想补充的任何说明" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;resize:vertical;font-family:inherit;line-height:1.5;"></textarea>
-    </div>
+
     <div id="subMsg" style="font-size:13px;margin-bottom:12px;display:none;padding:9px 12px;border-radius:9px;line-height:1.5;"></div>
     <div style="display:flex;gap:10px;justify-content:flex-end;">
       <button id="subCancel" type="button" style="padding:10px 20px;border:1px solid #d1d5db;border-radius:10px;background:#fff;color:#374151;font-size:14px;cursor:pointer;">取消</button>
@@ -1195,11 +1228,74 @@ window.__TIKU_SIMPLE__ = [
   var close=document.getElementById('subClose'), cancel=document.getElementById('subCancel'), send=document.getElementById('subSend');
   var msg=document.getElementById('subMsg'), subAPI="https://ai.scgsstudy.top/api/submit";
   if(!modal||!fab) return;
+
+  // Tab 切换
+  var tabImage=document.getElementById('tabImage'), tabManual=document.getElementById('tabManual');
+  var panelImage=document.getElementById('panelImage'), panelManual=document.getElementById('panelManual');
+  var currentTab='image';
+  function switchTab(tab){
+    currentTab=tab;
+    if(tab==='image'){
+      tabImage.style.color='#4F7CF7'; tabImage.style.borderBottomColor='#4F7CF7';
+      tabManual.style.color='#6B7280'; tabManual.style.borderBottomColor='transparent';
+      panelImage.style.display=''; panelManual.style.display='none';
+    } else {
+      tabManual.style.color='#4F7CF7'; tabManual.style.borderBottomColor='#4F7CF7';
+      tabImage.style.color='#6B7280'; tabImage.style.borderBottomColor='transparent';
+      panelManual.style.display=''; panelImage.style.display='none';
+    }
+  }
+  if(tabImage) tabImage.addEventListener('click',function(){ switchTab('image'); });
+  if(tabManual) tabManual.addEventListener('click',function(){ switchTab('manual'); });
+
+  // 图片上传
+  var fileInput=document.getElementById('fileInput'), dropZone=document.getElementById('dropZone'), previewArea=document.getElementById('previewArea');
+  var uploadedImages=[]; // {filename, base64}
+  function renderPreview(){
+    if(!previewArea) return;
+    previewArea.innerHTML='';
+    uploadedImages.forEach(function(img,idx){
+      var wrap=document.createElement('div');
+      wrap.style.cssText='position:relative;width:80px;height:80px;border-radius:8px;overflow:hidden;border:1px solid #e5e7eb;';
+      var im=document.createElement('img');
+      im.src=img.base64; im.style.cssText='width:100%;height:100%;object-fit:cover;';
+      var del=document.createElement('div');
+      del.textContent='×'; del.style.cssText='position:absolute;top:2px;right:2px;width:20px;height:20px;background:rgba(0,0,0,0.6);color:#fff;border-radius:50%;font-size:14px;line-height:20px;text-align:center;cursor:pointer;';
+      del.addEventListener('click',function(e){ e.stopPropagation(); uploadedImages.splice(idx,1); renderPreview(); });
+      wrap.appendChild(im); wrap.appendChild(del);
+      previewArea.appendChild(wrap);
+    });
+  }
+  function handleFiles(files){
+    if(!files||!files.length) return;
+    var remaining=Array.prototype.slice.call(files);
+    function processNext(){
+      if(!remaining.length){ renderPreview(); return; }
+      var file=remaining.shift();
+      if(!file.type||file.type.indexOf('image/')!==0){ processNext(); return; }
+      var reader=new FileReader();
+      reader.onload=function(e){
+        uploadedImages.push({filename:file.name||'image.jpg', base64:e.target.result});
+        processNext();
+      };
+      reader.onerror=function(){ processNext(); };
+      reader.readAsDataURL(file);
+    }
+    processNext();
+  }
+  if(dropZone&&fileInput){
+    dropZone.addEventListener('click',function(){ fileInput.click(); });
+    fileInput.addEventListener('change',function(e){ handleFiles(e.target.files); fileInput.value=''; });
+    dropZone.addEventListener('dragover',function(e){ e.preventDefault(); dropZone.style.borderColor='#4F7CF7'; dropZone.style.background='#f0f4ff'; });
+    dropZone.addEventListener('dragleave',function(){ dropZone.style.borderColor='#d1d5db'; dropZone.style.background='#fafafa'; });
+    dropZone.addEventListener('drop',function(e){ e.preventDefault(); dropZone.style.borderColor='#d1d5db'; dropZone.style.background='#fafafa'; handleFiles(e.dataTransfer.files); });
+  }
+
   function show(s){ modal.style.display=s?'flex':'none'; }
   function tip(t,ok){ if(!msg) return; msg.style.display='block'; msg.style.background=ok?'rgba(240,253,244,0.9)':'rgba(254,242,242,0.9)'; msg.style.color=ok?'#16a34a':'#dc2626'; msg.textContent=t; }
   window.openSubmit=function(subject){
-    var s=document.getElementById('subSubject');
-    if(subject&&s){ var map={高数:'高数',计算机:'计算机',英语:'英语'}; if(map[subject]) s.value=map[subject]; }
+    var s1=document.getElementById('subSubject'), s2=document.getElementById('subSubjectImg');
+    if(subject){ var map={高数:'高数',计算机:'计算机',英语:'英语'}; if(map[subject]){ if(s1)s1.value=map[subject]; if(s2)s2.value=map[subject]; } }
     if(msg) msg.style.display='none';
     show(true);
   };
@@ -1214,34 +1310,59 @@ window.__TIKU_SIMPLE__ = [
   if(close) close.addEventListener('click',function(){ show(false); });
   if(cancel) cancel.addEventListener('click',function(){ show(false); });
   modal.addEventListener('click',function(e){ if(e.target===modal) show(false); });
+
   send.addEventListener('click',function(){
-    var subject=document.getElementById('subSubject').value;
-    var qtype=document.getElementById('subType').value;
-    var question=document.getElementById('subQuestion').value.trim();
-    var options=document.getElementById('subOptions').value.trim();
-    var answer=document.getElementById('subAnswer').value.trim();
-    var source=document.getElementById('subSource').value.trim();
-    var note=document.getElementById('subNote').value.trim();
-    if(question.length<3){ tip('题目内容不能为空（至少3个字）',false); return; }
-    send.disabled=true; send.textContent='提交中…';
-    fetch(subAPI,{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({subject:subject,qtype:qtype,question:question,options:options,answer:answer,source:source,note:note})})
-      .then(function(r){ return r.json().then(function(j){ return {ok:r.ok,j:j}; }); })
-      .then(function(res){
-        send.disabled=false; send.textContent='提交投稿';
-        if(res.ok&&res.j.success){
-          tip('投稿成功！管理员审核后会尽快入库，谢谢你的贡献。',true);
-          document.getElementById('subQuestion').value='';
-          document.getElementById('subOptions').value='';
-          document.getElementById('subAnswer').value='';
-          document.getElementById('subSource').value='';
-          document.getElementById('subNote').value='';
-          setTimeout(function(){ show(false); }, 1800);
-        } else {
-          tip((res.j&&res.j.error)||'提交失败，请重试',false);
-        }
-      })
-      .catch(function(e){ send.disabled=false; send.textContent='提交投稿'; tip('网络错误：'+e.message,false); });
+    if(currentTab==='image'){
+      // 图片模式
+      if(uploadedImages.length===0){ tip('请至少选择一张图片',false); return; }
+      var subject=document.getElementById('subSubjectImg').value;
+      var note=document.getElementById('subNoteImg').value.trim();
+      send.disabled=true; send.textContent='上传中…';
+      fetch(subAPI,{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({type:'image',subject:subject,note:note,images:uploadedImages})})
+        .then(function(r){ return r.json().then(function(j){ return {ok:r.ok,j:j}; }); })
+        .then(function(res){
+          send.disabled=false; send.textContent='提交投稿';
+          if(res.ok&&res.j.success){
+            tip('图片上传成功！我们会尽快识别题目并审核入库。',true);
+            uploadedImages=[]; renderPreview();
+            document.getElementById('subNoteImg').value='';
+            setTimeout(function(){ show(false); }, 1800);
+          } else {
+            tip((res.j&&res.j.error)||'上传失败，请重试',false);
+          }
+        })
+        .catch(function(e){ send.disabled=false; send.textContent='提交投稿'; tip('网络错误：'+e.message,false); });
+    } else {
+      // 手动模式
+      var subject=document.getElementById('subSubject').value;
+      var qtype=document.getElementById('subType').value;
+      var question=document.getElementById('subQuestion').value.trim();
+      var options=document.getElementById('subOptions').value.trim();
+      var answer=document.getElementById('subAnswer').value.trim();
+      var source=document.getElementById('subSource').value.trim();
+      var note=document.getElementById('subNote').value.trim();
+      if(question.length<3){ tip('题目内容不能为空（至少3个字）',false); return; }
+      send.disabled=true; send.textContent='提交中…';
+      fetch(subAPI,{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({subject:subject,qtype:qtype,question:question,options:options,answer:answer,source:source,note:note})})
+        .then(function(r){ return r.json().then(function(j){ return {ok:r.ok,j:j}; }); })
+        .then(function(res){
+          send.disabled=false; send.textContent='提交投稿';
+          if(res.ok&&res.j.success){
+            tip('投稿成功！管理员审核后会尽快入库，谢谢你的贡献。',true);
+            document.getElementById('subQuestion').value='';
+            document.getElementById('subOptions').value='';
+            document.getElementById('subAnswer').value='';
+            document.getElementById('subSource').value='';
+            document.getElementById('subNote').value='';
+            setTimeout(function(){ show(false); }, 1800);
+          } else {
+            tip((res.j&&res.j.error)||'提交失败，请重试',false);
+          }
+        })
+        .catch(function(e){ send.disabled=false; send.textContent='提交投稿'; tip('网络错误：'+e.message,false); });
+    }
   });
 })();
 </script>

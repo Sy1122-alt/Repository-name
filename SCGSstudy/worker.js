@@ -40,6 +40,9 @@ export default {
     if (url.pathname === "/api/list" && request.method === "GET") {
       return handleList(request, env, corsHeaders);
     }
+    if (url.pathname === "/api/get" && request.method === "GET") {
+      return handleGet(request, env, corsHeaders);
+    }
     if (url.pathname === "/api/delete" && request.method === "POST") {
       return handleDelete(request, env, corsHeaders);
     }
@@ -161,7 +164,7 @@ async function handleAI(request, env, corsHeaders) {
   });
 }
 
-// ---------- 投稿存储 ----------
+// ---------- 投稿存储（支持手动填写 + 图片上传两种模式） ----------
 async function handleSubmit(request, env, corsHeaders) {
   let body;
   try {
@@ -174,14 +177,6 @@ async function handleSubmit(request, env, corsHeaders) {
   }
 
   const subject = String(body.subject || "").trim();
-  const qtype = String(body.qtype || "单选").trim();
-  const question = String(body.question || "").trim();
-  const options = String(body.options || "").trim();
-  const answer = String(body.answer || "").trim();
-  const source = String(body.source || "").trim();
-  const note = String(body.note || "").trim();
-
-  // 基础校验：科目 + 题目必填
   const subjects = ["高数", "计算机", "英语"];
   if (!subjects.includes(subject)) {
     return new Response(JSON.stringify({ error: "科目不合法，请选择 高数/计算机/英语" }), {
@@ -189,6 +184,77 @@ async function handleSubmit(request, env, corsHeaders) {
       headers: { "Content-Type": "application/json", ...corsHeaders },
     });
   }
+
+  const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+  const key = "sub_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
+  const baseRecord = {
+    key: key,
+    subject: subject,
+    ip: ip,
+    time: new Date().toISOString(),
+  };
+
+  // ===== 图片上传模式 =====
+  if (body.type === "image") {
+    const images = Array.isArray(body.images) ? body.images : [];
+    if (images.length === 0) {
+      return new Response(JSON.stringify({ error: "请至少上传一张图片" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
+    }
+    // 校验每张图片
+    const cleanImages = [];
+    let totalSize = 0;
+    for (const img of images) {
+      const filename = String(img.filename || "image.jpg").slice(0, 100);
+      const base64 = String(img.base64 || "").trim();
+      if (!base64 || base64.length < 100) {
+        return new Response(JSON.stringify({ error: "图片 " + filename + " 数据无效" }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      }
+      // 去掉 data:image/xxx;base64, 前缀
+      const pureBase64 = base64.replace(/^data:image\/[a-zA-Z+]+;base64,/, "");
+      totalSize += pureBase64.length;
+      cleanImages.push({ filename: filename, base64: pureBase64 });
+    }
+    // KV 单条最大 25MB，base64 后约 18.75MB 原始数据
+    if (totalSize > 18000000) {
+      return new Response(JSON.stringify({ error: "图片总大小超过限制（约18MB），请压缩后再上传" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
+    }
+    const record = {
+      ...baseRecord,
+      type: "image",
+      note: String(body.note || "").trim().slice(0, 500),
+      images: cleanImages,
+    };
+    try {
+      await env.ZSB_SUBMISSIONS.put(key, JSON.stringify(record));
+    } catch (e) {
+      return new Response(JSON.stringify({ error: "存储失败：" + e.message }), {
+        status: 500,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
+    }
+    return new Response(
+      JSON.stringify({ success: true, message: "图片上传成功！我们会尽快识别题目并审核入库。", key: key }),
+      { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+    );
+  }
+
+  // ===== 手动填写模式（原有逻辑） =====
+  const qtype = String(body.qtype || "单选").trim();
+  const question = String(body.question || "").trim();
+  const options = String(body.options || "").trim();
+  const answer = String(body.answer || "").trim();
+  const source = String(body.source || "").trim();
+  const note = String(body.note || "").trim();
+
   if (question.length < 3) {
     return new Response(JSON.stringify({ error: "题目内容太短（至少3个字）" }), {
       status: 400,
@@ -202,19 +268,15 @@ async function handleSubmit(request, env, corsHeaders) {
     });
   }
 
-  const ip = request.headers.get("CF-Connecting-IP") || "unknown";
-  const key = "sub_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
   const record = {
-    key: key,
-    subject: subject,
+    ...baseRecord,
+    type: "manual",
     qtype: qtype,
     question: question,
     options: options,
     answer: answer,
     source: source,
     note: note,
-    ip: ip,
-    time: new Date().toISOString(),
   };
 
   try {
@@ -266,10 +328,64 @@ async function handleList(request, env, corsHeaders) {
   }
 
   out.sort((a, b) => (a.time < b.time ? 1 : -1));
+  // 返回元数据，不含图片 base64（避免响应过大）
+  const meta = out.map(function (r) {
+    if (r.type === "image") {
+      return {
+        key: r.key, type: "image", subject: r.subject, time: r.time,
+        note: r.note || "", imageCount: (r.images || []).length,
+        filenames: (r.images || []).map(function (img) { return img.filename; }),
+      };
+    }
+    return {
+      key: r.key, type: r.type || "manual", subject: r.subject, time: r.time,
+      qtype: r.qtype || "", question: (r.question || "").slice(0, 100),
+      answer: r.answer || "", source: r.source || "", note: r.note || "",
+    };
+  });
   return new Response(
-    JSON.stringify({ success: true, total: out.length, items: out }),
+    JSON.stringify({ success: true, total: meta.length, items: meta }),
     { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
   );
+}
+
+// ---------- 获取单条投稿完整内容（含图片，管理员） ----------
+async function handleGet(request, env, corsHeaders) {
+  const adminKey = env.ADMIN_KEY || "";
+  const url = new URL(request.url);
+  const keyParam = url.searchParams.get("key") || "";
+  const id = url.searchParams.get("id") || "";
+  if (!adminKey || keyParam !== adminKey) {
+    return new Response(JSON.stringify({ error: "管理密钥不正确" }), {
+      status: 403,
+      headers: { "Content-Type": "application/json", ...corsHeaders },
+    });
+  }
+  if (!id.startsWith("sub_")) {
+    return new Response(JSON.stringify({ error: "id 不合法" }), {
+      status: 400,
+      headers: { "Content-Type": "application/json", ...corsHeaders },
+    });
+  }
+  let raw;
+  try {
+    raw = await env.ZSB_SUBMISSIONS.get(id);
+  } catch (e) {
+    return new Response(JSON.stringify({ error: "读取失败：" + e.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json", ...corsHeaders },
+    });
+  }
+  if (!raw) {
+    return new Response(JSON.stringify({ error: "投稿不存在" }), {
+      status: 404,
+      headers: { "Content-Type": "application/json", ...corsHeaders },
+    });
+  }
+  return new Response(raw, {
+    status: 200,
+    headers: { "Content-Type": "application/json", ...corsHeaders },
+  });
 }
 
 // ---------- 删除投稿（管理员） ----------
