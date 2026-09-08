@@ -399,7 +399,7 @@ def parse_tiku(path, subject):
             material.append(s)
             continue
         # 题目块起始
-        mb = re.match(r"^\*\*(真题|练习|自编|多选|模拟卷)[\s\-]*(.+?)[.、]\*{0,2}\s*(.*)$", s)
+        mb = re.match(r"^\*\*(真题|练习|自编|多选|模拟卷)[\s\-]*(.+?)(?:[.、]|\*\*)\s*(.*)$", s)
         if mb:
             flush()
             qtype, no = mb.group(1), mb.group(2)
