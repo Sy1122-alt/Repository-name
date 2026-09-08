@@ -2065,8 +2065,8 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     var box=$("card");
     if(!list.length){
       box.innerHTML='<div class="empty">当前范围没有题目。<br>换一个专题 / 模式，或点击「重置进度」重新开始。</div>';
-      $("btnShowA").style.visibility="hidden"; $("btnOK").style.visibility="hidden"; $("btnNO").style.visibility="hidden";
-      $("btnPrev").style.visibility="hidden"; $("btnNext").style.visibility="hidden";
+      ["btnShowA","btnOK","btnNO","btnPrev","btnNext"].forEach(function(id){ var el=$(id); if(el) el.style.visibility="hidden"; });
+      
       return;
     }
     ["btnShowA","btnOK","btnNO","btnPrev","btnNext"].forEach(function(id){ var el=$(id); if(el) el.style.visibility="visible"; });
