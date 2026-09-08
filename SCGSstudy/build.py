@@ -2049,7 +2049,7 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     var it=list[idx];
     revealed=false; answered=false;
     var html='<div class="meta">';
-    html+='<span class="tag qid">'+escHtml(it.id)+'</span><span class="tag">'+escHtml(it["专题"])+'</span><span class="tag">'+escHtml(it["题型"]||"")+'</span><span class="tag src">'+escHtml(it["来源"]||"")+'</span>';
+    html+='<span class="tag qid">'+escHtml(it.id)+'</span><span class="tag">'+escHtml(it["专题"])+'</span><span class="tag">'+escHtml(it["题型"]||"")+'</span>'+((it["来源"]&&String(it["来源"]).indexOf("真题")>=0)?'<span class="tag src">'+escHtml(it["来源"])+'</span>':'');
     if(done[it.id]) html+='<span class="tag" style="background:rgba(82,196,26,0.14);color:#3E8C13;">已完成</span>';
     if(basket.indexOf(it.id)>=0) html+='<span class="tag" style="background:rgba(234,102,104,0.14);color:#B44244;">已入篮</span>';
     html+='</div>';
@@ -2100,7 +2100,7 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     function renderAnswer(){
       var a="<div class='k'>答案："+renderMath(it["答案"])+"</div>";
       if(it["解析"]) a+="<br>"+renderMath(it["解析"]);
-      if(it["来源"]) a+="<br><span style='color:var(--sub)'>来源："+escHtml(it["来源"])+"</span>";
+      if(it["来源"]&&String(it["来源"]).indexOf("真题")>=0) a+="<br><span style='color:var(--sub)'>来源："+escHtml(it["来源"])+"</span>";
       ansBox.innerHTML=a;
       ansBox.style.display="block";
     }
@@ -2280,7 +2280,7 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
       }
       out+="- 答案："+it["答案"]+"\n";
       var jx=it["解析"]||"";
-      if(it["来源"]&&it["来源"]!=="自编") jx=(jx?jx+" ":"")+"（来源："+it["来源"]+"）";
+      if(it["来源"]&&String(it["来源"]).indexOf("真题")>=0) jx=(jx?jx+" ":"")+"（来源："+it["来源"]+"）";
       out+="- 解析："+jx+"\n\n";
       nextId++;
     });
