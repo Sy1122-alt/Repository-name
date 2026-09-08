@@ -2090,12 +2090,14 @@ window.__TIKU_SIMPLE__ = [
     var codes=[];
     t=t.replace(/`([^`]*)`/g,function(_,c){ codes.push(c); return "\u0000C"+(codes.length-1)+"\u0000"; });
     function fmt(x,display){
+      // 反转义：公式内容从已转义文本中提取，需还原 < > & 再给 KaTeX
+      var raw=x.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&");
       try{
         if(typeof katex!=="undefined"&&katex.renderToString){
-          return '<span class="ai-math">'+katex.renderToString(x,{displayMode:display,throwOnError:false})+'</span>';
+          return '<span class="ai-math">'+katex.renderToString(raw,{displayMode:display,throwOnError:false})+'</span>';
         }
       }catch(e){}
-      return '<span class="ai-math-plain">'+plainMath(x)+'</span>';
+      return '<span class="ai-math-plain">'+plainMath(raw)+'</span>';
     }
     t=t.replace(/\$\$([\s\S]+?)\$\$/g,function(_,x){ return fmt(x,true); });
     t=t.replace(/\\\[([\s\S]+?)\\\]/g,function(_,x){ return fmt(x,true); });
