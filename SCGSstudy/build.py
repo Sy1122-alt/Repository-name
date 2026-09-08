@@ -22,6 +22,9 @@ import json
 import re
 import pathlib
 from datetime import date
+import sys
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from gaoshu_kaodian import guess_kaodian
 
 # 项目根目录（本文件位于 错题本 子目录）
 BASE = pathlib.Path(__file__).resolve().parent
@@ -346,6 +349,10 @@ def parse_tiku(path, subject):
         nonlocal cur
         if cur is not None and not cur.get("判断题组"):
             if cur.get("材料") or cur.get("题目") or cur.get("选项"):
+                # 推断考点（仅高数）
+                if subject == "高数" and not cur.get("考点"):
+                    text_for_kd = cur.get("题目", "") + " " + cur.get("材料", "") + " " + cur.get("解析", "") + " " + cur.get("答案", "")
+                    cur["考点"] = guess_kaodian(subject, cur.get("题目", ""), text_for_kd)
                 items.append(cur)
             cur = None
         elif cur is not None:
@@ -413,6 +420,7 @@ def parse_tiku(path, subject):
                 "选项": [],
                 "答案": "",
                 "解析": "",
+                "考点": "",
             }
             if is_judge:
                 cur["判断题组"] = True
@@ -1792,6 +1800,7 @@ __KATEX_CSS__
 
   <div class="toolbar">
     <select id="selTopic"><option value="">全部专题</option></select>
+    <select id="selKaodian" style="display:none;"><option value="">全部考点</option></select>
     <button id="btnShuffle" class="primary">随机抽题</button>
     <button id="btnOrder">顺序浏览</button>
     <button id="btnUndone">只看未做</button>
@@ -1944,6 +1953,18 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
   topics.sort();
   topics.forEach(function(t){ var o=document.createElement("option"); o.value=t; o.textContent=t; $("selTopic").appendChild(o); });
 
+  // 考点筛选（仅高数）
+  if(SUBJECT==="高数"){
+    var selK=$("selKaodian");
+    if(selK){
+      selK.style.display="inline-block";
+      var kaodians=[];
+      ALL.forEach(function(it){ var kd=it["考点"]||"99-综合"; if(kaodians.indexOf(kd)<0) kaodians.push(kd); });
+      kaodians.sort();
+      kaodians.forEach(function(k){ var o=document.createElement("option"); o.value=k; o.textContent=k; selK.appendChild(o); });
+    }
+  }
+
   var mode="shuffle"; // shuffle|order|undone|basket
   var clozeFullMode=false;
   try{ clozeFullMode=localStorage.getItem("yingyu_cloze_full")==="1"; }catch(e){}
@@ -1974,8 +1995,10 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
   }
   function pool(){
     var t=$("selTopic").value;
+    var kd=$("selKaodian")?$("selKaodian").value:"";
     var base=ALL.filter(function(it){
       if(t && it["专题"]!==t) return false;
+      if(kd && (it["考点"]||"99-综合")!==kd) return false;
       if(mode==="basket") return basket.indexOf(it.id)>=0;
       if(mode==="undone") return !done[it.id];
       return true;
@@ -2212,6 +2235,7 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
   }
 
   $("selTopic").addEventListener("change",reload);
+  var selK2=$("selKaodian"); if(selK2) selK2.addEventListener("change",reload);
   $("btnShuffle").addEventListener("click",function(){setMode("shuffle");});
   $("btnOrder").addEventListener("click",function(){setMode("order");});
   $("btnUndone").addEventListener("click",function(){setMode("undone");});
