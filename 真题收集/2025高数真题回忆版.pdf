@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Error>
+  <Code>NoSuchBucket</Code>
+  <Message>The specified bucket does not exist.</Message>
+  <RequestId>6A9F8ECB855E8337334D4E2A</RequestId>
+  <HostId>kuke-prod-new.oss-cn-beijing.aliyuncs.com</HostId>
+  <BucketName>kuke-prod-new</BucketName>
+  <EC>0015-00000101</EC>
+  <RecommendDoc>https://api.aliyun.com/troubleshoot?q=0015-00000101</RecommendDoc>
+</Error>

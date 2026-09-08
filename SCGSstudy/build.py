@@ -623,6 +623,130 @@ AI_HTML = r"""
 
 
 # ============================================================
+# 投稿题目组件（模态框 + 浮动按钮 + 提交逻辑）
+# 数据 POST 到 https://ai.scgsstudy.top/api/submit
+# ============================================================
+SUBMIT_HTML = r"""
+<div id="subModal" style="display:none;position:fixed;inset:0;z-index:99990;background:rgba(15,23,42,0.55);backdrop-filter:blur(3px);justify-content:center;align-items:center;padding:16px;">
+  <div style="background:#fff;border-radius:16px;max-width:560px;width:100%;max-height:92vh;overflow-y:auto;padding:22px 24px;box-sizing:border-box;box-shadow:0 20px 60px rgba(0,0,0,0.25);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <div style="font-size:19px;font-weight:700;color:#1A1B1C;">📮 投稿题目</div>
+      <div id="subClose" style="cursor:pointer;font-size:22px;color:#8a8f98;line-height:1;padding:2px 8px;">×</div>
+    </div>
+    <div style="font-size:13px;color:#6B7280;margin-bottom:16px;line-height:1.6;">题目提交后由管理员审核入库，你的投稿会被认真对待。带 <span style="color:#e5484d;">*</span> 为必填。</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+      <div>
+        <div style="font-size:13px;color:#374151;margin-bottom:5px;">科目 <span style="color:#e5484d;">*</span></div>
+        <select id="subSubject" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;background:#fff;">
+          <option value="高数">高等数学</option>
+          <option value="计算机">计算机基础</option>
+          <option value="英语">大学英语</option>
+        </select>
+      </div>
+      <div>
+        <div style="font-size:13px;color:#374151;margin-bottom:5px;">题型</div>
+        <select id="subType" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;background:#fff;">
+          <option value="单选">单选题</option>
+          <option value="多选">多选题</option>
+          <option value="判断">判断题</option>
+          <option value="填空">填空题</option>
+          <option value="简答">简答题</option>
+          <option value="完形">完形填空</option>
+          <option value="翻译">翻译题</option>
+          <option value="其他">其他</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-bottom:12px;">
+      <div style="font-size:13px;color:#374151;margin-bottom:5px;">题目内容 <span style="color:#e5484d;">*</span></div>
+      <textarea id="subQuestion" rows="4" placeholder="题目内容，可含公式（用 $...$ 包裹，如 $\lim_{x\to0}\frac{\sin x}{x}$）" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;resize:vertical;font-family:inherit;line-height:1.5;"></textarea>
+    </div>
+    <div style="margin-bottom:12px;">
+      <div style="font-size:13px;color:#374151;margin-bottom:5px;">选项（每行一个，如 A.xxx）</div>
+      <textarea id="subOptions" rows="3" placeholder="A. 选项一&#10;B. 选项二&#10;C. 选项三&#10;D. 选项四" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;resize:vertical;font-family:inherit;line-height:1.5;"></textarea>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+      <div>
+        <div style="font-size:13px;color:#374151;margin-bottom:5px;">答案</div>
+        <input id="subAnswer" type="text" placeholder="如：B 或 具体答案" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;" />
+      </div>
+      <div>
+        <div style="font-size:13px;color:#374151;margin-bottom:5px;">题目来源</div>
+        <input id="subSource" type="text" placeholder="如：真题2025 / 自编 / 机构" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;" />
+      </div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:13px;color:#374151;margin-bottom:5px;">备注（可选）</div>
+      <textarea id="subNote" rows="2" placeholder="想补充的任何说明" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;resize:vertical;font-family:inherit;line-height:1.5;"></textarea>
+    </div>
+    <div id="subMsg" style="font-size:13px;margin-bottom:12px;display:none;padding:9px 12px;border-radius:9px;line-height:1.5;"></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button id="subCancel" type="button" style="padding:10px 20px;border:1px solid #d1d5db;border-radius:10px;background:#fff;color:#374151;font-size:14px;cursor:pointer;">取消</button>
+      <button id="subSend" type="button" style="padding:10px 22px;border:none;border-radius:10px;background:#4F7CF7;color:#fff;font-size:14px;font-weight:600;cursor:pointer;">提交投稿</button>
+    </div>
+  </div>
+</div>
+<button id="subFab" title="投稿题目" style="position:fixed;right:22px;bottom:96px;z-index:99970;width:50px;height:50px;border-radius:50%;border:none;background:linear-gradient(135deg,#4F7CF7,#8B5CF6);color:#fff;font-size:22px;cursor:pointer;box-shadow:0 6px 20px rgba(79,124,247,0.4);display:flex;align-items:center;justify-content:center;">📮</button>
+<script>
+(function(){
+  var modal=document.getElementById('subModal'), fab=document.getElementById('subFab');
+  var close=document.getElementById('subClose'), cancel=document.getElementById('subCancel'), send=document.getElementById('subSend');
+  var msg=document.getElementById('subMsg'), subAPI="https://ai.scgsstudy.top/api/submit";
+  if(!modal||!fab) return;
+  function show(s){ modal.style.display=s?'flex':'none'; }
+  function tip(t,ok){ if(!msg) return; msg.style.display='block'; msg.style.background=ok?'rgba(240,253,244,0.9)':'rgba(254,242,242,0.9)'; msg.style.color=ok?'#16a34a':'#dc2626'; msg.textContent=t; }
+  window.openSubmit=function(subject){
+    var s=document.getElementById('subSubject');
+    if(subject&&s){ var map={高数:'高数',计算机:'计算机',英语:'英语'}; if(map[subject]) s.value=map[subject]; }
+    if(msg) msg.style.display='none';
+    show(true);
+  };
+  fab.addEventListener('click',function(){
+    var t=document.title||'';
+    var guess='';
+    if(t.indexOf('计算机')>=0){ guess='计算机'; }
+    else if(t.indexOf('英语')>=0){ guess='英语'; }
+    else if(t.indexOf('高数')>=0||t.indexOf('高等数学')>=0){ guess='高数'; }
+    window.openSubmit(guess||undefined);
+  });
+  if(close) close.addEventListener('click',function(){ show(false); });
+  if(cancel) cancel.addEventListener('click',function(){ show(false); });
+  modal.addEventListener('click',function(e){ if(e.target===modal) show(false); });
+  send.addEventListener('click',function(){
+    var subject=document.getElementById('subSubject').value;
+    var qtype=document.getElementById('subType').value;
+    var question=document.getElementById('subQuestion').value.trim();
+    var options=document.getElementById('subOptions').value.trim();
+    var answer=document.getElementById('subAnswer').value.trim();
+    var source=document.getElementById('subSource').value.trim();
+    var note=document.getElementById('subNote').value.trim();
+    if(question.length<3){ tip('题目内容不能为空（至少3个字）',false); return; }
+    send.disabled=true; send.textContent='提交中…';
+    fetch(subAPI,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({subject:subject,qtype:qtype,question:question,options:options,answer:answer,source:source,note:note})})
+      .then(function(r){ return r.json().then(function(j){ return {ok:r.ok,j:j}; }); })
+      .then(function(res){
+        send.disabled=false; send.textContent='提交投稿';
+        if(res.ok&&res.j.success){
+          tip('投稿成功！管理员审核后会尽快入库，谢谢你的贡献。',true);
+          document.getElementById('subQuestion').value='';
+          document.getElementById('subOptions').value='';
+          document.getElementById('subAnswer').value='';
+          document.getElementById('subSource').value='';
+          document.getElementById('subNote').value='';
+          setTimeout(function(){ show(false); }, 1800);
+        } else {
+          tip((res.j&&res.j.error)||'提交失败，请重试',false);
+        }
+      })
+      .catch(function(e){ send.disabled=false; send.textContent='提交投稿'; tip('网络错误：'+e.message,false); });
+  });
+})();
+</script>
+"""
+
+
+# ============================================================
 # 复习页模板（三科共用；math 模式额外引入 KaTeX）
 # ============================================================
 REVIEW_HTML = r"""<!DOCTYPE html>
@@ -1359,7 +1483,7 @@ def build_review(sub):
             .replace("__INDEX__", "../../SCGSstudy/index.html"))
     html = html.replace("var MATH = __MATH_MODE__;",
                         "var MATH = %s;" % ("true" if mode == "math" else "false"))
-    html = html.replace("</body>", AI_HTML + "\n</body>")
+    html = html.replace("</body>", AI_HTML + SUBMIT_HTML + "\n</body>")
     out = d / "复习页.html"
     out.write_text(html, encoding="utf-8")
     return items
@@ -1373,7 +1497,7 @@ def build_wordcard(sub):
     html = (WORD_HTML
             .replace("__WORDS_JSON__", js_safe(items))
             .replace("__INDEX__", "../../SCGSstudy/index.html"))
-    html = html.replace("</body>", AI_HTML + "\n</body>")
+    html = html.replace("</body>", AI_HTML + SUBMIT_HTML + "\n</body>")
     out = d / "单词卡.html"
     out.write_text(html, encoding="utf-8")
     return items
@@ -1420,7 +1544,7 @@ def build_wordbook(sub):
     html = (tpl
             .replace("__WORDS_JSON__", js_safe(words))
             .replace("__INDEX__", "../../SCGSstudy/index.html"))
-    html = html.replace("</body>", AI_HTML + "\n</body>")
+    html = html.replace("</body>", AI_HTML + SUBMIT_HTML + "\n</body>")
     out = d / "单词本.html"
     out.write_text(html, encoding="utf-8")
     return words
@@ -1436,7 +1560,7 @@ def build_shengci(sub):
             .replace("__WORDS_JSON__", js_safe(words))
             .replace("__MANUAL_JSON__", js_safe(manual))
             .replace("__INDEX__", "../../SCGSstudy/index.html"))
-    html = html.replace("</body>", AI_HTML + "\n</body>")
+    html = html.replace("</body>", AI_HTML + SUBMIT_HTML + "\n</body>")
     out = d / "生词本.html"
     out.write_text(html, encoding="utf-8")
     return len(manual)
@@ -2113,7 +2237,7 @@ def build_tiku(sub, base_qid):
             .replace("__INDEX__", "../SCGSstudy/index.html"))
     html = html.replace("var MATH = __MATH_MODE__;",
                         "var MATH = %s;" % ("true" if mode == "math" else "false"))
-    html = html.replace("</body>", AI_HTML + "\n</body>")
+    html = html.replace("</body>", AI_HTML + SUBMIT_HTML + "\n</body>")
     out = d / "题库页.html"
     out.write_text(html, encoding="utf-8")
     return {"items": items, "out": out}
@@ -2180,7 +2304,7 @@ def build_index(per_subject, tiku_info):
             .replace("__WORD_CARDS__", word_cards)
             .replace("__DAILY_JSON__", js_safe(daily_data))
             .replace("__QUALITY_JSON__", js_safe(quality)))
-    html = html.replace("</body>", AI_HTML + "\n</body>")
+    html = html.replace("</body>", AI_HTML + SUBMIT_HTML + "\n</body>")
     out = BASE / "index.html"
     out.write_text(html, encoding="utf-8")
 

@@ -6,6 +6,10 @@ routes = [
   { pattern = "ai.scgsstudy.top/*", zone_id = "8ea2e0f97f7cc41531be2fa0b0d21e20" }
 ]
 
+[[kv_namespaces]]
+binding = "ZSB_SUBMISSIONS"
+id = "860cb2bdbae7491fb5cfcbbe6db42880"
+
 [vars]
 AI_MODEL = "grok-chat-fast"
 AI_DAILY_LIMIT = "15"
