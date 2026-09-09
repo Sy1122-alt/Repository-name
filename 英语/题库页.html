@@ -10026,6 +10026,7 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
   $("btnOrder").addEventListener("click",function(){setMode("order");});
   $("btnUndone").addEventListener("click",function(){setMode("undone");});
   $("btnBasket").addEventListener("click",function(){setMode("basket");});
+  $("btnKey").addEventListener("click",function(){setMode("key");});
   $("btnReset").addEventListener("click",function(){
     // 两次点击确认（避免原生弹窗在 file:// 下的不稳定）
     if(this._arm){
