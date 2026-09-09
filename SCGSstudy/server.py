@@ -15,7 +15,7 @@ import build
 
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-BUILD = ROOT / "错题本" / "build.py"
+BUILD = ROOT / "SCGSstudy" / "build.py"
 ERROR_BOOKS = {
     "计算机": ROOT / "计算机" / "错题集" / "错题本.md",
     "高数": ROOT / "高数" / "错题集" / "错题本.md",

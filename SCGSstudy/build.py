@@ -351,6 +351,8 @@ def parse_tiku(path, subject):
     def flush():
         nonlocal cur
         if cur is not None and not cur.get("判断题组"):
+            cur.pop("_pending", None)
+            cur.pop("_proof_mode", None)
             if cur.get("材料") or cur.get("题目") or cur.get("选项"):
                 # 推断考点（仅高数）
                 if subject == "高数" and not cur.get("考点"):
@@ -407,7 +409,9 @@ def parse_tiku(path, subject):
             flush()
             qtype, no = mb.group(1), mb.group(2)
             title = mb.group(3).strip().replace("**", "").strip()
-            is_judge = ("判断题" in s or "判断组" in s)
+            is_judge_group = ("判断题" in s or "判断组" in s)
+            # 独立判断题（如「练习 146（判断）」「真题2023-判断1」「真题2025-计算机-判断21」）也识别为判断
+            is_judge = is_judge_group or bool(re.search(r"判断\s*-?\s*\d|（判断）", s))
             is_multi = ("多选" in s)
             mat = "\n".join(material) if material else ""
             passage = "\n".join(passage_text) if (is_cloze_passage and passage_text) else ""
@@ -425,7 +429,7 @@ def parse_tiku(path, subject):
                 "解析": "",
                 "考点": "",
             }
-            if is_judge:
+            if is_judge_group:
                 cur["判断题组"] = True
             continue
         # 判断题组子题：N. 语句（ **对/错**，说明）
@@ -451,6 +455,7 @@ def parse_tiku(path, subject):
             opt_body = re.sub(r"^-\s*选项\s*[:：]\s*", "", s)
             opts = split_options(opt_body)
             if opts and cur is not None:
+                cur["_pending"] = None
                 if cur.get("选项"):
                     # 已有选项则追加（处理每行一个选项的格式）
                     cur["选项"].extend(opts)
@@ -467,6 +472,7 @@ def parse_tiku(path, subject):
                 # 答案与解析常同行："D**　解析：…"
                 seg = re.split(r"[　 ]*解析\s*[:：]", rest)
                 cur["答案"] = seg[0].strip()
+                cur["_pending"] = "答案"
                 if len(seg) > 1:
                     cur["解析"] = seg[1].strip()
             continue
@@ -475,6 +481,7 @@ def parse_tiku(path, subject):
             proof_text = re.sub(r"^-\s*\*{0,2}证明\s*[:：]\s*", "", s).replace("**", "").strip()
             cur["答案"] = "证明见解析"
             cur["解析"] = proof_text
+            cur["_pending"] = None
             cur["_proof_mode"] = True
             continue
         # 证明题续行（以空格开头，且当前处于证明模式）
@@ -484,23 +491,28 @@ def parse_tiku(path, subject):
         # 独立解析行（题库同时支持“答案行同行解析”和单独的解析行）
         if cur is not None and re.match(r"^-\s*\*{0,2}解析\s*[:：]", s):
             cur["解析"] = re.sub(r"^-\s*\*{0,2}解析\s*[:：]\s*", "", s).replace("**", "").strip()
+            cur["_pending"] = "解析"
             if cur.get("_proof_mode"):
                 del cur["_proof_mode"]
             continue
         # 来源行
         if cur is not None and re.match(r"^-\s*来源\s*[:：]", s):
             cur["来源"] = re.sub(r"^-\s*来源\s*[:：]\s*", "", s).strip()
+            cur["_pending"] = None
             continue
         # 标题行（#/##/###/#### 开头）：作为题目块的结束，flush当前题目
         if re.match(r"^#{1,4}\s", s) and cur is not None:
             if cur.get("_proof_mode"):
                 del cur["_proof_mode"]
+            cur["_pending"] = None
             flush()
             cur = None
             continue
-        # 其余行：追加到当前题目的题干（多行材料/续行）
+        # 其余行：若正处于答案/解析续行模式则续到对应字段，否则追加到题干（多行材料/续行）
         if cur is not None:
-            if cur["题目"]:
+            if cur.get("_pending") in ("答案", "解析"):
+                cur[cur["_pending"]] = (cur.get(cur["_pending"], "") + "\n" + s).strip()
+            elif cur["题目"]:
                 cur["题目"] += "\n" + s
             else:
                 cur["题目"] = s
@@ -523,9 +535,9 @@ def parse_tiku(path, subject):
                     it["题型"] = "证明"
                 elif "应用" in combined:
                     it["题型"] = "应用"
-                elif "填空" in combined:
+                elif "填空" in combined or re.search(r"_{2,}", title) or "＿" in title:
                     it["题型"] = "填空"
-                elif "计算" in combined:
+                elif re.search(r"计算[^机]", combined):
                     it["题型"] = "计算"
                 else:
                     it["题型"] = "简答"
@@ -1166,12 +1178,18 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
     // 保护反引号代码块（如Excel公式 $A$1、Shell $var），避免被KaTeX当数学公式
     var codes=[];
     t=t.replace(/`([^`]*)`/g, function(_,c){ codes.push(c); return "\u0000CODE"+(codes.length-1)+"\u0000"; });
+    // 保护 Excel 单元格绝对/混合引用（$A$1、$A1、A$1），避免被KaTeX当数学公式
+    var xls=[];
+    t=t.replace(/\$[A-Z]{1,3}\$[0-9]{1,7}|\$[A-Z]{1,3}[0-9]{1,7}|[A-Z]{1,3}\$[0-9]{1,7}/g, function(m){ xls.push(m); return "\u0000XLS"+(xls.length-1)+"\u0000"; });
+    function restoreXls(t){
+      return t.replace(/\u0000XLS(\d+)\u0000/g, function(_,i){ return xls[+i]||""; });
+    }
     function restore(t){
       return t.replace(/\u0000CODE(\d+)\u0000/g, function(_,i){
         return '<code style="background:rgba(0,0,0,0.06);border-radius:4px;padding:1px 6px;font-family:Consolas,Monaco,monospace;font-size:0.9em;color:#B44244;white-space:pre-wrap;word-break:break-all;">'+(codes[+i]||"")+'</code>';
       });
     }
-    if(!MATH || typeof katex==="undefined") return restore(t);
+    if(!MATH || typeof katex==="undefined") return restoreXls(restore(t));
     function unesc(x){ return x.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&quot;/g,'"'); }
     try{
       t = t.replace(/\$\$([\s\S]+?)\$\$/g, function(_,x){
@@ -1181,7 +1199,7 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
         return '<span class="math-inline">'+katex.renderToString(unesc(x),{displayMode:false,throwOnError:false})+'</span>';
       });
     }catch(e){}
-    return restore(t);
+    return restoreXls(restore(t));
   }
 
   var chapters=[], reasons=[];
@@ -1922,18 +1940,24 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     // 保护反引号代码块（如Excel公式 $A$1、Shell $var），避免被KaTeX当数学公式
     var codes=[];
     t=t.replace(/`([^`]*)`/g, function(_,c){ codes.push(c); return "\u0000CODE"+(codes.length-1)+"\u0000"; });
+    // 保护 Excel 单元格绝对/混合引用（$A$1、$A1、A$1），避免被KaTeX当数学公式
+    var xls=[];
+    t=t.replace(/\$[A-Z]{1,3}\$[0-9]{1,7}|\$[A-Z]{1,3}[0-9]{1,7}|[A-Z]{1,3}\$[0-9]{1,7}/g, function(m){ xls.push(m); return "\u0000XLS"+(xls.length-1)+"\u0000"; });
+    function restoreXls(t){
+      return t.replace(/\u0000XLS(\d+)\u0000/g, function(_,i){ return xls[+i]||""; });
+    }
     function restore(t){
       return t.replace(/\u0000CODE(\d+)\u0000/g, function(_,i){
         return '<code style="background:rgba(0,0,0,0.06);border-radius:4px;padding:1px 6px;font-family:Consolas,Monaco,monospace;font-size:0.9em;color:#B44244;white-space:pre-wrap;word-break:break-all;">'+(codes[+i]||"")+'</code>';
       });
     }
-    if(!MATH || typeof katex==="undefined") return restore(t);
+    if(!MATH || typeof katex==="undefined") return restoreXls(restore(t));
     function unesc(x){ return x.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&quot;/g,'"'); }
     try{
       t=t.replace(/\$\$([\s\S]+?)\$\$/g,function(_,x){ return '<div class="math-inline" style="margin:6px 0;">'+katex.renderToString(unesc(x),{displayMode:true,throwOnError:false})+'</div>'; });
       t=t.replace(/\$([^$\n]+?)\$/g,function(_,x){ return '<span class="math-inline">'+katex.renderToString(unesc(x),{displayMode:false,throwOnError:false})+'</span>'; });
     }catch(e){}
-    return restore(t);
+    return restoreXls(restore(t));
   }
   // 英语刷题：把文本中的英文单词标记为可点击，点击加入生词本
   var SHENGCI_KEY="yingyu_shengci_v1";
