@@ -1107,7 +1107,6 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
 .tag.review{background:rgba(234,102,104,0.14);color:#B44244;}
 .tag.mastered{background:rgba(82,196,26,0.14);color:#3E8C13;}
 .tag.err{background:rgba(250,173,20,0.18);color:#8A5B00;}
-.tag.keytag{background:rgba(230,60,60,0.15);color:#C22121;border:1px solid rgba(230,60,60,0.45);font-weight:700;}
 .tag.reason{background:rgba(155,187,244,0.18);color:#33509E;}
 .qtext{font-size:15px;font-weight:600;margin-bottom:10px;white-space:pre-wrap;}
 .opts{list-style:none;margin-bottom:10px;}
@@ -1184,7 +1183,7 @@ __KATEX_CSS__
     <select id="selReason"><option value="">全部错因</option></select>
     <button id="btnShuffle" class="primary">随机抽题</button>
     <button id="btnOrder">顺序浏览</button>
-    <button id="btnKey">重点题</button>
+    <button id="btnKey">易错题</button>
     <button id="btnDue">今日应复习</button>
     <button id="btnReset">重置进度</button>
     <button id="btnExportLocal">导出本地错题</button>
@@ -1193,7 +1192,7 @@ __KATEX_CSS__
   <div id="card"></div>
   <div class="hint">
     翻卡后选择「没记住 / 有点模糊 / 掌握」，系统会分别安排明天、3 天后或递进间隔后的复习。<br>
-    重点题 = 分析历年真题+结合考纲筛选的高频考点题（考前重点过一遍）。<br>
+    易错题 = 错误次数 ≥ 2 的题（反复出错的薄弱题，考前重点攻克）。<br>
     更新：往《错题本.md》追加错题后，运行 SCGSstudy/build.py 重新生成。
   </div>
 </div>
@@ -1299,8 +1298,7 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
     $("weakList").innerHTML=keys.length?keys.map(function(k){return '<div class="frow"><span class="nm" style="flex-basis:180px">'+escHtml(k.replace("｜"," · "))+'</span><span class="ct">'+map[k]+' 次</span></div>';}).join(""): "暂无数据";
   }
 
-  var KEY_ITEMS = __KEY_JSON__;
-  var list=[], idx=0, revealed=false, curListIsKey=false;
+  var list=[], idx=0, revealed=false;
   function $(id){ return document.getElementById(id); }
 
   // 渲染数学公式（KaTeX），失败则保留原文
@@ -1389,11 +1387,9 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
     }
     var it=list[idx];
     var answered=false;
-    var isKey=curListIsKey;
-    var cls=isKey?"review":(st(it)==="已掌握"?"mastered":"review");
-    var label=isKey?"重点题":(st(it)==="已掌握"?"已掌握":"待复习");
-    var meta=(isKey?'<span class="tag qid">'+escHtml(it.id)+'</span><span class="tag keytag">重点题</span>':'<span class="tag qid">Q-'+it.id+'</span>')+'<span class="tag">'+escHtml(it["章节"])+'</span><span class="tag '+cls+'">'+label+'</span>';
-    if(isKey && it["专题"]) meta+='<span class="tag">'+escHtml(it["专题"])+'</span>';
+    var cls=st(it)==="已掌握"?"mastered":"review";
+    var label=st(it)==="已掌握"?"已掌握":"待复习";
+    var meta='<span class="tag qid">Q-'+it.id+'</span><span class="tag">'+escHtml(it["章节"])+'</span><span class="tag '+cls+'">'+label+'</span>';
     if(it["题型"]) meta+='<span class="tag qid">'+escHtml(it["题型"])+'</span>';
     if(it["错因"]) meta+='<span class="tag reason">'+escHtml(it["错因"])+'</span>';
     if((it["错误次数"]||0)>0) meta+='<span class="tag err">错'+(it["错误次数"]||0)+'次</span>';
@@ -1410,10 +1406,10 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
       +(it["解析"]?'<div style="margin-top:6px"><span class="k">解析：</span>'+renderMath(it["解析"])+'</div>':'')
       +(it["知识点"]?'<div style="margin-top:6px"><span class="k">知识点：</span>'+renderMath(it["知识点"])+'</div>':'')
       +'</div>';
-    var reasonHtml=isKey?'':'<div class="reason-tools"><span>这次为什么错？</span>'
+    var reasonHtml='<div class="reason-tools"><span>这次为什么错？</span>'
       +'<select id="reasonPick"><option value="">选择错因</option><option>概念不清</option><option>公式记错</option><option>方法不会</option><option>计算失误</option><option>审题失误</option><option>词汇不懂</option><option>语法不清</option><option>理解偏差</option><option>粗心</option><option>其他</option></select>'
       +'<button id="reasonSave">记录错因</button></div>';
-    var similarHtml=isKey?'':'<div class="similar"><div>再来一道同章节题</div>'
+    var similarHtml='<div class="similar"><div>再来一道同章节题</div>'
       +((it["同类题"]||[]).length?(it["同类题"]||[]).map(function(candidate,n){return '<a href="#" data-similar="'+n+'">'+renderMath(candidate.id+' · '+(candidate["题目"]||"未命名"))+'</a>';}).join(""):'<span>当前题库暂无可推荐的同章节题。</span>')
       +'</div>';
     box.innerHTML=
@@ -1423,9 +1419,9 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
       +optsHtml
       +'<div class="btns">'
       +(revealed?'':'<button id="btnShow">显示答案</button>')
-      +(isKey?'':'<button id="btnAgain" class="u">没记住 · 明天</button>')
-      +(isKey?'':'<button id="btnHard" class="h">有点模糊 · 3 天后</button>')
-      +(isKey?'':'<button id="btnGood" class="m">掌握 · 延后复习</button>')
+      +'<button id="btnAgain" class="u">没记住 · 明天</button>'
+      +'<button id="btnHard" class="h">有点模糊 · 3 天后</button>'
+      +'<button id="btnGood" class="m">掌握 · 延后复习</button>'
       +'<button id="btnAITeach">AI 讲题</button>'
       +'</div>'
       +ansHtml
@@ -1514,7 +1510,7 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
     var ai=$("btnAITeach"); if(ai) ai.onclick=function(){
       var q=list[idx];
       if(!q){ return; }
-      var p="请帮我讲解这道专升本"+(curListIsKey?"重点题":"错题")+"，讲清楚考点和解题思路：\n\n";
+      var p="请帮我讲解这道专升本错题，讲清楚考点和解题思路：\n\n";
       p+="【题型】"+(q["题型"]||"")+"\n";
       p+="【题目】"+(q["题目"]||"")+"\n";
       if(q["选项"]&&q["选项"].length){
@@ -1524,7 +1520,7 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
       p+="\n【答案】"+(q["答案"]||"")+"\n";
       if(q["解析"]&&q["解析"]!=="（本题未附解析）") p+="【解析】"+q["解析"]+"\n";
       p+="\n请分点讲解：1) 考点是什么；2) 为什么选这个答案；3) 其他选项错在哪。";
-      if(window.AIAsk){ window.AIAsk(p, "AI讲题 · "+q.id); }
+      if(window.AIAsk){ window.AIAsk(p, "AI讲题 · Q-"+q.id); }
     };
     var a=$("btnAgain"); if(a) a.onclick=function(){ schedule(list[idx],"again"); revealed=false; if(idx<list.length-1){idx++;} show(); renderStats(); };
     var h=$("btnHard"); if(h) h.onclick=function(){ schedule(list[idx],"hard"); revealed=false; if(idx<list.length-1){idx++;} show(); renderStats(); };
@@ -1552,7 +1548,7 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
       location.reload();
     };
   }
-  function reload(){ curListIsKey=false; list=filtered(); idx=0; revealed=false; show(); renderStats(); }
+  function reload(){ list=filtered(); idx=0; revealed=false; show(); renderStats(); }
   function setMode(btn){
     ["btnShuffle","btnOrder","btnKey","btnDue"].forEach(function(id){ $(id).classList.remove("on"); });
     $(btn).classList.add("on");
@@ -1561,11 +1557,11 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
   $("selStatus").onchange=function(){ setMode("btnOrder"); reload(); };
   $("selReason").onchange=function(){ setMode("btnOrder"); reload(); };
   $("btnOrder").onclick=function(){ setMode("btnOrder"); reload(); };
-  $("btnShuffle").onclick=function(){ setMode("btnShuffle"); curListIsKey=false; list=filtered();
+  $("btnShuffle").onclick=function(){ setMode("btnShuffle"); list=filtered();
     for(var i=list.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=list[i]; list[i]=list[j]; list[j]=t; }
     idx=0; revealed=false; show(); renderStats(); };
-  $("btnKey").onclick=function(){ setMode("btnKey"); curListIsKey=true; list=KEY_ITEMS.slice(); idx=0; revealed=false; show(); renderStats(); };
-  $("btnDue").onclick=function(){ setMode("btnDue"); curListIsKey=false; list=filtered().filter(isDue); idx=0; revealed=false; show(); renderStats(); };
+  $("btnKey").onclick=function(){ setMode("btnKey"); list=filtered().filter(function(it){return (it["错误次数"]||0)>=2;}); idx=0; revealed=false; show(); renderStats(); };
+  $("btnDue").onclick=function(){ setMode("btnDue"); list=filtered().filter(isDue); idx=0; revealed=false; show(); renderStats(); };
   $("btnReset").onclick=function(){
     if(this._arm){
       statusMap={}; revMap={}; planMap={}; save();
@@ -1820,13 +1816,11 @@ def build_review(sub):
         katex_js = "../../SCGSstudy/katex/katex.min.js"
     # 题库精简数据（仅id+题目+选项），用于补全本地错题缺失的选项
     tiku_simple = [{"id": t["id"], "题目": t["题目"], "选项": t["选项"]} for t in tiku_items]
-    key_items = select_key_questions(name, tiku_items)
     html = (REVIEW_HTML
             .replace("__LABEL__", sub["label"])
             .replace("__COLOR__", sub["color"])
             .replace("__MODE__", mode)
             .replace("__DATA_JSON__", js_safe(items))
-            .replace("__KEY_JSON__", js_safe(key_items))
             .replace("__TIKU_SIMPLE_JSON__", js_safe(tiku_simple))
             .replace("__SUBJECT___cuowuji", name + "_cuowuji")
             .replace("__SUBJECT__", name)
@@ -2024,6 +2018,7 @@ __KATEX_CSS__
     <select id="selKaodian" style="display:none;"><option value="">全部考点</option></select>
     <button id="btnShuffle" class="primary">随机抽题</button>
     <button id="btnOrder">顺序浏览</button>
+    <button id="btnKey">重点题</button>
     <button id="btnUndone">只看未做</button>
     <button id="btnBasket">错题篮子</button>
     <button id="btnReset">重置进度</button>
@@ -2065,6 +2060,7 @@ __KATEX_CSS__
 <script src="__KATEX_JS__"></script>
 <script>
 window.__TIKU__ = __TIKU_JSON__;
+window.__KEY_ITEMS__ = __KEY_JSON__;
 window.__TIKU_META__ = {baseQid: __BASE_QID_VAL__};
 try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_sync&&_sync["__SUBJECT__"]&&_sync["__SUBJECT__"].tiku){window.__TIKU__=_sync["__SUBJECT__"].tiku;}}catch(e){}
 (function(){
@@ -2073,6 +2069,7 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
   var SUBJECT = "__SUBJECT__";
   var IS_EN = SUBJECT === "英语";
   var ALL = (window.__TIKU__||[]).slice();
+  var KEY_ITEMS=(window.__KEY_ITEMS__||[]).slice();
   var BASE_QID = parseInt((window.__TIKU_META__&&window.__TIKU_META__.baseQid)||1,10);
   var storeKey = "__SUBJECT___tiku_v1";
   var done={}, basket=[], nextId=BASE_QID;
@@ -2192,7 +2189,7 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     }
   }
 
-  var mode="shuffle"; // shuffle|order|undone|basket
+  var mode="shuffle"; // shuffle|order|key|undone|basket
   var clozeFullMode=false;
   try{ clozeFullMode=localStorage.getItem("yingyu_cloze_full")==="1"; }catch(e){}
   if(IS_EN){
@@ -2211,11 +2208,12 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
   var list=[], idx=0, revealed=false, answered=false;
   function setMode(m){
     mode=m;
-    ["btnShuffle","btnOrder","btnUndone","btnBasket"].forEach(function(id){
-      $("btnShuffle").classList.remove("on");$("btnOrder").classList.remove("on");$("btnUndone").classList.remove("on");$("btnBasket").classList.remove("on");
+    ["btnShuffle","btnOrder","btnKey","btnUndone","btnBasket"].forEach(function(id){
+      $("btnShuffle").classList.remove("on");$("btnOrder").classList.remove("on");$("btnKey").classList.remove("on");$("btnUndone").classList.remove("on");$("btnBasket").classList.remove("on");
     });
     if(m==="shuffle")$("btnShuffle").classList.add("on");
     else if(m==="order")$("btnOrder").classList.add("on");
+    else if(m==="key")$("btnKey").classList.add("on");
     else if(m==="undone")$("btnUndone").classList.add("on");
     else if(m==="basket")$("btnBasket").classList.add("on");
     reload();
@@ -2223,11 +2221,14 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
   function pool(){
     var t=$("selTopic").value;
     var kd=$("selKaodian")?$("selKaodian").value:"";
+    var keySet={};
+    if(mode==="key"){ KEY_ITEMS.forEach(function(k){ keySet[k.id]=1; }); }
     var base=ALL.filter(function(it){
       if(t && it["专题"]!==t) return false;
       if(kd && (it["考点"]||"99-综合")!==kd) return false;
       if(mode==="basket") return basket.indexOf(it.id)>=0;
       if(mode==="undone") return !done[it.id];
+      if(mode==="key") return !!keySet[it.id];
       return true;
     });
     if(mode==="shuffle"){
@@ -2599,7 +2600,9 @@ def build_tiku(sub, base_qid):
     if mode == "math":
         katex_css = '<link rel="stylesheet" href="../SCGSstudy/katex/katex.min.css">'
         katex_js = "../SCGSstudy/katex/katex.min.js"
+    key_items = select_key_questions(sub["name"], items)
     html = (TIKU_HTML
+            .replace("__KEY_JSON__", js_safe(key_items))
             .replace("__LABEL__", sub["label"])
             .replace("__COLOR__", sub["color"])
             .replace("__SUBJECT__", sub["name"])

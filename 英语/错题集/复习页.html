@@ -40,7 +40,6 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
 .tag.review{background:rgba(234,102,104,0.14);color:#B44244;}
 .tag.mastered{background:rgba(82,196,26,0.14);color:#3E8C13;}
 .tag.err{background:rgba(250,173,20,0.18);color:#8A5B00;}
-.tag.keytag{background:rgba(230,60,60,0.15);color:#C22121;border:1px solid rgba(230,60,60,0.45);font-weight:700;}
 .tag.reason{background:rgba(155,187,244,0.18);color:#33509E;}
 .qtext{font-size:15px;font-weight:600;margin-bottom:10px;white-space:pre-wrap;}
 .opts{list-style:none;margin-bottom:10px;}
@@ -117,7 +116,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
     <select id="selReason"><option value="">全部错因</option></select>
     <button id="btnShuffle" class="primary">随机抽题</button>
     <button id="btnOrder">顺序浏览</button>
-    <button id="btnKey">重点题</button>
+    <button id="btnKey">易错题</button>
     <button id="btnDue">今日应复习</button>
     <button id="btnReset">重置进度</button>
     <button id="btnExportLocal">导出本地错题</button>
@@ -126,7 +125,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
   <div id="card"></div>
   <div class="hint">
     翻卡后选择「没记住 / 有点模糊 / 掌握」，系统会分别安排明天、3 天后或递进间隔后的复习。<br>
-    重点题 = 分析历年真题+结合考纲筛选的高频考点题（考前重点过一遍）。<br>
+    易错题 = 错误次数 ≥ 2 的题（反复出错的薄弱题，考前重点攻克）。<br>
     更新：往《错题本.md》追加错题后，运行 SCGSstudy/build.py 重新生成。
   </div>
 </div>
@@ -4984,579 +4983,7 @@ window.__TIKU_SIMPLE__ = [
     $("weakList").innerHTML=keys.length?keys.map(function(k){return '<div class="frow"><span class="nm" style="flex-basis:180px">'+escHtml(k.replace("｜"," · "))+'</span><span class="ct">'+map[k]+' 次</span></div>';}).join(""): "暂无数据";
   }
 
-  var KEY_ITEMS = [
- {
-  "id": "练习-英语-单选-001",
-  "来源": "库课备考练习",
-  "专题": "词汇与语法",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "— I'm afraid I can't finish the work on time. — \\_\\_\\_\\_. I will help you.",
-  "选项": [
-   "Don't worry",
-   "Not at all",
-   "My pleasure",
-   "It's nice of you"
-  ],
-  "答案": "A",
-  "解析": "Don't worry 别担心。",
-  "考点": "",
-  "章节": "02-语法"
- },
- {
-  "id": "练习-英语-单选-002",
-  "来源": "库课备考练习",
-  "专题": "词汇与语法",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "The film \\_\\_\\_\\_ for ten minutes when we got to the cinema.",
-  "选项": [
-   "has been on",
-   "had been on",
-   "has started",
-   "had started"
-  ],
-  "答案": "B",
-  "解析": "for ten minutes 是延续性时间，须用延续性动词 be on；\"过去的过去\"用过去完成时。",
-  "考点": "",
-  "章节": "02-语法"
- },
- {
-  "id": "练习-英语-单选-003",
-  "来源": "库课备考练习",
-  "专题": "词汇与语法",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "She is the only one of the students who \\_\\_\\_\\_ good at French.",
-  "选项": [
-   "is",
-   "are",
-   "was",
-   "were"
-  ],
-  "答案": "A",
-  "解析": "the only one of + 复数名词，定语从句谓语用单数 is。",
-  "考点": "",
-  "章节": "02-语法"
- },
- {
-  "id": "练习-英语-单选-004",
-  "来源": "库课备考练习",
-  "专题": "词汇与语法",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "It is necessary for us \\_\\_\\_\\_ English well.",
-  "选项": [
-   "learn",
-   "learning",
-   "to learn",
-   "learned"
-  ],
-  "答案": "C",
-  "解析": "It is + adj. + for sb. + to do sth.",
-  "考点": "",
-  "章节": "02-语法"
- },
- {
-  "id": "练习-英语-单选-005",
-  "来源": "库课备考练习",
-  "专题": "词汇与语法",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "The doctor suggested that he \\_\\_\\_\\_ a rest at once.",
-  "选项": [
-   "takes",
-   "took",
-   "taking",
-   "take"
-  ],
-  "答案": "D",
-  "解析": "suggest 表\"建议\"时宾语从句用 (should) + 动词原形。",
-  "考点": "",
-  "章节": "02-语法"
- },
- {
-  "id": "练习-英语-单选-070",
-  "来源": "练习",
-  "专题": "词汇与语法",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "The teacher asked the students to ______ the text after class.",
-  "选项": [
-   "go over",
-   "go on",
-   "go out",
-   "go off"
-  ],
-  "答案": "A",
-  "解析": "go over复习；go on继续；go out出去；go off离开。",
-  "考点": "",
-  "章节": "02-语法"
- },
- {
-  "id": "练习-英语-单选-071",
-  "来源": "练习",
-  "专题": "词汇与语法",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "I have ______ umbrella. ______ umbrella is red.",
-  "选项": [
-   "an; The",
-   "a; The",
-   "an; A",
-   "the; The"
-  ],
-  "答案": "A",
-  "解析": "umbrella元音开头用an，第二次提到用the。",
-  "考点": "",
-  "章节": "02-语法"
- },
- {
-  "id": "练习-英语-单选-072",
-  "来源": "练习",
-  "专题": "词汇与语法",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "She is interested ______ music.",
-  "选项": [
-   "at",
-   "on",
-   "in",
-   "to"
-  ],
-  "答案": "C",
-  "解析": "be interested in对...感兴趣。",
-  "考点": "",
-  "章节": "02-语法"
- },
- {
-  "id": "练习-英语-单选-073",
-  "来源": "练习",
-  "专题": "词汇与语法",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "The book is ______ more interesting than that one.",
-  "选项": [
-   "very",
-   "quite",
-   "much",
-   "so"
-  ],
-  "答案": "C",
-  "解析": "much修饰比较级。",
-  "考点": "",
-  "章节": "02-语法"
- },
- {
-  "id": "练习-英语-单选-074",
-  "来源": "练习",
-  "专题": "词汇与语法",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "We will go for a picnic if it ______ tomorrow.",
-  "选项": [
-   "won't rain",
-   "doesn't rain",
-   "didn't rain",
-   "isn't raining"
-  ],
-  "答案": "B",
-  "解析": "if条件句主将从现。",
-  "考点": "",
-  "章节": "02-语法"
- },
- {
-  "id": "练习-英语-单选-075",
-  "来源": "练习",
-  "专题": "词汇与语法",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "He ______ in Beijing for ten years.",
-  "选项": [
-   "lives",
-   "lived",
-   "has lived",
-   "is living"
-  ],
-  "答案": "C",
-  "解析": "for ten years用现在完成时。",
-  "考点": "",
-  "章节": "02-语法"
- },
- {
-  "id": "练习-英语-单选-076",
-  "来源": "练习",
-  "专题": "词汇与语法",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "Neither he nor I ______ a doctor.",
-  "选项": [
-   "am",
-   "is",
-   "are",
-   "be"
-  ],
-  "答案": "A",
-  "解析": "neither...nor就近原则，I用am。",
-  "考点": "",
-  "章节": "02-语法"
- },
- {
-  "id": "练习-英语-单选-077",
-  "来源": "练习",
-  "专题": "词汇与语法",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "The question is ______ difficult for me ______ answer.",
-  "选项": [
-   "too; to",
-   "so; that",
-   "such; that",
-   "enough; to"
-  ],
-  "答案": "A",
-  "解析": "too...to太...而不能。",
-  "考点": "",
-  "章节": "02-语法"
- },
- {
-  "id": "练习-英语-单选-078",
-  "来源": "练习",
-  "专题": "词汇与语法",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "I don't know ______ he will come or not.",
-  "选项": [
-   "if",
-   "whether",
-   "that",
-   "what"
-  ],
-  "答案": "B",
-  "解析": "whether...or not固定搭配。",
-  "考点": "",
-  "章节": "02-语法"
- },
- {
-  "id": "练习-英语-单选-079",
-  "来源": "练习",
-  "专题": "词汇与语法",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "The old man lives ______, but he doesn't feel ______.",
-  "选项": [
-   "alone; lonely",
-   "lonely; alone",
-   "alone; alone",
-   "lonely; lonely"
-  ],
-  "答案": "A",
-  "解析": "alone独自，lonely孤独的。",
-  "考点": "",
-  "章节": "02-语法"
- },
- {
-  "id": "练习-英语-单选-160",
-  "来源": "练习",
-  "专题": "阅读理解",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "This passage is about how to ______.",
-  "选项": [
-   "build a new city",
-   "drive in a new city",
-   "get to know a new city",
-   "live in a new city"
-  ],
-  "答案": "C",
-  "解析": "文章介绍了如何通过买导游书、坐公交、打车等方式了解新城市。",
-  "考点": "",
-  "章节": "03-阅读理解"
- },
- {
-  "id": "练习-英语-单选-161",
-  "来源": "练习",
-  "专题": "阅读理解",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "What does the author suggest you do before going to a new city?",
-  "选项": [
-   "Buy a guidebook.",
-   "Find a newspaper.",
-   "Take a bus.",
-   "Take a taxi."
-  ],
-  "答案": "A",
-  "解析": "文章建议出发前买导游书。",
-  "考点": "",
-  "章节": "03-阅读理解"
- },
- {
-  "id": "练习-英语-单选-162",
-  "来源": "练习",
-  "专题": "阅读理解",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "Where does the author suggest you read a newspaper?",
-  "选项": [
-   "In a park.",
-   "At a bus stop.",
-   "In a restaurant.",
-   "In a museum."
-  ],
-  "答案": "A",
-  "解析": "文章说在公园里看报纸。",
-  "考点": "",
-  "章节": "03-阅读理解"
- },
- {
-  "id": "练习-英语-单选-163",
-  "来源": "练习",
-  "专题": "阅读理解",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "The author suggests you take a taxi so that you can ______.",
-  "选项": [
-   "travel faster",
-   "make new friends",
-   "ask the driver about the city",
-   "look for interesting places"
-  ],
-  "答案": "C",
-  "解析": "文章说出租车司机了解城市，可以问他们关于有趣的街区。",
-  "考点": "",
-  "章节": "03-阅读理解"
- },
- {
-  "id": "练习-英语-单选-164",
-  "来源": "练习",
-  "专题": "阅读理解",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "What does the passage tell you to do if it rains?",
-  "选项": [
-   "Take buses.",
-   "Play games.",
-   "Visit museums.",
-   "Ride bikes."
-  ],
-  "答案": "C",
-  "解析": "文章说下雨天在博物馆待几个小时是个好主意。",
-  "考点": "",
-  "章节": "03-阅读理解"
- },
- {
-  "id": "练习-英语-单选-165",
-  "来源": "练习",
-  "专题": "阅读理解",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "What does David do?",
-  "选项": [
-   "He is a writer.",
-   "He is a teacher.",
-   "He is a doctor.",
-   "He is the owner of a bookstore."
-  ],
-  "答案": "A",
-  "解析": "文章说David是一位英国作家。",
-  "考点": "",
-  "章节": "03-阅读理解"
- },
- {
-  "id": "练习-英语-单选-166",
-  "来源": "练习",
-  "专题": "阅读理解",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "Which of the following is NOT true according to the passage?",
-  "选项": [
-   "Some family names come from the places of people's homes.",
-   "Some family names come from people's hands.",
-   "Some family names come from nicknames.",
-   "Some family names come from people's jobs."
-  ],
-  "答案": "B",
-  "解析": "姓氏来源包括地名、职业、绰号，不包括手。",
-  "考点": "",
-  "章节": "03-阅读理解"
- },
- {
-  "id": "练习-英语-单选-167",
-  "来源": "练习",
-  "专题": "阅读理解",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "______ family names are mentioned in the passage.",
-  "选项": [
-   "Ten",
-   "Six",
-   "Seven",
-   "Nine"
-  ],
-  "答案": "D",
-  "解析": "文中提到Hill, Wood, Lake, Butcher, Farmer, Black, White, Brown, Whitehead共9个姓氏。",
-  "考点": "",
-  "章节": "03-阅读理解"
- },
- {
-  "id": "练习-英语-单选-168",
-  "来源": "练习",
-  "专题": "阅读理解",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "The underlined word \"fascinating\" in the last paragraph means ______.",
-  "选项": [
-   "interesting",
-   "welcome",
-   "easy",
-   "relaxing"
-  ],
-  "答案": "A",
-  "解析": "fascinating意为\"迷人的、有趣的\"，与interesting同义。",
-  "考点": "",
-  "章节": "03-阅读理解"
- },
- {
-  "id": "练习-英语-单选-169",
-  "来源": "练习",
-  "专题": "阅读理解",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "What is the passage mainly about?",
-  "选项": [
-   "Where people come from.",
-   "The story of \"Whitehead\".",
-   "Where family names come from.",
-   "The stories of people's family."
-  ],
-  "答案": "C",
-  "解析": "文章主要介绍英语姓氏的来源。",
-  "考点": "",
-  "章节": "03-阅读理解"
- },
- {
-  "id": "练习-英语-单选-170",
-  "来源": "练习",
-  "专题": "阅读理解",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "What does Para. 1 mainly tell us?",
-  "选项": [
-   "What digital currency is.",
-   "How to use digital currency.",
-   "Why we all need cash to live.",
-   "Where to find digital currency."
-  ],
-  "答案": "A",
-  "解析": "第一段介绍数字货币的定义。",
-  "考点": "",
-  "章节": "03-阅读理解"
- },
- {
-  "id": "练习-英语-单选-171",
-  "来源": "练习",
-  "专题": "阅读理解",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "What is the \"good answer\" to the question in Para. 2?",
-  "选项": [
-   "Generally, you cannot shop online without digital currency.",
-   "You cannot buy anything in China with real money.",
-   "You can buy anything in Canada without digital currency.",
-   "You can use both real money and digital currency to shop online."
-  ],
-  "答案": "A",
-  "解析": "文章说网购通常必须用数字货币。",
-  "考点": "",
-  "章节": "03-阅读理解"
- },
- {
-  "id": "练习-英语-单选-172",
-  "来源": "练习",
-  "专题": "阅读理解",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "What is the first problem mentioned in Para. 3?",
-  "选项": [
-   "Digital currency is not safe enough.",
-   "Digital currency is not reliable in some people's eyes.",
-   "Some people can hold their money in their hand.",
-   "Some people don't feel comfortable with numbers."
-  ],
-  "答案": "B",
-  "解析": "第一个问题是人们不信任数字货币，觉得拿不到手里就不真实。",
-  "考点": "",
-  "章节": "03-阅读理解"
- },
- {
-  "id": "练习-英语-单选-173",
-  "来源": "练习",
-  "专题": "阅读理解",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "What can we do to protect our digital currency accounts well according to the passage?",
-  "选项": [
-   "Avoid using our digital currency to shop online.",
-   "Download firewall software as much as possible.",
-   "Write the passwords down in our notebook.",
-   "Change our passwords frequently and try more complicated ones."
-  ],
-  "答案": "D",
-  "解析": "文章说密码简单且从不更换会被黑客盗取，应经常更换复杂密码。",
-  "考点": "",
-  "章节": "03-阅读理解"
- },
- {
-  "id": "练习-英语-单选-174",
-  "来源": "练习",
-  "专题": "阅读理解",
-  "题型": "单选",
-  "材料": "",
-  "passage": "",
-  "题目": "Which of the following is the best title for the passage?",
-  "选项": [
-   "Two Kinds of Money",
-   "The End of Cash",
-   "Currencies Around the World",
-   "Money that You Can Not Touch"
-  ],
-  "答案": "A",
-  "解析": "文章对比现金和数字货币，最佳标题为\"两种货币\"。",
-  "考点": "",
-  "章节": "03-阅读理解"
- }
-];
-  var list=[], idx=0, revealed=false, curListIsKey=false;
+  var list=[], idx=0, revealed=false;
   function $(id){ return document.getElementById(id); }
 
   // 渲染数学公式（KaTeX），失败则保留原文
@@ -5645,11 +5072,9 @@ window.__TIKU_SIMPLE__ = [
     }
     var it=list[idx];
     var answered=false;
-    var isKey=curListIsKey;
-    var cls=isKey?"review":(st(it)==="已掌握"?"mastered":"review");
-    var label=isKey?"重点题":(st(it)==="已掌握"?"已掌握":"待复习");
-    var meta=(isKey?'<span class="tag qid">'+escHtml(it.id)+'</span><span class="tag keytag">重点题</span>':'<span class="tag qid">Q-'+it.id+'</span>')+'<span class="tag">'+escHtml(it["章节"])+'</span><span class="tag '+cls+'">'+label+'</span>';
-    if(isKey && it["专题"]) meta+='<span class="tag">'+escHtml(it["专题"])+'</span>';
+    var cls=st(it)==="已掌握"?"mastered":"review";
+    var label=st(it)==="已掌握"?"已掌握":"待复习";
+    var meta='<span class="tag qid">Q-'+it.id+'</span><span class="tag">'+escHtml(it["章节"])+'</span><span class="tag '+cls+'">'+label+'</span>';
     if(it["题型"]) meta+='<span class="tag qid">'+escHtml(it["题型"])+'</span>';
     if(it["错因"]) meta+='<span class="tag reason">'+escHtml(it["错因"])+'</span>';
     if((it["错误次数"]||0)>0) meta+='<span class="tag err">错'+(it["错误次数"]||0)+'次</span>';
@@ -5666,10 +5091,10 @@ window.__TIKU_SIMPLE__ = [
       +(it["解析"]?'<div style="margin-top:6px"><span class="k">解析：</span>'+renderMath(it["解析"])+'</div>':'')
       +(it["知识点"]?'<div style="margin-top:6px"><span class="k">知识点：</span>'+renderMath(it["知识点"])+'</div>':'')
       +'</div>';
-    var reasonHtml=isKey?'':'<div class="reason-tools"><span>这次为什么错？</span>'
+    var reasonHtml='<div class="reason-tools"><span>这次为什么错？</span>'
       +'<select id="reasonPick"><option value="">选择错因</option><option>概念不清</option><option>公式记错</option><option>方法不会</option><option>计算失误</option><option>审题失误</option><option>词汇不懂</option><option>语法不清</option><option>理解偏差</option><option>粗心</option><option>其他</option></select>'
       +'<button id="reasonSave">记录错因</button></div>';
-    var similarHtml=isKey?'':'<div class="similar"><div>再来一道同章节题</div>'
+    var similarHtml='<div class="similar"><div>再来一道同章节题</div>'
       +((it["同类题"]||[]).length?(it["同类题"]||[]).map(function(candidate,n){return '<a href="#" data-similar="'+n+'">'+renderMath(candidate.id+' · '+(candidate["题目"]||"未命名"))+'</a>';}).join(""):'<span>当前题库暂无可推荐的同章节题。</span>')
       +'</div>';
     box.innerHTML=
@@ -5679,9 +5104,9 @@ window.__TIKU_SIMPLE__ = [
       +optsHtml
       +'<div class="btns">'
       +(revealed?'':'<button id="btnShow">显示答案</button>')
-      +(isKey?'':'<button id="btnAgain" class="u">没记住 · 明天</button>')
-      +(isKey?'':'<button id="btnHard" class="h">有点模糊 · 3 天后</button>')
-      +(isKey?'':'<button id="btnGood" class="m">掌握 · 延后复习</button>')
+      +'<button id="btnAgain" class="u">没记住 · 明天</button>'
+      +'<button id="btnHard" class="h">有点模糊 · 3 天后</button>'
+      +'<button id="btnGood" class="m">掌握 · 延后复习</button>'
       +'<button id="btnAITeach">AI 讲题</button>'
       +'</div>'
       +ansHtml
@@ -5770,7 +5195,7 @@ window.__TIKU_SIMPLE__ = [
     var ai=$("btnAITeach"); if(ai) ai.onclick=function(){
       var q=list[idx];
       if(!q){ return; }
-      var p="请帮我讲解这道专升本"+(curListIsKey?"重点题":"错题")+"，讲清楚考点和解题思路：\n\n";
+      var p="请帮我讲解这道专升本错题，讲清楚考点和解题思路：\n\n";
       p+="【题型】"+(q["题型"]||"")+"\n";
       p+="【题目】"+(q["题目"]||"")+"\n";
       if(q["选项"]&&q["选项"].length){
@@ -5780,7 +5205,7 @@ window.__TIKU_SIMPLE__ = [
       p+="\n【答案】"+(q["答案"]||"")+"\n";
       if(q["解析"]&&q["解析"]!=="（本题未附解析）") p+="【解析】"+q["解析"]+"\n";
       p+="\n请分点讲解：1) 考点是什么；2) 为什么选这个答案；3) 其他选项错在哪。";
-      if(window.AIAsk){ window.AIAsk(p, "AI讲题 · "+q.id); }
+      if(window.AIAsk){ window.AIAsk(p, "AI讲题 · Q-"+q.id); }
     };
     var a=$("btnAgain"); if(a) a.onclick=function(){ schedule(list[idx],"again"); revealed=false; if(idx<list.length-1){idx++;} show(); renderStats(); };
     var h=$("btnHard"); if(h) h.onclick=function(){ schedule(list[idx],"hard"); revealed=false; if(idx<list.length-1){idx++;} show(); renderStats(); };
@@ -5808,7 +5233,7 @@ window.__TIKU_SIMPLE__ = [
       location.reload();
     };
   }
-  function reload(){ curListIsKey=false; list=filtered(); idx=0; revealed=false; show(); renderStats(); }
+  function reload(){ list=filtered(); idx=0; revealed=false; show(); renderStats(); }
   function setMode(btn){
     ["btnShuffle","btnOrder","btnKey","btnDue"].forEach(function(id){ $(id).classList.remove("on"); });
     $(btn).classList.add("on");
@@ -5817,11 +5242,11 @@ window.__TIKU_SIMPLE__ = [
   $("selStatus").onchange=function(){ setMode("btnOrder"); reload(); };
   $("selReason").onchange=function(){ setMode("btnOrder"); reload(); };
   $("btnOrder").onclick=function(){ setMode("btnOrder"); reload(); };
-  $("btnShuffle").onclick=function(){ setMode("btnShuffle"); curListIsKey=false; list=filtered();
+  $("btnShuffle").onclick=function(){ setMode("btnShuffle"); list=filtered();
     for(var i=list.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=list[i]; list[i]=list[j]; list[j]=t; }
     idx=0; revealed=false; show(); renderStats(); };
-  $("btnKey").onclick=function(){ setMode("btnKey"); curListIsKey=true; list=KEY_ITEMS.slice(); idx=0; revealed=false; show(); renderStats(); };
-  $("btnDue").onclick=function(){ setMode("btnDue"); curListIsKey=false; list=filtered().filter(isDue); idx=0; revealed=false; show(); renderStats(); };
+  $("btnKey").onclick=function(){ setMode("btnKey"); list=filtered().filter(function(it){return (it["错误次数"]||0)>=2;}); idx=0; revealed=false; show(); renderStats(); };
+  $("btnDue").onclick=function(){ setMode("btnDue"); list=filtered().filter(isDue); idx=0; revealed=false; show(); renderStats(); };
   $("btnReset").onclick=function(){
     if(this._arm){
       statusMap={}; revMap={}; planMap={}; save();
