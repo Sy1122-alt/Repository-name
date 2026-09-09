@@ -27,3 +27,8 @@ _computer_moni_pages/
 
 _yy_moni_pages/
 _selfcheck/
+
+# 错题本为个人刷题数据，永不提交（本地保留）
+计算机/错题集/错题本.md
+高数/错题集/错题本.md
+英语/错题集/错题本.md
