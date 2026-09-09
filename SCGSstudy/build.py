@@ -2529,7 +2529,7 @@ INDEX_HTML = r"""<!DOCTYPE html>
 <meta name="theme-color" content="#22304A">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>专升本错题本</title>
+<title>学习平台</title>
 <style>
 :root{--text:#1A1B1C;--sub:#6B7280;--bg:#F4F3EE;--card:#FFFFFF;--border:#E4E3DD;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
@@ -2572,15 +2572,14 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
 </head>
 <body>
 <div class="wrap">
-  <h1>专升本错题本 · 总入口</h1>
-  <div class="sub">三科错题统一管理 · 数据在各自学科《错题集》目录 · 由 SCGSstudy/build.py 生成</div>
+  <h1>学习平台</h1>
   <div style="background:rgba(250,173,20,0.12);border:1px solid rgba(250,173,20,0.35);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:#8C6D1F;line-height:1.7;">📌 学习数据（错题 / 复习进度 / 单词标记）保存在<b>本设备浏览器</b>中：清理浏览器缓存、更换设备或使用无痕模式会导致进度丢失。建议定期在「复习页 / 生词本」中使用<b>导出</b>功能备份。</div>
-  <div class="h2">错题复习</div>
-  <div class="grid">__CARDS__
-  </div>
   <div class="h2">今日学习</div>
   <div class="daily-total">今天需要复习 <b id="dailyTotal">0</b> 题</div>
   <div class="grid" id="dailyList"></div>
+  <div class="h2">错题复习</div>
+  <div class="grid">__CARDS__
+  </div>
   <div class="h2">题库刷题（做错 → 一键入篮 → 自动存入错题本）</div>
   <div class="grid">__TIKU_CARDS__
   </div>
@@ -2600,10 +2599,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
     <div id="qualitySubjects"></div>
     <div class="quality-list" id="qualityIssues"></div>
   </div>
-  <div class="note">
-    使用流程：① 双击根目录的「启动错题本.bat」→ ② 在「题库刷题」里做题，做错的点「记入错题」入篮 → ③ 攒一批点「存入错题本」，系统自动写入并更新复习页 → ④ 从本页「错题复习」进入各科复习页，抽题翻卡、标记掌握。<br>
-    计算机与高数复习页/刷题页支持 LaTeX 公式（$...$ 行内、$$...$$ 块级），英语除错题外还有单词翻卡记忆。
-  </div>
+
 </div>
 <script>
 window.__DAILY__ = __DAILY_JSON__;
