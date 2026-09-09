@@ -125,7 +125,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
   <div id="card"></div>
   <div class="hint">
     翻卡后选择「没记住 / 有点模糊 / 掌握」，系统会分别安排明天、3 天后或递进间隔后的复习。<br>
-    重点题 = 错误次数 ≥ 2；「今日应复习」只显示今天到期的题目。<br>
+    重点题 = 分析历年真题+结合考纲筛选的高频考点题（考前重点过一遍）。<br>
     更新：往《错题本.md》追加错题后，运行 SCGSstudy/build.py 重新生成。
   </div>
 </div>
@@ -2178,22 +2178,22 @@ window.__TIKU_SIMPLE__ = [
  },
  {
   "id": "真题-英语-单选-106",
-  "题目": "They ______ be at home, for there is no light in the room.",
-  "选项": [
-   "can't",
-   "mustn't",
-   "needn't",
-   "shouldn't"
-  ]
- },
- {
-  "id": "真题-英语-单选-107",
   "题目": "The new movie directed by Jia Ling is quite inspiring, ______?",
   "选项": [
    "isn't it",
    "is it",
    "did she",
    "didn't she"
+  ]
+ },
+ {
+  "id": "真题-英语-单选-107",
+  "题目": "They ______ be at home, for there is no light in the room.",
+  "选项": [
+   "can't",
+   "mustn't",
+   "needn't",
+   "shouldn't"
   ]
  },
  {
@@ -2231,8 +2231,8 @@ window.__TIKU_SIMPLE__ = [
   "题目": "A college in Sichuan announced a spring break yesterday, ______ caused a heated discussion among students.",
   "选项": [
    "what",
-   "which",
    "as",
+   "which",
    "that"
   ]
  },
@@ -2288,7 +2288,7 @@ window.__TIKU_SIMPLE__ = [
  },
  {
   "id": "真题-英语-单选-117",
-  "题目": "A good team leader has to know the ______ and weakness of the member and create a harmonious environment for work.",
+  "题目": "A good team leader has to know the ______ and weaknesses of the members and create a harmonious environment for work.",
   "选项": [
    "benefits",
    "strengths",
@@ -2317,12 +2317,122 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
+  "id": "真题-英语-单选-120",
+  "题目": "The lion dance team of our university ______ much time in the UK since 2005.",
+  "选项": [
+   "spends",
+   "spent",
+   "has spent",
+   "spend"
+  ]
+ },
+ {
+  "id": "真题-英语-单选-121",
+  "题目": "Many health problems are closely connected with bad eating habits and a ______ of exercise.",
+  "选项": [
+   "limit",
+   "lack",
+   "need",
+   "demand"
+  ]
+ },
+ {
+  "id": "真题-英语-单选-122",
+  "题目": "Johnson was amazed that it ______ him less than two hours to go from Chengdu to Chongqing by high-speed train.",
+  "选项": [
+   "spent",
+   "took",
+   "consumed",
+   "required"
+  ]
+ },
+ {
+  "id": "真题-英语-单选-123",
+  "题目": "It was ______ to know that the foreign guests were so ______ in Sichuan opera.",
+  "选项": [
+   "surprised; interesting",
+   "surprising; interesting",
+   "surprised; interested",
+   "surprising; interested"
+  ]
+ },
+ {
+  "id": "真题-英语-单选-124",
+  "题目": "A good poet can ______ his feelings in words, which sound like music and move people to tears.",
+  "选项": [
+   "convey",
+   "determine",
+   "explain",
+   "transfer"
+  ]
+ },
+ {
+  "id": "真题-英语-单选-125",
+  "题目": "（Passage One：Teacher of the Week 评选海报）\n这是一张\"本周教师（Teacher of the Week）\"评选海报。海报左侧为一位男士的圆形头像，右侧醒目标注\"Teacher OF THE WEEK\"大标题，下方依次列出：教师姓名 Mr Scanlon，学校 RGS Worcester, Upper Tything, Worcestershire，以及学生 James 撰写的推荐评语：\"Mr Scanlon is the best teacher because he is really supportive. If we find things hard, he always has a laugh with us which makes the lessons fun.\"海报底部说明：如果你提名老师入选本周教师，我们将赠送你们学校三期 The Week Junior 杂志；请将提名、老师照片和学校全名地址发送至 hello@theweekjunior.co.uk。\n21. What do we know about Mr Scanlon?\nA. He's been given an honor.\nB. He's on duty this week.\nC. He's a boring young teacher.\nD. He teaches a new class.\n22. James is Mr Scanlon's ______.\nA. colleague\nB. student\nC. friend\nD. classmate\n23. What does the quoted part in the middle of the picture imply?\nA. Mr Scanlon dislikes maths.\nB. Mr Scanlon is good at teaching.\nC. Mr Scanlon studies hard in school.\nD. Mr Scanlon often laughs at students.\n24. What is The Week Junior most likely to be?\nA. A magazine.\nB. A dictionary.\nC. An organization.\nD. An award.",
+  "选项": []
+ },
+ {
+  "id": "真题-英语-单选-126",
+  "题目": "（Passage Two：如何给予负面反馈）\nI recently had to give feedback (反馈) to a junior colleague after noticing some errors in a project we worked on together. My first thought was to fix them myself and move forward. But my manager said, \"Well, Lucy, why not treat it as a teaching opportunity?\"\nIt took more than a week to schedule the meeting, and even after I did, I kept moving it back. Delivering negative feedback to my team member sounded fearful. Minutes before the actual call, I felt heavy in my chest.\nThe reason these conversations feel so difficult for me is my social anxiety. When faced with the choice of argument or avoidance, I almost always choose the latter. While I understand objectively that feedback is necessary, my inner voice says that sharing anything negative will result in conflict. In this situation, I assumed my colleague would get upset or react defensively. I imagined us reaching a deadlock instead of a solution.\nHere's what actually happened: I told my colleague I'd noticed some errors in our project and had corrected them. To avoid these kinds of errors in the future, I suggested we create a system to quality-check each other's work. Thankfully, my colleague listened calmly and told me he wished I had raised my concerns earlier so that we could have troubleshooted the issue together. It was a learning moment for both of us. We spent the next 30 minutes brainstorming solutions.\nGiving tough feedback is an art—and a difficult one at that. Different people often require different approaches, depending on your relationship and the power dynamics involved. Despite these aspects, however, all feedback should be delivered thoughtfully and with the intention of helping others improve.\n25. What did Lucy's manager do?\nA. The manager corrected the errors for her colleague.\nB. The manager asked her to correct the errors by herself.\nC. The manager taught her how to avoid making errors in the project.\nD. The manager advised her to help her colleague learn from the errors.\n26. What is Lucy's problem?\nA. She has social anxiety.\nB. She often has conflict with people.\nC. She usually makes her colleagues upset.\nD. She has trouble finding solutions to problems.\n27. What actually happened at their meeting?\nA. They discussed how to raise concerns in the project.\nB. They communicated smoothly about their work.\nC. They criticized each other for the errors.\nD. They corrected the errors together.\n28. The text is mainly about ______.\nA. how to finish tough projects\nB. how to give negative feedback\nC. how to correct colleagues' errors\nD. how to avoid conflict at workplace",
+  "选项": []
+ },
+ {
+  "id": "真题-英语-单选-127",
+  "题目": "（Passage Three：学历与技能型招聘）\nFor decades, not having a college degree has often been a barrier for workers seeking higher-level, better-paying jobs. But more employers are now saying they're willing to hire them.\nCollege degrees were used by companies as an indicator of skills and competence when they evaluated potential hires—making it very difficult for non-degree workers even to be considered. The majority of US workers have had to cope with that barrier. Only 37.7% of Americans aged 25 and up had a bachelor's degree (学士学位) in 2022, according to the US Census Bureau.\nBut employers are now—at least publicly—becoming more open to the idea of skills-based hiring, which focuses on the job candidates' competence and capacity to learn new skills rather than on their educational background.\nWhy the change of heart? There are several factors. But above all things is a population reality: The falling US birth rate will produce fewer workers in the years ahead to replace the number of workers to retire.\nAdditionally, employers are increasingly aware that the skills needed to do many jobs don't necessarily require a four-year degree, and that competent workers can be trained in needed skills as they arise.\nSome companies are now investing billions of dollars to build new chip factories here—creating tens of thousands of jobs, many of them paying over $100,000 a year, and don't require a college degree. And businesses and high schools will be connected more closely so that students can get hands-on experience and a path to a good-paying job.\n29. What can be inferred from Paragraph 2?\nA. Employers are willing to hire non-degree workers.\nB. The US Census Bureau has to cope with the barrier.\nC. Most American workers don't have a bachelor's degree.\nD. About 37.7% of Americans have no professional competence.\n30. Employers used to focus on job candidates' ______.\nA. creative skill\nB. work experience\nC. business capacity\nD. educational background\n31. What is the main factor for \"the change of heart\" in Paragraph 4?\nA. The retiring age.\nB. The higher birth rate.\nC. The population reality.\nD. The better job training.\n32. The cooperation between businesses and schools can ______.\nA. attract investment in new chips\nB. prepare students for a good college\nC. encourage factories to create more jobs\nD. help students acquire practical experience",
+  "选项": []
+ },
+ {
+  "id": "真题-英语-单选-128",
+  "题目": "（Passage Four：Floor Time 地板时间）\nAfter an online work meeting, nothing feels better than closing your laptop, stepping away from your desk, and slowly lowering yourself onto the floor. On TikTok, this practice has been named \"floor time\". With some videos under this tag reaching nearly 8 million views, floor time is good for anyone who's stressed, or sad, as well as for anyone who simply needs to relax.\nBelow, experts explain the reasons floor time feels so amazing, as well as how to make the most of it.\nAccording to Brandt, a yoga teacher, floor time physically removes you from whatever stresses you out, like work or chores, just like an intentional savasana (休息术) at the end of a yoga practice. Lying flat on your back can release aches and tension in your muscles.\nFeeling the hardness of the floor beneath you also sends a message to your body that you're safe and supported, which can help you feel more present—like the ground literally has your back. \"You may feel connected to the earth,\" says Brandt. \"This can calm the mind and reduce stress, making floor time appealing to many people.\"\nFloor time may also help to reset your central nervous system, says therapist Janet. A moment of relaxation allows you to bring your breath back to normal, and your stress will gradually become weaker and your heart rate will lower.\n33. What can be learned from Paragraph 1?\nA. You need to use floor time videos to attract viewers.\nB. You'd better close your laptop after a work meeting.\nC. You may lower yourself onto the floor to be relaxed.\nD. You ought to step away from the desk when stressed.\n34. Why does floor time feel so amazing?\nA. It can free you from work or chores.\nB. It can be used to strengthen your muscles.\nC. It can benefit you physically and mentally.\nD. It can be applied to heart disease treatment.\n35. What does the underlined word \"appealing\" in Paragraph 4 mean?\nA. Attractive.\nB. Challenging.\nC. Active.\nD. Convincing.\n36. What will the author continue to talk about next?\nA. Why a savasana can calm your mind.\nB. When you should lie flat on your back.\nC. Where to release your aches and tension.\nD. How to make the most of your floor time.",
+  "选项": []
+ },
+ {
+  "id": "真题-英语-填空-009",
+  "题目": "（Frosty 胖猫的救助故事）\nA very fat cat found wandering the streets in Virginia has gotten a forever home, the animal shelter that 37 it says.\n\"You know we love a cat with a belly, and this one has the 38 belly in town,\" Richmond Animal Care and Control 39 on the Internet.\nThe agency 40 the cat \"One Frosty Too Many\" or Frosty 41 . Frosty, described as \"28.58 pounds with a side of crankiness (走路不稳)\", is \"perfect\" as long as his adopter 42 him to do what he wants, 43 he wants.\nIt is reported that he is three times the normal 44 of a cat and is too big to fit in a standard 45 . The shelter hopes Frosty will be happier once he loses some weight.\nThe shelter's post netted hundreds of 46 . People commented with 47 of their own large cats, and some referenced the former shelter resident \"Patches\", a 42-pound cat that also rose to fame.\n\"He 48 me of my great-great-grandma's cats. She had numerous cats. They were all well over 15 pounds each. Every time they meowed at her, she would 49 them because she thought they needed to eat. They 50 people. They'd run away 51 people came over,\" one commented.\nThe cat was 52 to be about 2 years old, and was put on a 53 low-calorie diet once in shelter control, a report said. The shelter posted a picture of Frosty with his new 54 , who we identified as 38-year-old Maggie Thompson. Thompson 55 to start a new weight-loss journey for the cat.\n\"He got on my lap and started purring (打呼噜),\" she told the reporter. \"With animals, they pick you. You just know when it's right, 56 they do, too.\"\n37. A. followed　B. rescued　C. bought　D. lost\n38. A. cleanest　B. worst　C. dirtiest　D. best\n39. A. published　B. suggested　C. posted　D. denied\n40. A. left　B. showed　C. named　D. lent\n41. A. for sale　B. for sure　C. for example　D. for short\n42. A. allows　B. forces　C. persuades　D. requires\n43. A. before　B. after　C. until　D. when\n44. A. height　B. weight　C. scale　D. quantity\n45. A. nest　B. stable　C. cage　D. cave\n46. A. comments　B. honors　C. criticisms　D. proposals\n47. A. advertisements　B. newspapers　C. pictures　D. books\n48. A. informs　B. warns　C. reminds　D. tells\n49. A. touch　B. hug　C. kiss　D. feed\n50. A. disliked　B. envied　C. protected　D. admired\n51. A. whenever　B. wherever　C. however　D. whatever\n52. A. scanned　B. measured　C. calculated　D. estimated\n53. A. complex　B. strict　C. cheap　D. big\n54. A. servant　B. owner　C. customer　D. patient\n55. A. planned　B. refused　C. failed　D. agreed\n56. A. but　B. so　C. or　D. and",
+  "选项": []
+ },
+ {
+  "id": "真题-英语-填空-010",
+  "题目": "（Dentist=牙医；Nick=患者）\nDentist: Hi there. 57\nNick: I have a terrible toothache.\nDentist: Where does it hurt?\nNick: 58\nDentist: How long has it hurt?\nNick: 59 Then this morning, it started hurting really badly.\nDentist: Does it hurt when you eat or drink something hot or cold?\nNick: Yes, a little. 60\nDentist: It's too early to tell. Let's have a look. Open your mouth wide. Lean your head to the left. That's right. Now, I'll put my little...\nNick: 61\nDentist: I haven't even touched it yet. This is just a mirror.\nA. What do you want?\nB. I really can't bear it.\nC. I think it's back here.\nD. Wait! It hurts! It hurts!\nE. It only hurt a little bit yesterday.\nF. What seems to be the problem today?\nG. Are you going to have to pull the tooth?\n57. ______\n58. ______\n59. ______\n60. ______\n61. ______",
+  "选项": []
+ },
+ {
+  "id": "真题-英语-填空-011",
+  "题目": "（我的阅读爱好）\nI think it was my father who was responsible for my reading hobby. This has been my 62 hobby since my primary school days. What makes reading so 63 ? I do not really know, but I think it has to do with 64 . Every time I read a novel, I imagine what the 65 will look like.\nBook reading 66 my language ability and I notice that this shows in my writing. I am so familiar with the words and expressions that I can use them with 67 . I love to read, but I do not have to buy all the books 68 some or even most of them can be borrowed from the library. But for the books that I enjoy 69 again and again, I will try to buy them. I am glad that I have a hobby which I do not have to 70 much of my money. Reading is not an expensive hobby, 71 .\n62. ______\n63. ______\n64. ______\n65. ______\n66. ______\n67. ______\n68. ______\n69. ______\n70. ______\n71. ______\n- **注：** 原文未提供备选词库，本题暂无选项与答案。",
+  "选项": []
+ },
+ {
   "id": "真题-英语-简答-018",
+  "题目": "We may hear very soft sounds which have never been heard before.",
+  "选项": []
+ },
+ {
+  "id": "真题-英语-简答-019",
+  "题目": "At such a moment, we can be alone with our own thoughts without disturbance.",
+  "选项": []
+ },
+ {
+  "id": "真题-英语-简答-020",
+  "题目": "In fact, each of us may face some confusing difficulties, which are tough to deal with.",
+  "选项": []
+ },
+ {
+  "id": "真题-英语-简答-021",
+  "题目": "However, a moment in silence will clear our heads and help us make a decision.",
+  "选项": []
+ },
+ {
+  "id": "真题-英语-简答-022",
+  "题目": "Then we can tell the real value from the surface value in life.",
+  "选项": []
+ },
+ {
+  "id": "真题-英语-简答-023",
   "题目": "假如你是学生会主席李夏，下周\"国际交流周\"学校将要举办一个国际交流会，现请你给外教Smith教授写一封电子邮件，邀请他出席开幕式并参加这场活动。内容要点包括：\n（1）活动时间、地点。\n（2）活动内容。\n（3）表达期待。",
   "选项": []
  },
  {
-  "id": "真题-英语-单选-120",
+  "id": "真题-英语-单选-129",
   "题目": "Henry likes to play ______ piano, while his brother prefers playing ______ football.",
   "选项": [
    "the; the",
@@ -2332,7 +2442,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-121",
+  "id": "真题-英语-单选-130",
   "题目": "We invited Linda and Cathy to dinner, but _______ of them came.",
   "选项": [
    "both",
@@ -2342,7 +2452,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-122",
+  "id": "真题-英语-单选-131",
   "题目": "The number of new energy vehicles in our country _______ a lot in recent years.",
   "选项": [
    "increases",
@@ -2352,7 +2462,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-123",
+  "id": "真题-英语-单选-132",
   "题目": "—Juicy graduated from college at a very young age. —She ______ have been a smart student.",
   "选项": [
    "can",
@@ -2362,7 +2472,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-124",
+  "id": "真题-英语-单选-133",
   "题目": "She wondered what effective measures _______ to increase the productivity.",
   "选项": [
    "will take",
@@ -2372,7 +2482,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-125",
+  "id": "真题-英语-单选-134",
   "题目": "—Have you ever been to Beijing? —No, I wish I _______.",
   "选项": [
    "have",
@@ -2382,7 +2492,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-126",
+  "id": "真题-英语-单选-135",
   "题目": "It is no use ______ about the issue because he never change his mind.",
   "选项": [
    "argue",
@@ -2392,7 +2502,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-127",
+  "id": "真题-英语-单选-136",
   "题目": "We don't think ______ possible to master a foreign language without much memory work.",
   "选项": [
    "it",
@@ -2402,7 +2512,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-128",
+  "id": "真题-英语-单选-137",
   "题目": "______ do you think will be the best employee of the year in your company?",
   "选项": [
    "Who",
@@ -2412,7 +2522,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-129",
+  "id": "真题-英语-单选-138",
   "题目": "She always puts her medicine on the top of the shelf ______ the children might take them by mistake.",
   "选项": [
    "so that",
@@ -2422,7 +2532,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-130",
+  "id": "真题-英语-单选-139",
   "题目": "The day is bound to come ______ all people in the world shall live in peace.",
   "选项": [
    "when",
@@ -2432,7 +2542,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-131",
+  "id": "真题-英语-单选-140",
   "题目": "______ you are coming to the conference is the best news I have heard these days.",
   "选项": [
    "What",
@@ -2442,7 +2552,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-132",
+  "id": "真题-英语-单选-141",
   "题目": "The children were surprised when the teacher had them ______ their books unexpectedly.",
   "选项": [
    "close",
@@ -2452,7 +2562,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-133",
+  "id": "真题-英语-单选-142",
   "题目": "It is more than twenty years ______ Johnson came to Chengdu.",
   "选项": [
    "as",
@@ -2462,7 +2572,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-134",
+  "id": "真题-英语-单选-143",
   "题目": "The exercise was ______ the abilities of most of the class.",
   "选项": [
    "behind",
@@ -2472,7 +2582,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-135",
+  "id": "真题-英语-单选-144",
   "题目": "Don't bother Tom. He is trying to ______ the problem.",
   "选项": [
    "work out",
@@ -2482,7 +2592,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-136",
+  "id": "真题-英语-单选-145",
   "题目": "We need an umbrella on the beach to give us some ______ in such hot weather.",
   "选项": [
    "shell",
@@ -2492,7 +2602,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-137",
+  "id": "真题-英语-单选-146",
   "题目": "Don't forget to ask the shop for a ______ after you have paid.",
   "选项": [
    "recipe",
@@ -2502,7 +2612,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-138",
+  "id": "真题-英语-单选-147",
   "题目": "The success of Na Zha 2 ______ the charm of the Chinese traditional culture.",
   "选项": [
    "rejects",
@@ -2512,7 +2622,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-139",
+  "id": "真题-英语-单选-148",
   "题目": "The world market is ______ changing. We must anticipate the changes and make timely adjustments.",
   "选项": [
    "steadily",
@@ -2522,7 +2632,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-140",
+  "id": "真题-英语-单选-149",
   "题目": "（Time Zones教师用书目录）\nThe Teacher's Book contains a CD-ROM, audio CD to help you get the most out of your Time Zones textbook. The Resource pages will help you as the teacher to plan your lessons.\nCONTENTS: Introduction-1; Meet the time zones team-4; How to teach time zones-7; Using the teacher's book effectively-10; Unit 1-8...; Extra resources-150; Student's workbook answer key-155; Audio CD transcript-166; Acknowledgements-167.\n21. Time Zones is a textbook series for learners of ______.\n22. Which part can help the teacher teach Time Zones effectively?\n23. The answer keys to exercise in the students' workbook start from page ______.\n24. The credits (Acknowledgements) refer to ______.",
   "选项": [
    "the video games",
@@ -2544,7 +2654,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-141",
+  "id": "真题-英语-单选-150",
   "题目": "（哈尔滨冰雪节）\nEvery year, on January 5th, the city of Harbin in northeast China changes into a winter wonderland. Tourists from all around the world come to visit the wonderful ice and snow festival. Harbin's ice and snow festival is one of the largest ice and snow festivals in the world. It features amazing ice and snow sculptures. Some of the sculptures are based on famous fairy-tales or historical stories. There is also a Guinness World Records area where visitors can see record-holder sculptures. In the evening, the ice and snow world comes alive with colorful lights.\n25. When does the festival usually end every year?\n26. Where should visitors go if they want to see sculptures of tigers at this festival?\n27. What does underline word \"record-holder\" in the 2nd Paragraph refer to?\n28. What can we know from the text?",
   "选项": [
    "In early January",
@@ -2566,7 +2676,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-142",
+  "id": "真题-英语-单选-151",
   "题目": "（黑点测试）\nOne day a professor entered the classroom and announced a surprise test. The students were confused. There was not a question but just a black dot in the center of the page. The professor told them, \"I want you to write about what you see there.\" All of them described about the black dot. After the professor finished reading, the whole class fell into silence. \"Now,\" the professor began to explain, \"I am not going to give you grades for this. I just want you to think about something. Here everyone focused on the black dot and wrote about it, but no one wrote about the white paper. The same is with our lives. The white paper represents our whole life and the black spot represents problems in our life.\"\n29. Why were the students surprised?\n30. What did the professor ask his students to do?\n31. The professor reminded his students ______.\n32. Which of the following is the most likely the title of this article?",
   "选项": [
    "The test paper were required to be put faced down.",
@@ -2588,7 +2698,7 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-单选-143",
+  "id": "真题-英语-单选-152",
   "题目": "（实体商场转型）\nIn recent years, China's brick-and-mortar shopping scene has changed significantly. The rise of e-commerce has led to a decline in foot traffic in traditional shopping malls. To survive, mall owners are having to get creative. Mall owners are now focusing more on providing a unique shopping experience for customers. Some malls are hosting art exhibitions, live performances, and educational lectures. Another trend is the integration of technology. In the future, shopping malls need to continue to adapt. They should aim to become community hubs that offer a wide range of services.\n33. Why China's brick-and-mortar shopping scene has changed?\n34. What is paragraph 2 mainly about?\n35. What should shopping malls do to survive in the future?\n36. In which section of a magazine may this text appear?",
   "选项": [
    "Because of the development of art.",
@@ -2610,47 +2720,47 @@ window.__TIKU_SIMPLE__ = [
   ]
  },
  {
-  "id": "真题-英语-填空-009",
+  "id": "真题-英语-填空-012",
   "题目": "（西红柿与仇恨的故事）\nOnce at a summer camp, a teacher decided to do an activity with students. The teacher told each child to bring along a plastic bag (37)______ a few tomatoes. Each tomato would be given a (38)______ of a person that the child hated. So the (39)______ number of tomatoes in his or her bag would depend on the (40)______ of people the child hated. When the day came, every child brought some tomatoes. Some had 2 tomatoes, some 3, while (41)______ had up to 5 tomatoes. The teacher then told the children to (42)______ the tomatoes with them wherever they went (43)______ a week. Days passed, and the children started to (44)______, because the rotten tomatoes let out a terrible smell. Besides, those children who have 5 tomatoes really began to feel the (45)______ of the heavier bags. After one week, the (46)______ children were (47)______ because the game had finally ended. The teacher asked, \"how did you feel (48)______ carrying the tomatoes with you for one week?\" The children started complaining of the (49)______ that they had to go through. Then the teacher told them the (50)______ meaning behind the game. The teacher said, \"This is (51)______ the same situation when you carry hatred for somebody inside your heart. You should learn to (52)______. The terrible smell of hatred will pollute your heart, and you will carry it with you wherever you (53)______. If you cannot (54)______ the smell of the rotten tomatoes for just one week, can you (55)______ what it is like to have the smell of hatred in your heart for the rest of your life? It will only bring you more (56)______.\"\n37. A. covering　B. containing　C. linking　D. packaging\n38. A. address　B. signature　C. bag　D. name\n39. A. increased　B. to increase　C. to increasing　D. increasing\n40. A. number　B. identity　C. behavior　D. figure\n41. A. others　B. another　C. some　D. few\n42. A. share　B. plant　C. exchange　D. carry\n43. A. or　B. and　C. but　D. for\n44. A. talk　B. care　C. complain　D. think\n45. A. color　B. smell　C. size　D. weight\n46. A. unfriendly　B. unusual　C. unhappy　D. unwise\n47. A. relieved　B. reported　C. recorded　D. reminded\n48. A. before　B. since　C. until　D. while\n49. A. damage　B. puzzle　C. trouble　D. misfortune\n50. A. written　B. hidden　C. typical　D. logical\n51. A. exactly　B. suddenly　C. directly　D. traditionally\n52. A. scold　B. scare　C. forget　D. forgive\n53. A. walk around　B. fly around　C. look around　D. hang around\n54. A. refuse　B. spread　C. tolerate　D. find\n55. A. imagine　B. explain　C. describe　D. understand\n56. A. hesitation　B. anger　C. sadness　D. anxiety",
   "选项": []
  },
  {
-  "id": "真题-英语-填空-010",
+  "id": "真题-英语-填空-013",
   "题目": "A=Anna; F=Fred\nA: Hurry up, otherwise we'll miss the opening ceremony of the sports meeting!\nF: OK! (57)______ Let me tie my shoelaces.\nA: (58)______\nF: The 100-meter dash, 110-meter hurdle and 400-meter relay.\nA: You must be a very fast runner!\nF: (59)______ I was on the school track team two years ago.\nA: Track events require development of the whole body. (60)______\nF: 14.0 seconds—broke the university record last year. What events will you take part in?\nA: The high jump.\nF: (61)______\nA: I hope so.\nA. Just a minute.\nB. I am fond of race.\nC. What events are you in?\nD. Let's set off without delay.\nE. What's your favorite sport?\nF. What's your record for the 100-meters dash?\nG. I'm sure you can get first place at this sports meeting.",
   "选项": []
  },
  {
-  "id": "真题-英语-填空-011",
+  "id": "真题-英语-填空-014",
   "题目": "（钉子与脾气的故事）\nThere once was a little boy who had a bad temper. His father gave him a bag of nails and told him that every time he (62)______ his temper, he must hammer a (63)______ into the back of the (64)______. The boy drove 37 nails into the fence on the first day. Over the next few weeks, as he learned to (65)______ his anger, the number of nails hammered gradually decreased. (66)______ the day came when the boy didn't lose his temper at all. He told his father about it and the father suggested that the boy (67)______ out one nail for each day that he was able to hold his temper. The days passed by and the boy was finally able to tell his father that all the nails were gone. The father took his son by the hand and led him to the fence. He said, \"You have done well, my son, but look at the (68)______ in the fence. The fence will never be the (69)______. When you say something in anger, it leaves a scar just like this one. If you hurt a person with (70)______, the wound is as bad as a physical one. You can put a knife in a man and draw it out. It wouldn't matter how many (71)______ you say I'm sorry, the wound is still there.\"\nA. holes　B. pull　C. same　D. control　E. Finally　F. times　G. Similarly　H. lost　I. words　J. fence　K. luckily　L. nail",
   "选项": []
  },
  {
-  "id": "真题-英语-简答-019",
+  "id": "真题-英语-简答-024",
   "题目": "\"Dear stranger, I'm inviting you to hear my ambitions I've never shared with anyone before. I would like to be positive. I want to achieve...\"",
   "选项": []
  },
  {
-  "id": "真题-英语-简答-020",
+  "id": "真题-英语-简答-025",
   "题目": "This heartfelt message recently caught the attention of Chinese social media users.",
   "选项": []
  },
  {
-  "id": "真题-英语-简答-021",
+  "id": "真题-英语-简答-026",
   "题目": "The next day, another passenger sitting in the same seat discovered the bag. The passenger posted it online with a reply.",
   "选项": []
  },
  {
-  "id": "真题-英语-简答-022",
+  "id": "真题-英语-简答-027",
   "题目": "How lucky we are to \"meet\" across time and space! I hope you can do well in the interview.",
   "选项": []
  },
  {
-  "id": "真题-英语-简答-023",
+  "id": "真题-英语-简答-028",
   "题目": "According to a news report, the girl has been admitted to her dream school.",
   "选项": []
  },
  {
-  "id": "真题-英语-简答-024",
+  "id": "真题-英语-简答-029",
   "题目": "校英语协会举办写作比赛，请以\"One Day without a Mobile Phone\"为题写一篇参赛作文，描述你没有手机的一天生活。要求：1.字数约100词；2.可以适当增加细节，使行文连贯。",
   "选项": []
  },
@@ -4468,7 +4578,579 @@ window.__TIKU_SIMPLE__ = [
     $("weakList").innerHTML=keys.length?keys.map(function(k){return '<div class="frow"><span class="nm" style="flex-basis:180px">'+escHtml(k.replace("｜"," · "))+'</span><span class="ct">'+map[k]+' 次</span></div>';}).join(""): "暂无数据";
   }
 
-  var list=[], idx=0, revealed=false;
+  var KEY_ITEMS = [
+ {
+  "id": "练习-英语-单选-001",
+  "来源": "库课备考练习",
+  "专题": "词汇与语法",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "— I'm afraid I can't finish the work on time. — \\_\\_\\_\\_. I will help you.",
+  "选项": [
+   "Don't worry",
+   "Not at all",
+   "My pleasure",
+   "It's nice of you"
+  ],
+  "答案": "A",
+  "解析": "Don't worry 别担心。",
+  "考点": "",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-英语-单选-002",
+  "来源": "库课备考练习",
+  "专题": "词汇与语法",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "The film \\_\\_\\_\\_ for ten minutes when we got to the cinema.",
+  "选项": [
+   "has been on",
+   "had been on",
+   "has started",
+   "had started"
+  ],
+  "答案": "B",
+  "解析": "for ten minutes 是延续性时间，须用延续性动词 be on；\"过去的过去\"用过去完成时。",
+  "考点": "",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-英语-单选-003",
+  "来源": "库课备考练习",
+  "专题": "词汇与语法",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "She is the only one of the students who \\_\\_\\_\\_ good at French.",
+  "选项": [
+   "is",
+   "are",
+   "was",
+   "were"
+  ],
+  "答案": "A",
+  "解析": "the only one of + 复数名词，定语从句谓语用单数 is。",
+  "考点": "",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-英语-单选-004",
+  "来源": "库课备考练习",
+  "专题": "词汇与语法",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "It is necessary for us \\_\\_\\_\\_ English well.",
+  "选项": [
+   "learn",
+   "learning",
+   "to learn",
+   "learned"
+  ],
+  "答案": "C",
+  "解析": "It is + adj. + for sb. + to do sth.",
+  "考点": "",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-英语-单选-005",
+  "来源": "库课备考练习",
+  "专题": "词汇与语法",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "The doctor suggested that he \\_\\_\\_\\_ a rest at once.",
+  "选项": [
+   "takes",
+   "took",
+   "taking",
+   "take"
+  ],
+  "答案": "D",
+  "解析": "suggest 表\"建议\"时宾语从句用 (should) + 动词原形。",
+  "考点": "",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-英语-单选-070",
+  "来源": "练习",
+  "专题": "词汇与语法",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "The teacher asked the students to ______ the text after class.",
+  "选项": [
+   "go over",
+   "go on",
+   "go out",
+   "go off"
+  ],
+  "答案": "A",
+  "解析": "go over复习；go on继续；go out出去；go off离开。",
+  "考点": "",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-英语-单选-071",
+  "来源": "练习",
+  "专题": "词汇与语法",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "I have ______ umbrella. ______ umbrella is red.",
+  "选项": [
+   "an; The",
+   "a; The",
+   "an; A",
+   "the; The"
+  ],
+  "答案": "A",
+  "解析": "umbrella元音开头用an，第二次提到用the。",
+  "考点": "",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-英语-单选-072",
+  "来源": "练习",
+  "专题": "词汇与语法",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "She is interested ______ music.",
+  "选项": [
+   "at",
+   "on",
+   "in",
+   "to"
+  ],
+  "答案": "C",
+  "解析": "be interested in对...感兴趣。",
+  "考点": "",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-英语-单选-073",
+  "来源": "练习",
+  "专题": "词汇与语法",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "The book is ______ more interesting than that one.",
+  "选项": [
+   "very",
+   "quite",
+   "much",
+   "so"
+  ],
+  "答案": "C",
+  "解析": "much修饰比较级。",
+  "考点": "",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-英语-单选-074",
+  "来源": "练习",
+  "专题": "词汇与语法",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "We will go for a picnic if it ______ tomorrow.",
+  "选项": [
+   "won't rain",
+   "doesn't rain",
+   "didn't rain",
+   "isn't raining"
+  ],
+  "答案": "B",
+  "解析": "if条件句主将从现。",
+  "考点": "",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-英语-单选-075",
+  "来源": "练习",
+  "专题": "词汇与语法",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "He ______ in Beijing for ten years.",
+  "选项": [
+   "lives",
+   "lived",
+   "has lived",
+   "is living"
+  ],
+  "答案": "C",
+  "解析": "for ten years用现在完成时。",
+  "考点": "",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-英语-单选-076",
+  "来源": "练习",
+  "专题": "词汇与语法",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "Neither he nor I ______ a doctor.",
+  "选项": [
+   "am",
+   "is",
+   "are",
+   "be"
+  ],
+  "答案": "A",
+  "解析": "neither...nor就近原则，I用am。",
+  "考点": "",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-英语-单选-077",
+  "来源": "练习",
+  "专题": "词汇与语法",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "The question is ______ difficult for me ______ answer.",
+  "选项": [
+   "too; to",
+   "so; that",
+   "such; that",
+   "enough; to"
+  ],
+  "答案": "A",
+  "解析": "too...to太...而不能。",
+  "考点": "",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-英语-单选-078",
+  "来源": "练习",
+  "专题": "词汇与语法",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "I don't know ______ he will come or not.",
+  "选项": [
+   "if",
+   "whether",
+   "that",
+   "what"
+  ],
+  "答案": "B",
+  "解析": "whether...or not固定搭配。",
+  "考点": "",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-英语-单选-079",
+  "来源": "练习",
+  "专题": "词汇与语法",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "The old man lives ______, but he doesn't feel ______.",
+  "选项": [
+   "alone; lonely",
+   "lonely; alone",
+   "alone; alone",
+   "lonely; lonely"
+  ],
+  "答案": "A",
+  "解析": "alone独自，lonely孤独的。",
+  "考点": "",
+  "章节": "02-语法"
+ },
+ {
+  "id": "练习-英语-单选-160",
+  "来源": "练习",
+  "专题": "阅读理解",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "This passage is about how to ______.",
+  "选项": [
+   "build a new city",
+   "drive in a new city",
+   "get to know a new city",
+   "live in a new city"
+  ],
+  "答案": "C",
+  "解析": "文章介绍了如何通过买导游书、坐公交、打车等方式了解新城市。",
+  "考点": "",
+  "章节": "03-阅读理解"
+ },
+ {
+  "id": "练习-英语-单选-161",
+  "来源": "练习",
+  "专题": "阅读理解",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "What does the author suggest you do before going to a new city?",
+  "选项": [
+   "Buy a guidebook.",
+   "Find a newspaper.",
+   "Take a bus.",
+   "Take a taxi."
+  ],
+  "答案": "A",
+  "解析": "文章建议出发前买导游书。",
+  "考点": "",
+  "章节": "03-阅读理解"
+ },
+ {
+  "id": "练习-英语-单选-162",
+  "来源": "练习",
+  "专题": "阅读理解",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "Where does the author suggest you read a newspaper?",
+  "选项": [
+   "In a park.",
+   "At a bus stop.",
+   "In a restaurant.",
+   "In a museum."
+  ],
+  "答案": "A",
+  "解析": "文章说在公园里看报纸。",
+  "考点": "",
+  "章节": "03-阅读理解"
+ },
+ {
+  "id": "练习-英语-单选-163",
+  "来源": "练习",
+  "专题": "阅读理解",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "The author suggests you take a taxi so that you can ______.",
+  "选项": [
+   "travel faster",
+   "make new friends",
+   "ask the driver about the city",
+   "look for interesting places"
+  ],
+  "答案": "C",
+  "解析": "文章说出租车司机了解城市，可以问他们关于有趣的街区。",
+  "考点": "",
+  "章节": "03-阅读理解"
+ },
+ {
+  "id": "练习-英语-单选-164",
+  "来源": "练习",
+  "专题": "阅读理解",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "What does the passage tell you to do if it rains?",
+  "选项": [
+   "Take buses.",
+   "Play games.",
+   "Visit museums.",
+   "Ride bikes."
+  ],
+  "答案": "C",
+  "解析": "文章说下雨天在博物馆待几个小时是个好主意。",
+  "考点": "",
+  "章节": "03-阅读理解"
+ },
+ {
+  "id": "练习-英语-单选-165",
+  "来源": "练习",
+  "专题": "阅读理解",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "What does David do?",
+  "选项": [
+   "He is a writer.",
+   "He is a teacher.",
+   "He is a doctor.",
+   "He is the owner of a bookstore."
+  ],
+  "答案": "A",
+  "解析": "文章说David是一位英国作家。",
+  "考点": "",
+  "章节": "03-阅读理解"
+ },
+ {
+  "id": "练习-英语-单选-166",
+  "来源": "练习",
+  "专题": "阅读理解",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "Which of the following is NOT true according to the passage?",
+  "选项": [
+   "Some family names come from the places of people's homes.",
+   "Some family names come from people's hands.",
+   "Some family names come from nicknames.",
+   "Some family names come from people's jobs."
+  ],
+  "答案": "B",
+  "解析": "姓氏来源包括地名、职业、绰号，不包括手。",
+  "考点": "",
+  "章节": "03-阅读理解"
+ },
+ {
+  "id": "练习-英语-单选-167",
+  "来源": "练习",
+  "专题": "阅读理解",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "______ family names are mentioned in the passage.",
+  "选项": [
+   "Ten",
+   "Six",
+   "Seven",
+   "Nine"
+  ],
+  "答案": "D",
+  "解析": "文中提到Hill, Wood, Lake, Butcher, Farmer, Black, White, Brown, Whitehead共9个姓氏。",
+  "考点": "",
+  "章节": "03-阅读理解"
+ },
+ {
+  "id": "练习-英语-单选-168",
+  "来源": "练习",
+  "专题": "阅读理解",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "The underlined word \"fascinating\" in the last paragraph means ______.",
+  "选项": [
+   "interesting",
+   "welcome",
+   "easy",
+   "relaxing"
+  ],
+  "答案": "A",
+  "解析": "fascinating意为\"迷人的、有趣的\"，与interesting同义。",
+  "考点": "",
+  "章节": "03-阅读理解"
+ },
+ {
+  "id": "练习-英语-单选-169",
+  "来源": "练习",
+  "专题": "阅读理解",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "What is the passage mainly about?",
+  "选项": [
+   "Where people come from.",
+   "The story of \"Whitehead\".",
+   "Where family names come from.",
+   "The stories of people's family."
+  ],
+  "答案": "C",
+  "解析": "文章主要介绍英语姓氏的来源。",
+  "考点": "",
+  "章节": "03-阅读理解"
+ },
+ {
+  "id": "练习-英语-单选-170",
+  "来源": "练习",
+  "专题": "阅读理解",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "What does Para. 1 mainly tell us?",
+  "选项": [
+   "What digital currency is.",
+   "How to use digital currency.",
+   "Why we all need cash to live.",
+   "Where to find digital currency."
+  ],
+  "答案": "A",
+  "解析": "第一段介绍数字货币的定义。",
+  "考点": "",
+  "章节": "03-阅读理解"
+ },
+ {
+  "id": "练习-英语-单选-171",
+  "来源": "练习",
+  "专题": "阅读理解",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "What is the \"good answer\" to the question in Para. 2?",
+  "选项": [
+   "Generally, you cannot shop online without digital currency.",
+   "You cannot buy anything in China with real money.",
+   "You can buy anything in Canada without digital currency.",
+   "You can use both real money and digital currency to shop online."
+  ],
+  "答案": "A",
+  "解析": "文章说网购通常必须用数字货币。",
+  "考点": "",
+  "章节": "03-阅读理解"
+ },
+ {
+  "id": "练习-英语-单选-172",
+  "来源": "练习",
+  "专题": "阅读理解",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "What is the first problem mentioned in Para. 3?",
+  "选项": [
+   "Digital currency is not safe enough.",
+   "Digital currency is not reliable in some people's eyes.",
+   "Some people can hold their money in their hand.",
+   "Some people don't feel comfortable with numbers."
+  ],
+  "答案": "B",
+  "解析": "第一个问题是人们不信任数字货币，觉得拿不到手里就不真实。",
+  "考点": "",
+  "章节": "03-阅读理解"
+ },
+ {
+  "id": "练习-英语-单选-173",
+  "来源": "练习",
+  "专题": "阅读理解",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "What can we do to protect our digital currency accounts well according to the passage?",
+  "选项": [
+   "Avoid using our digital currency to shop online.",
+   "Download firewall software as much as possible.",
+   "Write the passwords down in our notebook.",
+   "Change our passwords frequently and try more complicated ones."
+  ],
+  "答案": "D",
+  "解析": "文章说密码简单且从不更换会被黑客盗取，应经常更换复杂密码。",
+  "考点": "",
+  "章节": "03-阅读理解"
+ },
+ {
+  "id": "练习-英语-单选-174",
+  "来源": "练习",
+  "专题": "阅读理解",
+  "题型": "单选",
+  "材料": "",
+  "passage": "",
+  "题目": "Which of the following is the best title for the passage?",
+  "选项": [
+   "Two Kinds of Money",
+   "The End of Cash",
+   "Currencies Around the World",
+   "Money that You Can Not Touch"
+  ],
+  "答案": "A",
+  "解析": "文章对比现金和数字货币，最佳标题为\"两种货币\"。",
+  "考点": "",
+  "章节": "03-阅读理解"
+ }
+];
+  var list=[], idx=0, revealed=false, curListIsKey=false;
   function $(id){ return document.getElementById(id); }
 
   // 渲染数学公式（KaTeX），失败则保留原文
@@ -4557,9 +5239,11 @@ window.__TIKU_SIMPLE__ = [
     }
     var it=list[idx];
     var answered=false;
-    var cls=st(it)==="已掌握"?"mastered":"review";
-    var label=st(it)==="已掌握"?"已掌握":"待复习";
-    var meta='<span class="tag qid">Q-'+it.id+'</span><span class="tag">'+escHtml(it["章节"])+'</span><span class="tag '+cls+'">'+label+'</span>';
+    var isKey=curListIsKey;
+    var cls=isKey?"review":(st(it)==="已掌握"?"mastered":"review");
+    var label=isKey?"重点题":(st(it)==="已掌握"?"已掌握":"待复习");
+    var meta=(isKey?'<span class="tag qid">'+escHtml(it.id)+'</span><span class="tag keytag">重点题</span>':'<span class="tag qid">Q-'+it.id+'</span>')+'<span class="tag">'+escHtml(it["章节"])+'</span><span class="tag '+cls+'">'+label+'</span>';
+    if(isKey && it["专题"]) meta+='<span class="tag">'+escHtml(it["专题"])+'</span>';
     if(it["题型"]) meta+='<span class="tag qid">'+escHtml(it["题型"])+'</span>';
     if(it["错因"]) meta+='<span class="tag reason">'+escHtml(it["错因"])+'</span>';
     if((it["错误次数"]||0)>0) meta+='<span class="tag err">错'+(it["错误次数"]||0)+'次</span>';
@@ -4576,10 +5260,10 @@ window.__TIKU_SIMPLE__ = [
       +(it["解析"]?'<div style="margin-top:6px"><span class="k">解析：</span>'+renderMath(it["解析"])+'</div>':'')
       +(it["知识点"]?'<div style="margin-top:6px"><span class="k">知识点：</span>'+renderMath(it["知识点"])+'</div>':'')
       +'</div>';
-    var reasonHtml='<div class="reason-tools"><span>这次为什么错？</span>'
+    var reasonHtml=isKey?'':'<div class="reason-tools"><span>这次为什么错？</span>'
       +'<select id="reasonPick"><option value="">选择错因</option><option>概念不清</option><option>公式记错</option><option>方法不会</option><option>计算失误</option><option>审题失误</option><option>词汇不懂</option><option>语法不清</option><option>理解偏差</option><option>粗心</option><option>其他</option></select>'
       +'<button id="reasonSave">记录错因</button></div>';
-    var similarHtml='<div class="similar"><div>再来一道同章节题</div>'
+    var similarHtml=isKey?'':'<div class="similar"><div>再来一道同章节题</div>'
       +((it["同类题"]||[]).length?(it["同类题"]||[]).map(function(candidate,n){return '<a href="#" data-similar="'+n+'">'+renderMath(candidate.id+' · '+(candidate["题目"]||"未命名"))+'</a>';}).join(""):'<span>当前题库暂无可推荐的同章节题。</span>')
       +'</div>';
     box.innerHTML=
@@ -4589,9 +5273,9 @@ window.__TIKU_SIMPLE__ = [
       +optsHtml
       +'<div class="btns">'
       +(revealed?'':'<button id="btnShow">显示答案</button>')
-      +'<button id="btnAgain" class="u">没记住 · 明天</button>'
-      +'<button id="btnHard" class="h">有点模糊 · 3 天后</button>'
-      +'<button id="btnGood" class="m">掌握 · 延后复习</button>'
+      +(isKey?'':'<button id="btnAgain" class="u">没记住 · 明天</button>')
+      +(isKey?'':'<button id="btnHard" class="h">有点模糊 · 3 天后</button>')
+      +(isKey?'':'<button id="btnGood" class="m">掌握 · 延后复习</button>')
       +'<button id="btnAITeach">AI 讲题</button>'
       +'</div>'
       +ansHtml
@@ -4680,7 +5364,7 @@ window.__TIKU_SIMPLE__ = [
     var ai=$("btnAITeach"); if(ai) ai.onclick=function(){
       var q=list[idx];
       if(!q){ return; }
-      var p="请帮我讲解这道专升本错题，讲清楚考点和解题思路：\n\n";
+      var p="请帮我讲解这道专升本"+(curListIsKey?"重点题":"错题")+"，讲清楚考点和解题思路：\n\n";
       p+="【题型】"+(q["题型"]||"")+"\n";
       p+="【题目】"+(q["题目"]||"")+"\n";
       if(q["选项"]&&q["选项"].length){
@@ -4690,7 +5374,7 @@ window.__TIKU_SIMPLE__ = [
       p+="\n【答案】"+(q["答案"]||"")+"\n";
       if(q["解析"]&&q["解析"]!=="（本题未附解析）") p+="【解析】"+q["解析"]+"\n";
       p+="\n请分点讲解：1) 考点是什么；2) 为什么选这个答案；3) 其他选项错在哪。";
-      if(window.AIAsk){ window.AIAsk(p, "AI讲题 · Q-"+q.id); }
+      if(window.AIAsk){ window.AIAsk(p, "AI讲题 · "+q.id); }
     };
     var a=$("btnAgain"); if(a) a.onclick=function(){ schedule(list[idx],"again"); revealed=false; if(idx<list.length-1){idx++;} show(); renderStats(); };
     var h=$("btnHard"); if(h) h.onclick=function(){ schedule(list[idx],"hard"); revealed=false; if(idx<list.length-1){idx++;} show(); renderStats(); };
@@ -4718,7 +5402,7 @@ window.__TIKU_SIMPLE__ = [
       location.reload();
     };
   }
-  function reload(){ list=filtered(); idx=0; revealed=false; show(); renderStats(); }
+  function reload(){ curListIsKey=false; list=filtered(); idx=0; revealed=false; show(); renderStats(); }
   function setMode(btn){
     ["btnShuffle","btnOrder","btnKey","btnDue"].forEach(function(id){ $(id).classList.remove("on"); });
     $(btn).classList.add("on");
@@ -4727,11 +5411,11 @@ window.__TIKU_SIMPLE__ = [
   $("selStatus").onchange=function(){ setMode("btnOrder"); reload(); };
   $("selReason").onchange=function(){ setMode("btnOrder"); reload(); };
   $("btnOrder").onclick=function(){ setMode("btnOrder"); reload(); };
-  $("btnShuffle").onclick=function(){ setMode("btnShuffle"); list=filtered();
+  $("btnShuffle").onclick=function(){ setMode("btnShuffle"); curListIsKey=false; list=filtered();
     for(var i=list.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=list[i]; list[i]=list[j]; list[j]=t; }
     idx=0; revealed=false; show(); renderStats(); };
-  $("btnKey").onclick=function(){ setMode("btnKey"); list=filtered().filter(function(it){return (it["错误次数"]||0)>=2;}); idx=0; revealed=false; show(); renderStats(); };
-  $("btnDue").onclick=function(){ setMode("btnDue"); list=filtered().filter(isDue); idx=0; revealed=false; show(); renderStats(); };
+  $("btnKey").onclick=function(){ setMode("btnKey"); curListIsKey=true; list=KEY_ITEMS.slice(); idx=0; revealed=false; show(); renderStats(); };
+  $("btnDue").onclick=function(){ setMode("btnDue"); curListIsKey=false; list=filtered().filter(isDue); idx=0; revealed=false; show(); renderStats(); };
   $("btnReset").onclick=function(){
     if(this._arm){
       statusMap={}; revMap={}; planMap={}; save();
