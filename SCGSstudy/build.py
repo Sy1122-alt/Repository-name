@@ -407,24 +407,24 @@ def parse_tiku(path, subject):
         if material and not re.match(r"^\*\*(真题|练习|自编|多选|模拟卷)", s) and not s.lstrip().startswith("-") and not re.match(r"^#{1,4}\s", s):
             material.append(s)
             continue
-        # 题目块起始
-        mb = re.match(r"^\*\*(真题|练习|自编|多选|模拟卷)[\s\-]*(.+?)(?:[.、]|\*\*)\s*(.*)$", s)
+        # 题目块起始（新编号格式：**类别-科目-题型-序号.** 或 **…-序号（判断组）.**）
+        mb = re.match(r"^\*\*(真题|练习)[\s\-]*(计算机|高数|英语)[\s\-]*(单选|多选|判断|填空|计算|证明|应用|简答)[\s\-]*(\d+)\s*(?:（判断组）)?[.、]?\s*\*\*\s*(.*)$", s)
         if mb:
             flush()
-            qtype, no = mb.group(1), mb.group(2)
-            title = mb.group(3).strip().replace("**", "").strip()
-            is_judge_group = ("判断题" in s or "判断组" in s)
-            # 独立判断题（如「练习 146（判断）」「真题2023-判断1」「真题2025-计算机-判断21」）也识别为判断
-            is_judge = is_judge_group or bool(re.search(r"判断\s*-?\s*\d|（判断）", s))
-            is_multi = ("多选" in s)
+            qtype, subject_zh, qtype_zh, num = mb.group(1), mb.group(2), mb.group(3), mb.group(4)
+            title = mb.group(5).strip().replace("**", "").strip()
+            is_judge_group = ("（判断组）" in s or "判断题组" in s)
+            # 独立判断题（题型段=判断）也识别为判断
+            is_judge = is_judge_group or (qtype_zh == "判断")
+            is_multi = (qtype_zh == "多选")
             mat = "\n".join(material) if material else ""
             passage = "\n".join(passage_text) if (is_cloze_passage and passage_text) else ""
             # 注意：不清空 material，使 Passage 材料持续附给该 Passage 下的所有题目
             cur = {
-                "id": "%s-%s" % (qtype, no),
+                "id": "%s-%s-%s-%03d" % (qtype, subject_zh, qtype_zh, int(num)),
                 "来源": qtype,
                 "专题": topic,
-                "题型": "多选" if is_multi else ("判断" if is_judge else "单选"),
+                "题型": qtype_zh,
                 "材料": mat,
                 "passage": passage,
                 "题目": title,
