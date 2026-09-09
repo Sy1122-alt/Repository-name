@@ -250,7 +250,7 @@ SUBJECT_CHAPTER_RULES = {
         (["存储空间", "汉字", "U 盘", "可存放"], "01-计算机基础知识"),
         (["子网", "掩码"], "06-计算机网络"),
         (["输入又是输出", "触摸屏", "截图", "PrintScreen"], "02-操作系统"),
-        (["数据库", "SQL", "关系模型", "大数据"], "10-程序设计基础"),
+        (["数据库", "SQL", "关系模型", "大数据", "DESC", "GROUP BY", "查询结果"], "10-程序设计基础"),
         (["ENIAC", "电子管", "补码", "浮点数", "尾数", "无符号", "总线"], "01-计算机基础知识"),
         (["物联网", "云计算", "数字素养", "图灵", "二分查找"], "09-数据结构与算法"),
         (["主频", "数据模型", "DeepSeek", "编码", "采样", "量化", "ASCII", "GB2312", "GBK", "UTF-8"], "01-计算机基础知识"),
@@ -284,18 +284,21 @@ SUBJECT_CHAPTER_RULES["英语"] = [
 # 高数：按知识点关键词细分章节
 SUBJECT_CHAPTER_RULES["高数"] = [
     (["定义域", "ln", "极限"], "01-函数与极限"),
+    (["微分方程", "通解", "满足 y(0)", "y'=2y"], "06-微分方程"),
+    (["中值", "罗尔", "拉格朗日", "不等式证明", "恒等式", "至少有一个"], "03-中值定理与导数应用"),
+    (["最值", "最大", "最小", "用料", "容积", "利润", "边际", "造价", "费用"], "03-中值定理与导数应用"),
+    (["极值", "拐点", "凹凸", "单调", "渐近线", "极小值", "极大值", "凸区间", "凹区间"], "03-中值定理与导数应用"),
+    (["面积", "围成", "旋转体"], "05-定积分及其应用"),
     (["一元函数微分学", "导数", "切线", "单调", "极值"], "02-导数与微分"),
     (["一元函数积分学", "不定积分", "定积分"], "04-不定积分"),
-    (["中值", "罗尔", "拉格朗日", "不等式证明"], "03-中值定理与导数应用"),
-    (["最值", "最大", "最小", "用料", "容积", "利润", "边际", "造价", "费用"], "03-中值定理与导数应用"),
-    (["面积", "围成", "旋转体"], "05-定积分及其应用"),
-    (["极限", "间断"], "01-函数与极限"),
-    (["导数", "微分", "切线", "法线"], "02-导数与微分"),
-    (["不定积分", "原函数"], "04-不定积分"),
-    (["微分方程", "通解"], "06-微分方程"),
-    (["偏导", "多元", "二重积分"], "07-多元函数微积分"),
-    (["级数", "收敛", "发散"], "08-无穷级数"),
-    (["行列式", "矩阵", "线性方程", "向量", "特征值"], "09-线性代数"),
+    (["极限", "间断", "无穷小", "无穷大", "等价", "奇函数", "\\begin{cases}", "f[f", "f\\left", "f(x-"], "01-函数与极限"),
+    (["\\lim", "\\to"], "01-函数与极限"),
+    (["导数", "微分", "切线", "法线", "求导", "参数方程", "f'", "y'=", "dy=", "\\frac{dy}{dx}", "\\dfrac{dy}{dx}"], "02-导数与微分"),
+    (["不定积分", "原函数", "\\int"], "04-不定积分"),
+    (["偏导", "多元", "二重积分", "隐函数", "驻点", "二元函数", "矩形区域", "dz=", "dz|", "dz}{", "\\partial", "\\iint"], "07-多元函数微积分"),
+    (["空间", "平面方程", "点到平面", "距离", "对称点", "yOz", "xOy", "xOz"], "07-多元函数微积分"),
+    (["级数", "收敛", "发散", "麦克劳林", "展开式", "幂级数", "\\sum"], "08-无穷级数"),
+    (["行列式", "矩阵", "线性方程", "向量", "特征值", "方阵", "可逆", "\\begin{pmatrix}", "\\begin{vmatrix}"], "09-线性代数"),
 ]
 
 
@@ -396,11 +399,12 @@ def parse_tiku(path, subject):
                 is_cloze_passage = False
             continue
         # 完形Passage正文续行累积
-        if is_cloze_passage and passage_text and not re.match(r"^\*\*(真题|练习|自编|多选|模拟卷)", s) and not s.lstrip().startswith("-"):
+        if is_cloze_passage and passage_text and not re.match(r"^\*\*(真题|练习|自编|多选|模拟卷)", s) and not s.lstrip().startswith("-") and not re.match(r"^#{1,4}\s", s):
+
             passage_text.append(s)
             continue
         # 材料累积（仅当正在读 Passage 时，且只累积不以"-"开头的正文续行，避免吞掉选项/答案/来源行）
-        if material and not re.match(r"^\*\*(真题|练习|自编|多选|模拟卷)", s) and not s.lstrip().startswith("-"):
+        if material and not re.match(r"^\*\*(真题|练习|自编|多选|模拟卷)", s) and not s.lstrip().startswith("-") and not re.match(r"^#{1,4}\s", s):
             material.append(s)
             continue
         # 题目块起始
@@ -463,10 +467,10 @@ def parse_tiku(path, subject):
                     cur["选项"] = opts
             continue
         # 答案行（可能同行带解析，用全角空格/“解析”分隔）
-        if cur is not None and "答案" in s and (s.startswith("- 答案") or s.startswith("- **答案")):
+        if cur is not None and ("答案" in s or "参考译文" in s or "参考范文" in s) and (s.startswith("- 答案") or s.startswith("- **答案") or s.startswith("- **参考译文") or s.startswith("- **参考范文")):
             body = s.lstrip("- ").strip()
             body = body.replace("**", "")
-            m = re.match(r"^答案(参考)?\s*[:：]?\s*(.*)$", body, flags=re.S)
+            m = re.match(r"^(?:答案(?:参考)?|参考译文|参考范文)(\s*[:：]?\s*)(.*)$", body, flags=re.S)
             if m:
                 rest = m.group(2)
                 # 答案与解析常同行："D**　解析：…"
@@ -500,13 +504,19 @@ def parse_tiku(path, subject):
             cur["来源"] = re.sub(r"^-\s*来源\s*[:：]\s*", "", s).strip()
             cur["_pending"] = None
             continue
-        # 标题行（#/##/###/#### 开头）：作为题目块的结束，flush当前题目
-        if re.match(r"^#{1,4}\s", s) and cur is not None:
-            if cur.get("_proof_mode"):
-                del cur["_proof_mode"]
-            cur["_pending"] = None
-            flush()
-            cur = None
+        # 标题行（#/##/###/#### 开头）：作为题目块的结束，flush当前题目，并清空阅读材料
+        # （避免新章节的作文/翻译正文被误当作 Passage 材料累积）
+        if re.match(r"^#{1,4}\s", s):
+
+            if cur is not None:
+                if cur.get("_proof_mode"):
+                    del cur["_proof_mode"]
+                cur["_pending"] = None
+                flush()
+                cur = None
+            material = []
+            passage_text = []
+            is_cloze_passage = False
             continue
         # 其余行：若正处于答案/解析续行模式则续到对应字段，否则追加到题干（多行材料/续行）
         if cur is not None:
