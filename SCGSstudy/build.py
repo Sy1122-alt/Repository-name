@@ -193,6 +193,10 @@ def quality_check():
                 if not letters or any(ord(letter) - 65 >= len(options) for letter in letters):
                     add_issue(subject, "error", "题库.md", "选项数量与答案不匹配", label)
             if item.get("章节") == DEFAULT_CHAPTER:
+                # 综合卷类专题（真题/模拟卷/专项/操作题/简答/Office 综合）归"综合"属预期，不提示
+                _tp = item.get("专题") or ""
+                if any(k in _tp for k in ("真题", "模拟卷", "专项", "操作", "简答", "Office")):
+                    continue
                 add_issue(subject, "warning", "题库.md", "未能自动归类章节", label)
 
         report["subjects"].append({
@@ -234,11 +238,46 @@ CHAPTER_MAP = {
         "编码": "01-计算机基础知识",
         "判断对错": "01-计算机基础知识",
         "计算机基础知识": "01-计算机基础知识",
+        "基础知识": "01-计算机基础知识",
+        "Windows": "02-操作系统",
+        "Word": "03-Word 文字处理",
+        "Excel": "04-Excel 电子表格",
+        "PowerPoint": "05-PowerPoint 演示文稿",
+        "网络": "06-计算机网络",
+        "Internet": "06-计算机网络",
+        "安全": "07-信息安全与病毒",
+        "多媒体": "07-信息安全与病毒",
+        "数据库": "10-程序设计基础",
     },
     "英语": {
         "词汇与语法": "02-语法",
+        "词汇辨析": "01-词汇与词组",
         "阅读理解": "03-阅读理解",
+        "完形": "04-完形填空",
+        "时态": "02-语法",
+        "从句": "02-语法",
+        "非谓语": "02-语法",
+        "虚拟": "02-语法",
+        "情态": "02-语法",
+        "交际": "02-语法",
         "写作模板": "06-写作",
+    },
+    "高数": {
+        "极限": "01-函数与极限",
+        "一元微分": "02-导数与微分",
+        "导数": "02-导数与微分",
+        "中值": "03-中值定理与导数应用",
+        "一元积分": "04-不定积分",
+        "不定积分": "04-不定积分",
+        "定积分": "05-定积分及其应用",
+        "积分": "04-不定积分",
+        "多元函数": "07-多元函数微积分",
+        "二重积分": "07-多元函数微积分",
+        "无穷级数": "08-无穷级数",
+        "级数": "08-无穷级数",
+        "常微分方程": "06-微分方程",
+        "微分方程": "06-微分方程",
+        "线性代数": "09-线性代数",
     },
 }
 DEFAULT_CHAPTER = "99-综合"
@@ -339,6 +378,26 @@ def split_options(line):
     return opts
 
 
+def clean_topic_title(raw):
+    """`## ` 二级标题 → 专题名。
+    例：'专题一 · 进制转换（高频必考）'→'进制转换'；'2023年真题（四川省专升本统考·计算机基础）'→'2023年真题'；
+        '库课模拟卷-计算机-基础1（单选）'→'库课模拟卷-计算机-基础1'（单选/多选两行自动合并）；
+        '库课模拟卷·基础检测卷（一）改编版·高等数学'→'库课模拟卷·基础检测卷'（同卷多套合并）；
+        '自编计算机题（Windows操作系统）'→'自编计算机题（Windows操作系统）'（自编分类括号保留）。
+    """
+    t = re.sub(r"^专题[^\s\u00b7]*\s*[\u00b7]?\s*", "", raw).strip()
+    if not t:
+        return "综合"
+    if t.startswith("自编"):
+        return t
+    # 高数库课模拟卷：去卷号括号（一）（二）…与"改编版·高等数学"后缀
+    t = re.sub(r"[（(][一二三四五六七八九十]+[）)]", "", t)
+    t = re.sub(r"改编版·高等数学$", "", t)
+    # 去其余括号修饰（年份说明/单选多选/高频必考等）
+    t = re.sub(r"[（(].*$", "", t).strip()
+    return t or "综合"
+
+
 def parse_tiku(path, subject):
     """解析学科根目录《题库.md》为题目列表（用于刷题页）。"""
     if not path.exists():
@@ -370,18 +429,18 @@ def parse_tiku(path, subject):
         s = raw.strip()
         if not s:
             continue
-        # 专题标题（去掉序号与括号修饰，如"专题一 · 进制转换（高频必考）"→"进制转换"）
-        mt = re.match(r"^##\s*专题[^\s·]*\s*[·]?\s*(.*)$", s)
+        # 附录标题：结束当前题目块，避免附录内容被吞进最后一题（必须在专题匹配之前）
+        if s.startswith("## 附") or s.startswith("附："):
+            flush()
+            continue
+        # 二级标题 → 专题边界（2023年真题/库课模拟卷/自编题等均成为独立专题，避免被吞进大专题）
+        mt = re.match(r"^##\s+(.+)$", s)
         if mt:
             flush()
-            topic = re.sub(r"[（(].*$", "", mt.group(1)).strip() or "综合"
+            topic = clean_topic_title(mt.group(1))
             continue
         # 表格 / 引用说明 / 分隔线 / 代码块 跳过
         if s.startswith("|") or s.startswith(">") or s.startswith("---") or s.startswith("```"):
-            continue
-        # 附录标题：结束当前题目块，避免附录内容被吞进最后一题
-        if s.startswith("## 附") or s.startswith("附："):
-            flush()
             continue
         # 阅读材料：**Passage（标题）**：内容
         mp = re.match(r"^\*\*Passage[（(]([^）)]*)[）)]\*\*(.*)$", s)
