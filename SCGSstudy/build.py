@@ -240,6 +240,7 @@ CHAPTER_MAP = {
         "计算机基础知识": "01-计算机基础知识",
         "基础知识": "01-计算机基础知识",
         "Windows": "02-操作系统",
+        "操作系统": "02-操作系统",
         "Word": "03-Word 文字处理",
         "Excel": "04-Excel 电子表格",
         "PowerPoint": "05-PowerPoint 演示文稿",
@@ -248,6 +249,7 @@ CHAPTER_MAP = {
         "安全": "07-信息安全与病毒",
         "多媒体": "07-信息安全与病毒",
         "数据库": "10-程序设计基础",
+        "数据结构": "09-数据结构与算法",
     },
     "英语": {
         "词汇与语法": "02-语法",
@@ -378,6 +380,51 @@ def split_options(line):
     return opts
 
 
+# 模拟卷等综合卷题目：按题干内容关键词归入知识点专题（专题名不体现来源）
+TOPIC_CONTENT_RULES = {
+    "高数": [
+        ([r"\lim", r"\to", "极限", "间断", "无穷小", "无穷大", "等价", "数列", "收敛子列", "定义域"], "极限与连续"),
+        ([r"\int", "不定积分", "原函数", "定积分", "变上限", "面积", "旋转体", "广义积分"], "一元函数积分学"),
+        ([r"\iint", "二重积分", "偏导", "多元", "隐函数", "驻点", "全微分", r"\partial", "空间", "平面方程", "点到平面", "对称点"], "多元函数与二重积分"),
+        (["级数", "收敛", "发散", "麦克劳林", "幂级数", r"\sum", "正项级数"], "无穷级数"),
+        (["微分方程", "通解", "可分离变量", "一阶线性", "特征方程", "y'=", "y''"], "常微分方程"),
+        (["行列式", "矩阵", "向量", "特征值", "线性方程", "可逆", r"\begin{pmatrix}", r"\begin{vmatrix}", "秩"], "线性代数"),
+        (["导数", "微分", "切线", "法线", "求导", "参数方程", "f'", "dy=", "极值", "拐点", "凹凸", "单调", "渐近线", "中值", "罗尔", "拉格朗日"], "一元函数微分学"),
+    ],
+    "计算机": [
+        (["进制", "二进制", "十进制", "八进制", "十六进制", "转换为"], "进制转换"),
+        (["ASCII", "GB2312", "GBK", "UTF-8", "编码", "汉字", "存储", "单位", "KB", "MB", "GB", "字节", "位"], "编码、单位与存储"),
+        (["Word", "文字处理", "文档", "段落", "字体", "页码", "页眉"], "Word 文字处理"),
+        (["Excel", "电子表格", "单元格", "工作表", "函数", "公式"], "Excel 电子表格"),
+        (["PowerPoint", "PPT", "演示文稿", "幻灯片", "放映", "讲义"], "PowerPoint 演示文稿"),
+        (["网络", "IP", "域名", "拓扑", "子网", "协议", "Internet", "上网", "浏览器"], "网络与Internet"),
+        (["病毒", "安全", "加密", "防火墙", "木马", "黑客", "杀毒"], "安全与多媒体"),
+        (["数据库", "SQL", "关系模型", "大数据", "数据模型"], "数据库与新技术"),
+        (["栈", "队列", "二叉树", "排序", "算法", "数据结构", "链表", "查找"], "数据结构与算法"),
+        (["操作系统", "Windows", "进程", "文件", "虚拟内存", "回收站", "窗口", "桌面", "任务栏"], "操作系统"),
+    ],
+    "英语": [
+        (["完形", "Cloze"], "完形填空"),
+        (["Passage", "passage", "阅读", "短文"], "阅读理解"),
+        (["翻译", "汉译", "英译", "Translation"], "翻译"),
+        (["写作", "作文", "Writing"], "写作"),
+    ],
+}
+
+
+def topic_from_content(subject, item):
+    """综合卷题目按题干内容关键词推断知识点专题；兜底：英语→词汇与语法，其余→综合。"""
+    hay = (item.get("题目") or "") + " " + (item.get("材料") or "") + " " + (item.get("解析") or "")
+    for kws, tp in TOPIC_CONTENT_RULES.get(subject, []):
+        if any(k in hay for k in kws):
+            return tp
+    if subject == "英语":
+        return "词汇与语法"
+    if subject == "计算机":
+        return "计算机基础知识"
+    return "综合"
+
+
 def clean_topic_title(raw):
     """`## ` 二级标题 → 专题名。
     例：'专题一 · 进制转换（高频必考）'→'进制转换'；'2023年真题（四川省专升本统考·计算机基础）'→'2023年真题'；
@@ -388,9 +435,10 @@ def clean_topic_title(raw):
     t = re.sub(r"^专题[^\s\u00b7]*\s*[\u00b7]?\s*", "", raw).strip()
     if not t:
         return "综合"
-    if t.startswith("自编"):
-        return t
-    # 高数库课模拟卷：去卷号括号（一）（二）…与"改编版·高等数学"后缀
+    # 特例：专题一名统一（"词汇与语法结构"≡"词汇与语法"）
+    if t.startswith("词汇与语法结构"):
+        return "词汇与语法"
+    # 高数库课模拟卷：去卷号括号（一）（二）…与"改编版·高等数学"后缀（兼容旧标题）
     t = re.sub(r"[（(][一二三四五六七八九十]+[）)]", "", t)
     t = re.sub(r"改编版·高等数学$", "", t)
     # 去其余括号修饰（年份说明/单选多选/高频必考等）
@@ -405,17 +453,23 @@ def parse_tiku(path, subject):
     text = read_clean(path)
     items = []
     topic = "综合"
+    content_mode = False   # 模拟卷等综合卷标题后：题目按题干内容归类
+    content_topic = None   # 标注段强制专题（如模拟卷（阅读）→"阅读理解"）
     material = []          # 阅读材料累积
     passage_text = []      # 完形填空完整原文累积
     is_cloze_passage = False
     cur = None
 
     def flush():
-        nonlocal cur
+        nonlocal cur, topic, content_mode, content_topic
         if cur is not None and not cur.get("判断题组"):
             cur.pop("_pending", None)
             cur.pop("_proof_mode", None)
             if cur.get("材料") or cur.get("题目") or cur.get("选项"):
+                if content_mode:
+                    cur["专题"] = content_topic or topic_from_content(subject, cur)
+                else:
+                    cur["专题"] = topic
                 # 推断考点（仅高数）
                 if subject == "高数" and not cur.get("考点"):
                     text_for_kd = cur.get("题目", "") + " " + cur.get("材料", "") + " " + cur.get("解析", "") + " " + cur.get("答案", "")
@@ -433,11 +487,19 @@ def parse_tiku(path, subject):
         if s.startswith("## 附") or s.startswith("附："):
             flush()
             continue
-        # 二级标题 → 专题边界（2023年真题/库课模拟卷/自编题等均成为独立专题，避免被吞进大专题）
+        # 二级标题 → 专题边界（真题按年份、知识点按内容；库课模拟卷/模拟卷精选不设边界，题目按内容归类）
         mt = re.match(r"^##\s+(.+)$", s)
         if mt:
             flush()
-            topic = clean_topic_title(mt.group(1))
+            raw = mt.group(1)
+            if "模拟卷" in raw or raw.startswith("自编"):
+                # 模拟卷/自编：不设专题边界，题目按内容归类（专题名=知识点，不体现来源）
+                content_mode = True
+                content_topic = "阅读理解" if "（阅读）" in raw else None
+                continue
+            topic = clean_topic_title(raw)
+            content_mode = False
+            content_topic = None
             continue
         # 表格 / 引用说明 / 分隔线 / 代码块 跳过
         if s.startswith("|") or s.startswith(">") or s.startswith("---") or s.startswith("```"):
