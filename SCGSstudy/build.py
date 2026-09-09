@@ -514,9 +514,21 @@ def parse_tiku(path, subject):
         it["答案"] = it["答案"] or "见解析"
         if not it["选项"]:
             it["选项"] = []
-            # 无选项的计算/简答/证明题：题型归为"简答"
             if it["题型"] == "单选":
-                it["题型"] = "简答"
+                # 根据题目ID/标题关键词细分题型
+                qid = it.get("id", "")
+                title = it.get("题目", "")
+                combined = qid + " " + title
+                if "证明" in combined:
+                    it["题型"] = "证明"
+                elif "应用" in combined:
+                    it["题型"] = "应用"
+                elif "填空" in combined:
+                    it["题型"] = "填空"
+                elif "计算" in combined:
+                    it["题型"] = "计算"
+                else:
+                    it["题型"] = "简答"
     return items
 
 
