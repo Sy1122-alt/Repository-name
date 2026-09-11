@@ -534,16 +534,16 @@ def parse_tiku(path, subject):
                 is_cloze_passage = False
             continue
         # 完形Passage正文续行累积
-        if is_cloze_passage and passage_text and not re.match(r"^\*\*(真题|练习|自编|多选|模拟卷)", s) and not s.lstrip().startswith("-") and not re.match(r"^#{1,4}\s", s):
+        if is_cloze_passage and passage_text and not re.match(r"^\*\*(真题|练习|自编|多选|模拟卷|通关|站长错题)", s) and not s.lstrip().startswith("-") and not re.match(r"^#{1,4}\s", s):
 
             passage_text.append(s)
             continue
         # 材料累积（仅当正在读 Passage 时，且只累积不以"-"开头的正文续行，避免吞掉选项/答案/来源行）
-        if material and not re.match(r"^\*\*(真题|练习|自编|多选|模拟卷)", s) and not s.lstrip().startswith("-") and not re.match(r"^#{1,4}\s", s):
+        if material and not re.match(r"^\*\*(真题|练习|自编|多选|模拟卷|通关|站长错题)", s) and not s.lstrip().startswith("-") and not re.match(r"^#{1,4}\s", s):
             material.append(s)
             continue
         # 题目块起始（新编号格式：**类别-科目-题型-序号.** 或 **…-序号（判断组）.**）
-        mb = re.match(r"^\*\*(真题|练习)[\s\-]*(计算机|高数|英语)[\s\-]*(单选|多选|判断|填空|计算|证明|应用|简答)[\s\-]*(\d+)(?:-(\d+))?\s*(?:（判断组）)?[.、]?\s*\*\*\s*(.*)$", s)
+        mb = re.match(r"^\*\*(真题|练习|自编|模拟卷|通关|站长错题)[\s\-]*(计算机|高数|英语)[\s\-]*(单选|多选|判断|填空|计算|证明|应用|简答)[\s\-]*(\d+)(?:-(\d+))?\s*(?:（判断组）)?[.、]?\s*\*\*\s*(.*)$", s)
         if mb:
             flush()
             qtype, subject_zh, qtype_zh, num, sub_num = mb.group(1), mb.group(2), mb.group(3), mb.group(4), mb.group(5)
