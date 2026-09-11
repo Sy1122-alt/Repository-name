@@ -1,150 +1,297 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN">
+
 <head>
+
 <meta charset="utf-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>高等数学 · 题库刷题</title>
+
 <style>
+
 :root{--accent:#94D8C3;--accent-d:#33475C;--text:#1A1B1C;--sub:#6B7280;--bg:#F4F3EE;--card:#FFFFFF;--border:#E4E3DD;}
+
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+
 body{font-family:'Roboto','PingFang SC','Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);padding:16px;line-height:1.6;}
+
 .wrap{max-width:760px;margin:0 auto;}
+
 h1{font-size:20px;font-weight:700;margin-bottom:2px;}
+
 .back{font-size:12px;color:var(--sub);text-decoration:none;display:inline-block;margin-bottom:6px;}
+
 .sub{font-size:12px;color:var(--sub);margin-bottom:12px;}
+
 .stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+
 .stat{flex:1 1 110px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:9px 12px;}
+
 .stat .n{font-size:18px;font-weight:700;}
+
 .stat .l{font-size:11px;color:var(--sub);}
+
 .stat.hot{border-color:var(--accent);}
+
 .toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+
 .toolbar select,.toolbar button{font-size:13px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);cursor:pointer;}
+
 .toolbar button.primary{background:var(--accent-d);color:#fff;border-color:var(--accent-d);font-weight:600;}
+
 .toolbar button.on{background:var(--accent);border-color:var(--accent);color:#1A1B1C;font-weight:600;}
+
 .toolbar button.danger{background:rgba(234,102,104,0.14);border-color:#EA6668;color:#B44244;font-weight:600;}
+
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;}
+
 .meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px;}
+
 .tag{font-size:11px;padding:2px 8px;border-radius:10px;background:var(--accent);color:#22304A;}
+
 .tag.qid{background:rgba(0,0,0,0.06);color:var(--sub);}
+
 .tag.src{background:rgba(0,0,0,0.05);color:var(--sub);}
+
 .material{background:rgba(0,0,0,0.035);border-left:3px solid var(--accent);padding:10px 12px;border-radius:0 8px 8px 0;margin-bottom:10px;font-size:13px;white-space:pre-wrap;}
+
 .word-clickable{cursor:pointer;border-bottom:1px dashed #9BBBF4;color:#2B5A9E;padding:0 1px;border-radius:2px;transition:background .15s;}
+
 .word-clickable:hover{background:rgba(155,187,244,0.18);}
+
 .word-clickable.word-saved{background:rgba(234,167,178,0.18);border-bottom-color:#EAA7B2;color:#B44244;}
+
 .qtext{font-size:15px;font-weight:600;margin-bottom:10px;white-space:pre-wrap;}
+
 .opts{list-style:none;margin-bottom:10px;}
+
 .opts li{font-size:13.5px;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;margin-bottom:8px;background:#FBFBF8;cursor:pointer;transition:all .18s ease;position:relative;user-select:none;-webkit-tap-highlight-color:transparent;}
+
 .opts li:active{transform:scale(0.97);}
+
 .opts li:hover{border-color:var(--accent);background:rgba(155,187,244,0.06);}
+
 .opts li.sel{border-color:var(--accent-d);background:rgba(0,0,0,0.04);}
+
 .opts li.right{border-color:#52C41A;background:rgba(82,196,26,0.12);animation:pulse .5s ease;}
+
 .opts li.wrong{border-color:#EA6668;background:rgba(234,102,104,0.10);animation:shake .4s ease;}
+
 .opts li .opt-letter{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:rgba(0,0,0,0.06);font-weight:700;font-size:12px;margin-right:8px;flex:0 0 auto;}
+
 .opts li.sel .opt-letter{background:var(--accent-d);color:#fff;}
+
 .opts li.right .opt-letter{background:#52C41A;color:#fff;}
+
 .opts li.wrong .opt-letter{background:#EA6668;color:#fff;}
+
 @keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-6px);}40%{transform:translateX(6px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}}
+
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(82,196,26,0.4);}70%{box-shadow:0 0 0 10px rgba(82,196,26,0);}100%{box-shadow:0 0 0 0 rgba(82,196,26,0);}}
+
 .answer{display:none;border-left:3px solid var(--accent-d);background:rgba(155,187,244,0.10);padding:10px 12px;border-radius:0 8px 8px 0;margin-bottom:10px;font-size:13.5px;white-space:pre-wrap;}
+
 .answer .k{font-weight:700;color:var(--accent-d);}
+
 .feedback{display:none;font-size:13.5px;font-weight:600;margin-bottom:10px;padding:8px 12px;border-radius:8px;}
+
 .feedback.ok{background:rgba(82,196,26,0.12);color:#3E8C13;}
+
 .feedback.no{background:rgba(234,102,104,0.10);color:#B44244;}
+
 .btns{display:flex;gap:8px;flex-wrap:wrap;}
+
 .btns button{font-size:13px;padding:8px 14px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--text);cursor:pointer;}
+
 .btns button.g{background:rgba(82,196,26,0.14);border-color:#52C41A;color:#3E8C13;font-weight:600;}
+
 .btns button.r{background:rgba(234,102,104,0.12);border-color:#EA6668;color:#B44244;font-weight:600;}
+
 .btns button.d{background:rgba(250,173,20,0.16);border-color:#FAAD14;color:#8A5B00;font-weight:600;}
+
 .nav{display:flex;justify-content:space-between;gap:8px;margin-top:12px;}
+
 .nav button{font-size:13px;padding:8px 14px;border:1px solid var(--border);border-radius:8px;background:var(--card);cursor:pointer;}
+
 .basket{background:var(--card);border:1px dashed var(--accent);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
+
 .basket .bt{font-size:13px;font-weight:700;margin-bottom:8px;}
+
 .basket .blist{font-size:12.5px;color:var(--text);}
+
 .basket .blist div{display:flex;gap:8px;align-items:flex-start;margin-bottom:4px;}
+
 .basket .blist span{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
 .basket .blist button{font-size:11px;padding:2px 8px;border:1px solid var(--border);border-radius:6px;background:#fff;cursor:pointer;color:var(--sub);}
+
 .basket .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+
 .basket .actions button{font-size:13px;padding:7px 12px;border:1px solid var(--border);border-radius:8px;cursor:pointer;}
+
 .basket .actions .exp{background:var(--accent-d);color:#fff;border-color:var(--accent-d);font-weight:600;}
+
 .expout{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
+
 .expout textarea{width:100%;min-height:150px;font-family:Consolas,monospace;font-size:12px;border:1px solid var(--border);border-radius:8px;padding:10px;background:#FBFBF8;color:var(--text);}
+
   .similar{border-top:1px solid var(--border);margin-top:10px;padding-top:10px;font-size:12px;color:var(--sub);}
+
   .similar a{display:block;color:var(--accent-d);text-decoration:none;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;min-width:0;}
+
 #toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#33475C;color:#fff;font-size:13px;padding:10px 18px;border-radius:10px;max-width:88vw;box-shadow:0 4px 16px rgba(0,0,0,0.18);z-index:99;display:none;line-height:1.5;}
+
 .empty{text-align:center;color:var(--sub);font-size:13px;padding:30px 10px;background:var(--card);border:1px dashed var(--border);border-radius:14px;}
+
 .hint{font-size:11.5px;color:var(--sub);margin-top:12px;line-height:1.7;}
+
 .math-inline{display:inline-block;vertical-align:middle;}
+
 /* 移动端适配 */
+
 @media (max-width:480px){
+
   .toolbar select,.toolbar button{min-height:44px;font-size:14px;}
+
   .opts li{min-height:44px;display:flex;align-items:center;font-size:14px;padding:10px 12px;}
+
   .btns button{min-height:44px;font-size:14px;}
+
   .nav button{min-height:44px;font-size:14px;}
+
   .basket .actions button{min-height:44px;}
+
   .similar a{min-height:40px;padding:8px 10px;}
+
   .qtext{font-size:16px;}
+
 }
+
 </style>
+
 <link rel="stylesheet" href="../SCGSstudy/katex/katex.min.css">
+
 </head>
+
 <body>
+
 <div class="wrap">
+
   <a class="back" href="../SCGSstudy/index.html">‹ 返回错题本总入口</a>
+
   <h1>高等数学 · 题库刷题</h1>  <div class="sub">数据源：同目录《题库.md》 · 做错一键入篮，一键存入《错题本.md》</div>
 
+
+
   <div class="stats">
+
     <div class="stat"><div class="n" id="nTotal">0</div><div class="l">题库总题</div></div>
+
     <div class="stat"><div class="n" id="nDone">0</div><div class="l">已完成</div></div>
+
     <div class="stat"><div class="n" id="nLeft">0</div><div class="l">本组待做</div></div>
+
     <div class="stat hot"><div class="n" id="nBasket">0</div><div class="l">错题篮子</div></div>
+
   </div>
 
+
+
   <div class="toolbar">
+
     <select id="selTopic"><option value="">全部专题</option></select>
+
     <select id="selKaodian" style="display:none;"><option value="">全部考点</option></select>
+
     <button id="btnShuffle" class="primary">随机抽题</button>
+
     <button id="btnOrder">顺序浏览</button>
+
     <button id="btnKey">重点题</button>
+
     <button id="btnUndone">只看未做</button>
+
     <button id="btnBasket">错题篮子</button>
+
     <button id="btnReset">重置进度</button>
+
     <button id="btnClozeMode" style="display:none;background:#EAA7B2;color:#fff;">完形全文：关</button>
+
   </div>
+
+
 
   <div id="card"></div>
 
+
+
   <div class="basket" id="basketBox">
+
     <div class="bt">错题篮子（做错的题会进这里，可一键存入错题本）</div>
+
     <div class="blist" id="basketList"></div>
+
     <div class="actions">
+
       <button class="exp" id="btnExport">存入错题本</button>
+
       <button id="btnClearBasket">清空篮子</button>
+
     </div>
+
   </div>
+
+
 
   <div class="expout" id="expBox" style="display:none;">
+
     <div class="sub" style="margin-bottom:6px;">当前页面不是从“启动错题本”打开，无法直接写入文件。请复制以下内容，粘贴到本学科《错题集\SCGSstudy.md》末尾：</div>
+
     <textarea id="expText" readonly></textarea>
+
   </div>
+
+
 
   <div id="toast"></div>
+
   <div id="passageModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:9999;justify-content:center;align-items:center;padding:20px;">
+
     <div style="background:#fff;border-radius:16px;max-width:700px;width:100%;max-height:85vh;overflow-y:auto;padding:24px;position:relative;">
+
       <button id="passageClose" aria-label="关闭全文" style="position:absolute;top:12px;right:16px;font-size:22px;cursor:pointer;color:#999;line-height:1;background:none;border:none;padding:6px;">×</button>
+
       <h3 style="margin-bottom:14px;font-size:16px;">📖 完形填空 · 本篇全文</h3>
+
       <div id="passageContent" style="font-size:14px;line-height:1.8;color:#333;white-space:pre-wrap;"></div>
+
       <div style="margin-top:16px;font-size:12px;color:#999;">💡 点击文中蓝色单词可加入生词本</div>
+
     </div>
+
   </div>
+
+
 
   <div class="hint">
+
     操作：看题 → 点选答案判对错（或点「显示答案」）→ 按结果点「做对了」或「做错了·记入错题」→ 攒够一批点「存入错题本」。从“启动错题本”打开时，系统会自动写入并更新复习页。<br>
+
     章节、序号、选项格式已自动生成；直接双击 HTML 打开时仍可导出文本作为兼容方案。
+
   </div>
+
 </div>
 
+
+
 <script src="../SCGSstudy/katex/katex.min.js"></script>
+
 <script>
+
 window.__TIKU__ = [
  {
   "id": "真题-高数-单选-001",
@@ -19208,15 +19355,15 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "设 f(x) 的定义域是 [0,1]，则 f(x²-1) 的定义域为（ ）",
+  "题目": "设 f(x) 的定义域是 [0,1]，则 f($x^{2}$-1) 的定义域为（ ）",
   "选项": [
    "[0,1]",
-   "[1,√2]",
-   "[-√2,-1]",
-   "[-√2,-1]∪[1,√2]"
+   "[1,$\\sqrt{2}$]",
+   "[-$\\sqrt{2}$,-1]",
+   "[-$\\sqrt{2},-1]\\cup [1,\\sqrt{2}$]"
   ],
   "答案": "D",
-  "解析": "由0≤x²-1≤1，得1≤x²≤2，解得1≤x≤√2或-√2≤x≤-1，故选D。",
+  "解析": "由$0\\leq x^{2}-1\\leq 1$，得$1\\leq x^{2}\\leq 2$，解得$1\\leq x\\leq \\sqrt{2}$或-$\\sqrt{2}\\leq x\\leq -1$，故选D。",
   "考点": "1-1 函数的相关概念及性质",
   "章节": "01-函数与极限"
  },
@@ -19229,8 +19376,8 @@ window.__TIKU__ = [
   "passage": "",
   "题目": "若函数 f(2x+1)=e^x，则 f(x)=？",
   "选项": [],
-  "答案": "f(x)=e^((x-1)/2)",
-  "解析": "换元法，令t=2x+1，则x=(t-1)/2，f(t)=e^((t-1)/2)，换t为x即可。",
+  "答案": "f(x)=$e^{\\frac{(x-1)}{2}}$",
+  "解析": "换元法，令t=2x+1，则x=$\\frac{(t-1)}{2}$，f(t)=$e^{\\frac{(t-1)}{2}}$，换t为x即可。",
   "考点": "99-综合",
   "章节": "01-函数与极限"
  },
@@ -19243,8 +19390,8 @@ window.__TIKU__ = [
   "passage": "",
   "题目": "函数 y=2e^x+1 的反函数为？",
   "选项": [],
-  "答案": "y=ln((x-1)/2)，x∈(1,+∞)",
-  "解析": "由y=2e^x+1得e^x=(y-1)/2，取对数x=ln((y-1)/2)，对换x,y。原函数值域y>1，故反函数定义域x>1。",
+  "答案": "$y=\\ln(\\frac{(x-1)}{2}$)，$x\\in (1,+\\infty )$",
+  "解析": "由y=2e^x+1得e^x=$\\frac{(y-1)}{2}$，取对数$x=\\ln(\\frac{(y-1)}{2}$)，对换x,y。原函数值域y>1，故反函数定义域x>1。",
   "考点": "1-1 函数的相关概念及性质",
   "章节": "01-函数与极限"
  },
@@ -19255,10 +19402,10 @@ window.__TIKU__ = [
   "题型": "填空",
   "材料": "",
   "passage": "",
-  "题目": "函数 y=arcsin(3x/2) 的反函数为？",
+  "题目": "函数 $y=\\arcsin(\\frac{3x}{2}$) 的反函数为？",
   "选项": [],
-  "答案": "y=(2/3)sin x，x∈[-π/2,π/2]",
-  "解析": "由y=arcsin(3x/2)得3x/2=sin y，x=(2/3)sin y，对换x,y。原函数值域[-π/2,π/2]，故反函数定义域相同。",
+  "答案": "y=($\\frac{2}{3})\\sin$ x，$x\\in [-π/2,π/2]$",
+  "解析": "由$y=\\arcsin(\\frac{3x}{2}$)得$\\frac{3x}{2}=\\sin$ y，x=($\\frac{2}{3})\\sin$ y，对换x,y。原函数值域[-π/2,π/2]，故反函数定义域相同。",
   "考点": "1-1 函数的相关概念及性质",
   "章节": "01-函数与极限"
  },
@@ -19269,10 +19416,10 @@ window.__TIKU__ = [
   "题型": "填空",
   "材料": "",
   "passage": "",
-  "题目": "函数 f(x)=√(4-x²)+1/ln(cos x) 的定义域为？",
+  "题目": "函数 f(x)=$\\sqrt{4-x^{2}}$+$\\frac{1}{\\ln(\\cos x)}$ 的定义域为？",
   "选项": [],
-  "答案": "(-π/2,0)∪(0,π/2)",
-  "解析": "需4-x²≥0得|x|≤2；cos x>0得2kπ-π/2<x<2kπ+π/2；cos x≠1即x≠2kπ。综合得(-π/2,0)∪(0,π/2)。",
+  "答案": "$(-π/2,0)\\cup (0,π/2)$",
+  "解析": "需4-$x^{2}\\geq 0$得$|x|\\leq 2$；$\\cos$ x>0得2kπ-π/2<x<2kπ+π/2；$\\cos$ x≠1即x≠2kπ。综合得$(-π/2,0)\\cup (0,π/2)$。",
   "考点": "1-1 函数的相关概念及性质",
   "章节": "01-函数与极限"
  },
@@ -19283,10 +19430,10 @@ window.__TIKU__ = [
   "题型": "填空",
   "材料": "",
   "passage": "",
-  "题目": "求函数 y=2^x/(2^x+1) 的反函数。",
+  "题目": "求函数 y=$\\frac{2^x}{(2^x+1)}$ 的反函数。",
   "选项": [],
-  "答案": "y=log₂(x/(1-x))，x∈(0,1)",
-  "解析": "由y=2^x/(2^x+1)得2^x=y/(1-y)，x=log₂(y/(1-y))，对换x,y。原函数值域0<y<1。",
+  "答案": "$y=log_{2}(\\frac{x}{(1-x)}$)，$x\\in (0,1)$",
+  "解析": "由y=$\\frac{2^x}{(2^x+1)}$得2^x=$\\frac{y}{(1-y)}$，$x=log_{2}(\\frac{y}{(1-y)}$)，对换x,y。原函数值域0<y<1。",
   "考点": "1-1 函数的相关概念及性质",
   "章节": "01-函数与极限"
  },
@@ -19297,15 +19444,15 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "设函数 f(x) 的定义域是 [1,2]，则函数 f(x²) 的定义域是（ ）",
+  "题目": "设函数 f(x) 的定义域是 [1,2]，则函数 f($x^{2}$) 的定义域是（ ）",
   "选项": [
    "[1,2]",
-   "[1,√2]",
-   "[-√2,√2]",
-   "[-√2,-1]∪[1,√2]"
+   "[1,$\\sqrt{2}$]",
+   "[-$\\sqrt{2}$,$\\sqrt{2}$]",
+   "[-$\\sqrt{2},-1]\\cup [1,\\sqrt{2}$]"
   ],
   "答案": "D",
-  "解析": "1≤x²≤2，解得1≤x≤√2或-√2≤x≤-1。",
+  "解析": "$1\\leq x^{2}\\leq 2$，解得$1\\leq x\\leq \\sqrt{2}$或-$\\sqrt{2}\\leq x\\leq -1$。",
   "考点": "1-1 函数的相关概念及性质",
   "章节": "01-函数与极限"
  },
@@ -19318,8 +19465,8 @@ window.__TIKU__ = [
   "passage": "",
   "题目": "求函数 y=1+2tan(5x)（|x|<π/10）的反函数。",
   "选项": [],
-  "答案": "y=(1/5)arctan((x-1)/2)",
-  "解析": "由y=1+2tan(5x)得tan(5x)=(y-1)/2，5x=arctan((y-1)/2)，x=(1/5)arctan((y-1)/2)，对换x,y。",
+  "答案": "y=($\\frac{1}{5})\\arctan(\\frac{(x-1)}{2}$)",
+  "解析": "由y=1+2tan(5x)得$\\tan(5x)=\\frac{(y-1)}{2}$，$5x=\\arctan(\\frac{(y-1)}{2}$)，x=($\\frac{1}{5})\\arctan(\\frac{(y-1)}{2}$)，对换x,y。",
   "考点": "1-1 函数的相关概念及性质",
   "章节": "99-综合"
  },
@@ -19330,15 +19477,15 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "函数 f(x)>g(x)，且 lim(x→x₀)f(x)=a，lim(x→x₀)g(x)=b，则（ ）",
+  "题目": "函数 f(x)>g(x)，且 $\\lim_{x\\to x_{0}}$f(x)=a，$\\lim_{x\\to x_{0}}$g(x)=b，则（ ）",
   "选项": [
    "a>b",
-   "a≥b",
+   "$a\\geq b$",
    "|a|>|b|",
-   "|a|≥|b|"
+   "$|a|\\geq |b|$"
   ],
   "答案": "B",
-  "解析": "由保号性，f(x)>g(x)且极限存在，则a≥b（等号可能成立，如f(x)=x²+1,g(x)=1在x→0时）。",
+  "解析": "由保号性，f(x)>g(x)且极限存在，则$a\\geq b$（等号可能成立，如f(x)=$x^{2}$+1,g(x)=1在$x\\to 0$时）。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19349,7 +19496,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "下列函数在给定变化过程中是无穷小量的有（ ）个。\n(1) 2⁻ˣ-1（x→0）；(2) 2⁻ˣ（x→+∞）；(3) ln x（x→1）；(4) 1/(1+x²)（x→0）",
+  "题目": "下列函数在给定变化过程中是无穷小量的有（ ）个。\n(1) $2^{-}$ˣ-1（$x\\to 0$）；(2) $2^{-}$ˣ（$x\\to +\\infty $）；(3) $\\ln$ x（$x\\to 1$）；(4) $\\frac{1}{(1+x^{2})}$（$x\\to 0$）",
   "选项": [
    "0",
    "1",
@@ -19357,7 +19504,7 @@ window.__TIKU__ = [
    "3"
   ],
   "答案": "D",
-  "解析": "(1)lim(2⁻ˣ-1)=0；(2)x→+∞时2⁻ˣ→0；(3)lim ln x=0；(4)lim 1/(1+x²)=1≠0。共3个无穷小量。",
+  "解析": "(1)$\\lim_{2^{-}ˣ-1}$=0；$(2)x\\to +\\infty $时$2^{-}ˣ\\to 0$；(3)lim $\\ln$ x=0；(4)lim $\\frac{1}{(1+x^{2})}$=1≠0。共3个无穷小量。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19368,10 +19515,10 @@ window.__TIKU__ = [
   "题型": "填空",
   "材料": "",
   "passage": "",
-  "题目": "求 lim[1/(1×5)+1/(5×9)+1/(9×13)+…+1/((4n-3)(4n+1))]",
+  "题目": "求 lim[$\\frac{1}{(1\\times 5)}$+$\\frac{1}{(5\\times 9)}$+$\\frac{1}{(9\\times 13)}$+…+$\\frac{1}{((4n-3)(4n+1))}$]",
   "选项": [],
-  "答案": "1/4",
-  "解析": "裂项相消，1/[(4n-3)(4n+1)]=1/4·[1/(4n-3)-1/(4n+1)]，求和后=1/4(1-1/(4n+1))→1/4。",
+  "答案": "$\\frac{1}{4}$",
+  "解析": "裂项相消，$\\frac{1}{[(4n-3)(4n+1)]}$=$\\frac{1}{4}$·[$\\frac{1}{(4n-3)}$-$\\frac{1}{(4n+1)}$]，求和后=$\\frac{1}{4}$(1-$\\frac{1}{(4n+1)})\\to \\frac{1}{4}$。",
   "考点": "99-综合",
   "章节": "99-综合"
  },
@@ -19382,10 +19529,10 @@ window.__TIKU__ = [
   "题型": "填空",
   "材料": "",
   "passage": "",
-  "题目": "求 lim(1/3+1/15+…+1/(4n²-1))",
+  "题目": "求 lim($\\frac{1}{3}$+$\\frac{1}{15}$+…+$\\frac{1}{(4n^{2}-1)}$)",
   "选项": [],
-  "答案": "1/2",
-  "解析": "裂项相消，1/(4n²-1)=1/2·[1/(2n-1)-1/(2n+1)]，求和后=1/2(1-1/(2n+1))→1/2。",
+  "答案": "$\\frac{1}{2}$",
+  "解析": "裂项相消，$\\frac{1}{(4n^{2}-1)}$=$\\frac{1}{2}$·[$\\frac{1}{(2n-1)}$-$\\frac{1}{(2n+1)}$]，求和后=$\\frac{1}{2}$(1-$\\frac{1}{(2n+1)})\\to \\frac{1}{2}$。",
   "考点": "99-综合",
   "章节": "99-综合"
  },
@@ -19396,10 +19543,10 @@ window.__TIKU__ = [
   "题型": "计算",
   "材料": "",
   "passage": "",
-  "题目": "求 lim(x→0) (x-sin3x)/(x+sin3x)",
+  "题目": "求 $\\lim_{x\\to 0}$ $\\frac{(x-sin3x)}{(x+sin3x)}$",
   "选项": [],
-  "答案": "-1/2",
-  "解析": "分子分母同除以x，=(1-sin3x/x)/(1+sin3x/x)=(1-3)/(1+3)=-1/2。",
+  "答案": "-$\\frac{1}{2}$",
+  "解析": "分子分母同除以x，=$\\frac{(1-sin3x/x)}{(1+sin3x/x)}$=$\\frac{(1-3)}{(1+3)}$=-$\\frac{1}{2}$。",
   "考点": "99-综合",
   "章节": "99-综合"
  },
@@ -19410,10 +19557,10 @@ window.__TIKU__ = [
   "题型": "计算",
   "材料": "",
   "passage": "",
-  "题目": "求 lim(x→2) tan3(x-2)/sin2(x-2)",
+  "题目": "求 $\\lim_{x\\to 2}$ $tan3(x-2)/sin2(x-2)$",
   "选项": [],
-  "答案": "3/2",
-  "解析": "凑重要极限，=lim[tan3(x-2)/(3(x-2))]·[2(x-2)/sin2(x-2)]·3/2=1×1×3/2=3/2。",
+  "答案": "$\\frac{3}{2}$",
+  "解析": "凑重要极限，$=lim[tan3(x-2)/(3(x-2))]·[2(x-2)/sin2(x-2)]·\\frac{3}{2}$=1\\times 1\\times $\\frac{3}{2}$=$\\frac{3}{2}$。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19424,10 +19571,10 @@ window.__TIKU__ = [
   "题型": "计算",
   "材料": "",
   "passage": "",
-  "题目": "求 lim(x→0) (1-x²)^(1/x)",
+  "题目": "求 $\\lim_{x\\to 0}$ (1-$x^{2})^{\\frac{1}{x}}$",
   "选项": [],
   "答案": "1",
-  "解析": "拆为[(1+x)^(1/x)]⁻¹·(1-x)^(1/x)，=e⁻¹·e=1。",
+  "解析": "拆为[(1+x$)^{\\frac{1}{x}}]^{-1}$·(1-x$)^{\\frac{1}{x}}$，=$e^{-1}$·e=1。",
   "考点": "99-综合",
   "章节": "99-综合"
  },
@@ -19438,7 +19585,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "当x→0时，无穷小量x+sin x是x的（ ）",
+  "题目": "当$x\\to 0$时，无穷小量$x+\\sin$ x是x的（ ）",
   "选项": [
    "高阶无穷小量",
    "低阶无穷小量",
@@ -19446,7 +19593,7 @@ window.__TIKU__ = [
    "等价无穷小量"
   ],
   "答案": "C",
-  "解析": "lim(x+sin x)/x=lim(1+sin x/x)=1+1=2，同阶非等价。",
+  "解析": "$\\lim_{x+\\sin x}$/x=$\\lim_{1+\\sin x/x}$=1+1=2，同阶非等价。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19457,7 +19604,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "当x→0时，无穷小量√(1+x)-√(1-x)是x的（ ）",
+  "题目": "当$x\\to 0$时，无穷小量$\\sqrt{1+x}$-$\\sqrt{1-x}$是x的（ ）",
   "选项": [
    "高阶无穷小量",
    "低阶无穷小量",
@@ -19465,7 +19612,7 @@ window.__TIKU__ = [
    "等价无穷小量"
   ],
   "答案": "D",
-  "解析": "分子有理化，=2x/[x(√(1+x)+√(1-x))]=2/(√(1+x)+√(1-x))→1，为等价无穷小。",
+  "解析": "分子有理化，=2x/[x($\\sqrt{1+x}$+$\\sqrt{1-x}$)]=$\\frac{2}{(\\sqrt{1+x}+\\sqrt{1-x})}\\to 1$，为等价无穷小。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19476,15 +19623,15 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "当x→0⁺时，与x是等价无穷小量的是（ ）",
+  "题目": "当$x\\to 0^{+}$时，与x是等价无穷小量的是（ ）",
   "选项": [
-   "sin x/√x",
-   "ln(1+x²)",
+   "$\\sin$ x/$\\sqrt{x}$",
+   "$\\ln(1+x^{2}$)",
    "eˣ-1",
-   "1-cos x"
+   "$1-\\cos$ x"
   ],
   "答案": "C",
-  "解析": "A为∞（高阶无穷大）；B为x²（高阶）；C中eˣ-1~x（等价）；D中1-cos x~x²/2（高阶）。",
+  "解析": "A为$\\infty $（高阶无穷大）；B为$x^{2}$（高阶）；C中eˣ-1~x（等价）；D中$1-\\cos$ x~$x^{2}$/2（高阶）。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19495,10 +19642,10 @@ window.__TIKU__ = [
   "题型": "填空",
   "材料": "",
   "passage": "",
-  "题目": "当x→0时，(e^(x²)-1)sin2x与a·arctan x³是等价无穷小量，则a=？",
+  "题目": "当$x\\to 0$时，($e^{x^{2}}-1)sin2x$与$a·\\arctan$ $x^{3}$是等价无穷小量，则a=？",
   "选项": [],
   "答案": "a=2",
-  "解析": "e^(x²)-1~x²，sin2x~2x，故(e^(x²)-1)sin2x~2x³；arctan x³~x³，a·arctan x³~ax³。等价得a=2。",
+  "解析": "$e^{x^{2}}$-1~$x^{2}$，$sin2x~2x$，故($e^{x^{2}}-1)sin2x~2x^{3}$；$\\arctan$ $x^{3}$~$x^{3}$，$a·\\arctan$ $x^{3}$~a$x^{3}$。等价得a=2。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19509,15 +19656,15 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "试确定当x→0时，下列（ ）是对于x的三阶无穷小量",
+  "题目": "试确定当$x\\to 0$时，下列（ ）是对于x的三阶无穷小量",
   "选项": [
-   "∛x²-∛x",
-   "√(1+x³)-1",
-   "x³+0.0002x²",
-   "∛sin x³"
+   "$\\sqrt[3]{x^{2}}$-$\\sqrt[3]{x}$",
+   "$\\sqrt{1+x^{3}}$-1",
+   "$x^{3}$+0.0002$x^{2}$",
+   "$\\sqrt[3]{\\sin}$ $x^{3}$"
   ],
   "答案": "B",
-  "解析": "√(1+x³)-1~x³/2，与x³同阶为三阶；A为1阶；C中0.0002x²主导为二阶；D中∛sin x³~x，为一阶。",
+  "解析": "$\\sqrt{1+x^{3}}$-1~$x^{3}$/2，与$x^{3}$同阶为三阶；A为1阶；C中0.0002$x^{2}$主导为二阶；D中$\\sqrt[3]{\\sin}$ $x^{3}$~x，为一阶。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19528,13 +19675,13 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "当x→0时，无穷小量1-cos x是x的（ ）",
+  "题目": "当$x\\to 0$时，无穷小量$1-\\cos$ x是x的（ ）",
   "选项": [
    "高阶无穷小量",
    "低阶无穷小量"
   ],
   "答案": "A",
-  "解析": "1-cos x~x²/2，是x的高阶无穷小量。",
+  "解析": "$1-\\cos$ x~$x^{2}$/2，是x的高阶无穷小量。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19545,15 +19692,15 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "当x→0时，与x是等价无穷小量的是（ ）",
+  "题目": "当$x\\to 0$时，与x是等价无穷小量的是（ ）",
   "选项": [
-   "√(1+2x)-1",
+   "$\\sqrt{1+2x}$-1",
    "2ˣ-1",
-   "x-sin x",
-   "arctan x²"
+   "$x-\\sin$ x",
+   "$\\arctan$ $x^{2}$"
   ],
   "答案": "A",
-  "解析": "A中√(1+2x)-1~x；B中2ˣ-1~xln2；C中x-sin x~x³/6；D中arctan x²~x²。仅A与x等价。",
+  "解析": "A中$\\sqrt{1+2x}$-1~x；B中2ˣ-1~xln2；C中$x-\\sin$ x~$x^{3}$/6；D中$\\arctan$ $x^{2}$~$x^{2}$。仅A与x等价。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19564,15 +19711,15 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "试确定当x→0时，下列（ ）是关于x的三阶无穷小量",
+  "题目": "试确定当$x\\to 0$时，下列（ ）是关于x的三阶无穷小量",
   "选项": [
-   "∛x²-∛x",
-   "√(a+x³)-√a",
-   "x³+0.0001x²",
-   "∛tan x³"
+   "$\\sqrt[3]{x^{2}}$-$\\sqrt[3]{x}$",
+   "$\\sqrt{a+x^{3}}$-$\\sqrt{a}$",
+   "$x^{3}$+0.0001$x^{2}$",
+   "$\\sqrt[3]{\\tan}$ $x^{3}$"
   ],
   "答案": "B",
-  "解析": "B中√(a+x³)-√a~x³/(2√a)，为三阶；A为1阶；C中0.0001x²主导为二阶；D中∛tan x³~x为一阶。",
+  "解析": "B中$\\sqrt{a+x^{3}}$-$\\sqrt{a}$~$x^{3}$/(2$\\sqrt{a}$)，为三阶；A为1阶；C中0.0001$x^{2}$主导为二阶；D中$\\sqrt[3]{\\tan}$ $x^{3}$~x为一阶。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19583,10 +19730,10 @@ window.__TIKU__ = [
   "题型": "计算",
   "材料": "",
   "passage": "",
-  "题目": "求 lim(x→-8) [√(1-x)-3]/[2+∛x]",
+  "题目": "求 $\\lim_{x\\to -8}$ [$\\sqrt{1-x}$-3]/[2+$\\sqrt[3]{x}$]",
   "选项": [],
   "答案": "-2",
-  "解析": "分子有理化+立方和公式，原式=[(1-x-9)]/[(2+∛x)(√(1-x)+3)]=-(8+x)/[(2+∛x)(√(1-x)+3)]，用a³+b³=(a+b)(a²-ab+b²)约分得-2。",
+  "解析": "分子有理化+立方和公式，原式=[(1-x-9)]/[(2+$\\sqrt[3]{x}$)($\\sqrt{1-x}$+3)]=-(8+x)/[(2+$\\sqrt[3]{x}$)($\\sqrt{1-x}$+3)]，用$a^{3}$+$b^{3}$=(a+b)($a^{2}$-ab+$b^{2}$)约分得-2。",
   "考点": "99-综合",
   "章节": "99-综合"
  },
@@ -19597,10 +19744,10 @@ window.__TIKU__ = [
   "题型": "计算",
   "材料": "",
   "passage": "",
-  "题目": "求 lim(x→1) tan(x²-1)/(x³-1)",
+  "题目": "求 $\\lim_{x\\to 1}$ $\\tan\\frac{(x^{2}-1)}{(x^{3}-1)}$",
   "选项": [],
-  "答案": "2/3",
-  "解析": "x→1时tan(x²-1)~x²-1，=(x²-1)/(x³-1)=(x+1)/(x²+x+1)→2/3。",
+  "答案": "$\\frac{2}{3}$",
+  "解析": "$x\\to 1$时$\\tan(x^{2}$-1)~$x^{2}$-1，=$\\frac{(x^{2}-1)}{(x^{3}-1)}$=$\\frac{(x+1)}{(x^{2}+x+1)}\\to \\frac{2}{3}$。",
   "考点": "99-综合",
   "章节": "99-综合"
  },
@@ -19611,10 +19758,10 @@ window.__TIKU__ = [
   "题型": "计算",
   "材料": "",
   "passage": "",
-  "题目": "求 lim(x→1) arcsin(1-x)/ln x",
+  "题目": "求 $\\lim_{x\\to 1}$ $\\arcsin(1-x)/\\ln$ x",
   "选项": [],
   "答案": "-1",
-  "解析": "x→1时arcsin(1-x)~1-x，ln x=ln[1+(x-1)]~x-1，原式=(1-x)/(x-1)=-1。",
+  "解析": "$x\\to 1$时$\\arcsin(1-x)~1-x$，$\\ln$ $x=\\ln[1+(x-1)]~x-1$，原式=$\\frac{(1-x)}{(x-1)}$=-1。",
   "考点": "99-综合",
   "章节": "99-综合"
  },
@@ -19625,10 +19772,10 @@ window.__TIKU__ = [
   "题型": "计算",
   "材料": "",
   "passage": "",
-  "题目": "求 lim(x→∞) (3x³+1)/(4x²+5x+7)",
+  "题目": "求 $\\lim_{x\\to\\infty}$ $\\frac{(3x^{3}+1)}{(4x^{2}+5x+7)}$",
   "选项": [],
-  "答案": "∞",
-  "解析": "分子次数3>分母次数2，极限为∞。",
+  "答案": "$\\infty $",
+  "解析": "分子次数3>分母次数2，极限为$\\infty $。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19639,10 +19786,10 @@ window.__TIKU__ = [
   "题型": "计算",
   "材料": "",
   "passage": "",
-  "题目": "求 lim(n→∞) [3ⁿ+(-2)ⁿ]/[3ⁿ⁺¹+(-2)ⁿ⁺¹]",
+  "题目": "求 $\\lim_{n\\to\\infty}$ $\\frac{[3^{n}+(-2)^{n}]}{[3^{n+1}+(-2)^{n+1}]}$",
   "选项": [],
-  "答案": "1/3",
-  "解析": "分子分母同除以3ⁿ，=[1+(-2/3)ⁿ]/[3+(-2)·(-2/3)ⁿ]→1/3。",
+  "答案": "$\\frac{1}{3}$",
+  "解析": "分子分母同除以$3^{n}$，=$\\frac{[1+(-\\frac{2}{3})^{n}]}{[3+(-2)·(-\\frac{2}{3})^{n}]}\\to \\frac{1}{3}$。",
   "考点": "99-综合",
   "章节": "99-综合"
  },
@@ -19653,10 +19800,10 @@ window.__TIKU__ = [
   "题型": "计算",
   "材料": "",
   "passage": "",
-  "题目": "求 lim(x→∞) (x²+1)/(x³+2x)·(3+cos x)",
+  "题目": "求 $\\lim_{x\\to\\infty}$ $\\frac{(x^{2}+1)}{(x^{3}+2x)}·(3+\\cos$ x)",
   "选项": [],
   "答案": "0",
-  "解析": "(x²+1)/(x³+2x)→0为无穷小量，|3+cos x|≤4有界，无穷小量乘有界量仍为无穷小量。",
+  "解析": "$\\frac{(x^{2}+1)}{(x^{3}+2x)}\\to 0$为无穷小量，$|3+\\cos$ $x|\\leq 4$有界，无穷小量乘有界量仍为无穷小量。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19667,10 +19814,10 @@ window.__TIKU__ = [
   "题型": "计算",
   "材料": "",
   "passage": "",
-  "题目": "求 lim(x→∞) (2x-1)^30/[(x+2)^15(2x-15)^15]",
+  "题目": "求 $\\lim_{x\\to\\infty}$ (2x-1)^$\\frac{30}{[(x+2)^15(2x-15)^15]}$",
   "选项": [],
   "答案": "2^15",
-  "解析": "分子最高次(2x)^30=2^30x^30，分母最高次x^15·(2x)^15=2^15x^30，比值=2^30/2^15=2^15。",
+  "解析": "分子最高次(2x)^30=2^30x^30，分母最高次x^15·(2x)^15=2^15x^30，比值=2^$\\frac{30}{2}$^15=2^15。",
   "考点": "99-综合",
   "章节": "99-综合"
  },
@@ -19681,10 +19828,10 @@ window.__TIKU__ = [
   "题型": "计算",
   "材料": "",
   "passage": "",
-  "题目": "求 lim(x→∞) (3x²+5)/(5x+3)·sin(2/x)",
+  "题目": "求 $\\lim_{x\\to\\infty}$ $\\frac{(3x^{2}+5)}{(5x+3)}·\\sin(\\frac{2}{x}$)",
   "选项": [],
-  "答案": "6/5",
-  "解析": "x→∞时sin(2/x)~2/x，原式=(3x²+5)/(5x+3)·2/x→2·3/5=6/5。",
+  "答案": "$\\frac{6}{5}$",
+  "解析": "$x\\to \\infty $时$\\sin(\\frac{2}{x}$)~$\\frac{2}{x}$，原式=$\\frac{(3x^{2}+5)}{(5x+3)}$·$\\frac{2}{x}\\to 2·\\frac{3}{5}$=$\\frac{6}{5}$。",
   "考点": "99-综合",
   "章节": "99-综合"
  },
@@ -19695,10 +19842,10 @@ window.__TIKU__ = [
   "题型": "计算",
   "材料": "",
   "passage": "",
-  "题目": "求 lim(x→+∞) [√(x²+x+1)-√(x²-x+1)]",
+  "题目": "求 $\\lim_{x\\to +\\infty }$ [$\\sqrt{x^{2}+x+1}$-$\\sqrt{x^{2}-x+1}$]",
   "选项": [],
   "答案": "1",
-  "解析": "分子有理化，=2x/[√(x²+x+1)+√(x²-x+1)]→2x/(2x)=1。",
+  "解析": "分子有理化，=2x/[$\\sqrt{x^{2}+x+1}$+$\\sqrt{x^{2}-x+1}]\\to \\frac{2x}{(2x)}$=1。",
   "考点": "99-综合",
   "章节": "99-综合"
  },
@@ -19709,10 +19856,10 @@ window.__TIKU__ = [
   "题型": "计算",
   "材料": "",
   "passage": "",
-  "题目": "求 lim(n→∞) [√(n+3√n)-√(n-√n)]",
+  "题目": "求 $\\lim_{n\\to\\infty}$ [$\\sqrt{n+3\\sqrt{n}}$-$\\sqrt{n-\\sqrt{n}}$]",
   "选项": [],
   "答案": "2",
-  "解析": "分子有理化，=4√n/[√(n+3√n)+√(n-√n)]→4/2=2。",
+  "解析": "分子有理化，=4$\\sqrt{n}$/[$\\sqrt{n+3\\sqrt{n}}$+$\\sqrt{n-\\sqrt{n}}]\\to \\frac{4}{2}$=2。",
   "考点": "99-综合",
   "章节": "99-综合"
  },
@@ -19723,10 +19870,10 @@ window.__TIKU__ = [
   "题型": "计算",
   "材料": "",
   "passage": "",
-  "题目": "求 lim(x→1) [3/(1-x³)-1/(1-x)]",
+  "题目": "求 $\\lim_{x\\to 1}$ [$\\frac{3}{(1-x^{3})}$-$\\frac{1}{(1-x)}$]",
   "选项": [],
   "答案": "1",
-  "解析": "通分，=[3-(1+x+x²)]/(1-x³)=(2-x-x²)/[(1-x)(1+x+x²)]=(2+x)/(1+x+x²)→3/3=1。",
+  "解析": "通分，=[3-(1+x+$x^{2}$)]/(1-$x^{3}$)=(2-x-$x^{2}$)/[(1-x)(1+x+$x^{2}$)]=$\\frac{(2+x)}{(1+x+x^{2})}\\to \\frac{3}{3}$=1。",
   "考点": "99-综合",
   "章节": "99-综合"
  },
@@ -19737,10 +19884,10 @@ window.__TIKU__ = [
   "题型": "填空",
   "材料": "",
   "passage": "",
-  "题目": "设实数a,b满足 lim(x→-1)(3x²+ax+b)/(x+1)=4，求a,b。",
+  "题目": "设实数a,b满足 $\\lim_{x\\to -1}\\frac{(3x^{2}+ax+b)}{(x+1)}$=4，求a,b。",
   "选项": [],
   "答案": "a=10, b=7",
-  "解析": "分母→0，故分子→0得3-a+b=0即b=a-3。代入因式分解(3x²+ax+3-a)=(x+1)(3x+a-3)，极限=3·(-1)+a-3=a-6=4，得a=10,b=7。",
+  "解析": "分母$\\to 0$，故分子$\\to 0$得3-a+b=0即b=a-3。代入因式分解(3$x^{2}$+ax+3-a)=(x+1)(3x+a-3)，极限=3·(-1)+a-3=a-6=4，得a=10,b=7。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19751,10 +19898,10 @@ window.__TIKU__ = [
   "题型": "填空",
   "材料": "",
   "passage": "",
-  "题目": "设实数a,b满足 lim(x→∞)[(x²+1)/(x+1)-ax-b]=0，求a,b。",
+  "题目": "设实数a,b满足 $\\lim_{x\\to\\infty}$[$\\frac{(x^{2}+1)}{(x+1)}$-ax-b]=0，求a,b。",
   "选项": [],
   "答案": "a=1, b=-1",
-  "解析": "通分后分子为(1-a)x²-(a+b)x+(1-b)，x→∞时极限为0需1-a=0且a+b=0，得a=1,b=-1。",
+  "解析": "通分后分子为(1-a)$x^{2}$-(a+b)x+(1-b)，$x\\to \\infty $时极限为0需1-a=0且a+b=0，得a=1,b=-1。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19765,10 +19912,10 @@ window.__TIKU__ = [
   "题型": "填空",
   "材料": "",
   "passage": "",
-  "题目": "设实数a,b满足 lim(x→-1)(x³-ax²-x+4)/(x+1)=b，求a,b。",
+  "题目": "设实数a,b满足 $\\lim_{x\\to -1}\\frac{(x^{3}-ax^{2}-x+4)}{(x+1)}$=b，求a,b。",
   "选项": [],
   "答案": "a=4, b=10",
-  "解析": "分母→0，分子→0得-1-a+1+4=4-a=0，a=4。因式分解后极限=(-1-4)(-1-1)=10=b。",
+  "解析": "分母$\\to 0$，分子$\\to 0$得-1-a+1+4=4-a=0，a=4。因式分解后极限=(-1-4)(-1-1)=10=b。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19779,10 +19926,10 @@ window.__TIKU__ = [
   "题型": "计算",
   "材料": "",
   "passage": "",
-  "题目": "求 lim(x→0)(eˣ+x-1)/(2x)",
+  "题目": "求 $\\lim_{x\\to 0}\\frac{(eˣ+x-1)}{(2x)}$",
   "选项": [],
   "答案": "1",
-  "解析": "拆分=lim(eˣ-1)/(2x)+lim x/(2x)=1/2+1/2=1。",
+  "解析": "拆分=$\\lim_{eˣ-1}$/(2x)+lim $\\frac{x}{(2x)}$=$\\frac{1}{2}$+$\\frac{1}{2}$=1。",
   "考点": "99-综合",
   "章节": "99-综合"
  },
@@ -19793,10 +19940,10 @@ window.__TIKU__ = [
   "题型": "填空",
   "材料": "",
   "passage": "",
-  "题目": "已知当x→0时，(1+ax²)^(1/3)-1与1-cos x是等价无穷小量，则常数a=？",
+  "题目": "已知当$x\\to 0$时，(1+a$x^{2})^{\\frac{1}{3}}$-1与$1-\\cos$ x是等价无穷小量，则常数a=？",
   "选项": [],
-  "答案": "a=3/2",
-  "解析": "(1+ax²)^(1/3)-1~ax²/3，1-cos x~x²/2，等价得a/3=1/2，a=3/2。",
+  "答案": "a=$\\frac{3}{2}$",
+  "解析": "(1+a$x^{2})^{\\frac{1}{3}}$-1~a$x^{2}$/3，$1-\\cos$ x~$x^{2}$/2，等价得$\\frac{a}{3}$=$\\frac{1}{2}$，a=$\\frac{3}{2}$。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19807,10 +19954,10 @@ window.__TIKU__ = [
   "题型": "填空",
   "材料": "",
   "passage": "",
-  "题目": "设f(x)={tan(ax)/x, x<0; x+2, x≥0}，lim(x→0)f(x)存在，求a。",
+  "题目": "设f(x)=$\\begin{cases}\\tan(ax)/x, x\\lt 0 \\\\ x+2, x\\geq 0\\end{cases}$，$\\lim_{x\\to 0}$f(x)存在，求a。",
   "选项": [],
   "答案": "a=2",
-  "解析": "左极限lim tan(ax)/x=a，右极限lim(x+2)=2，极限存在需a=2。",
+  "解析": "左极限lim $\\tan(ax)/x=a$，右极限$\\lim_{x+2}$=2，极限存在需a=2。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19821,7 +19968,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "已知极限 lim(x→+∞)(x²/(x+1)-x-a)=2，则常数a=（ ）",
+  "题目": "已知极限 $\\lim_{x\\to +\\infty }$($x^{2}$/(x+1)-x-a)=2，则常数a=（ ）",
   "选项": [
    "1",
    "2",
@@ -19840,10 +19987,10 @@ window.__TIKU__ = [
   "题型": "填空",
   "材料": "",
   "passage": "",
-  "题目": "设函数y=f(x)在x=0点连续，且lim(x→0)(f(x)+3)/x存在，则f(0)=？",
+  "题目": "设函数y=f(x)在x=0点连续，且$\\lim_{x\\to 0}$(f(x)+3)/x存在，则f(0)=？",
   "选项": [],
   "答案": "3",
-  "解析": "x→0时sin2x/x→2，由连续性=f(2)=3。",
+  "解析": "$x\\to 0$时$sin2x/x\\to 2$，由连续性=f(2)=3。",
   "考点": "1-3 函数的连续性",
   "章节": "99-综合"
  },
@@ -19854,10 +20001,10 @@ window.__TIKU__ = [
   "题型": "填空",
   "材料": "",
   "passage": "",
-  "题目": "设函数y=f(x)在x=2点连续，且lim(x→2)(f(x)+2)/(x-2)存在，则f(2)=？",
+  "题目": "设函数y=f(x)在x=2点连续，且$\\lim_{x\\to 2}$(f(x)+2)/(x-2)存在，则f(2)=？",
   "选项": [],
   "答案": "-2",
-  "解析": "极限存在说明f(x)+2→0，故f(2)=-2。",
+  "解析": "极限存在说明$f(x)+2\\to 0$，故f(2)=-2。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19868,7 +20015,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "设函数f(x)={arctan(1/x), x≠0; π/2, x=0}，则f(x)在x=0处（ ）",
+  "题目": "设函数f(x)=$\\begin{cases}\\arctan(\\frac{1}{x}), x≠0 \\\\ π/2, x=0\\end{cases}$，则f(x)在x=0处（ ）",
   "选项": [
    "无定义",
    "左连续",
@@ -19876,7 +20023,7 @@ window.__TIKU__ = [
    "连续"
   ],
   "答案": "C",
-  "解析": "x→0⁺时1/x→+∞，arctan(1/x)→π/2=f(0)，右连续；x→0⁻时→-π/2≠f(0)，非左连续。",
+  "解析": "$x\\to 0^{+}$时$\\frac{1}{x}\\to +\\infty $，$\\arctan(\\frac{1}{x})\\to π/2=f(0)$，右连续；$x\\to 0^{-}$时$\\to -π/2≠f(0)$，非左连续。",
   "考点": "1-3 函数的连续性",
   "章节": "99-综合"
  },
@@ -19887,7 +20034,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "已知函数f(x)=(x+2)/(x²-x)，则x=0是函数f(x)的（ ）",
+  "题目": "已知函数f(x)=$\\frac{(x+2)}{(x^{2}-x)}$，则x=0是函数f(x)的（ ）",
   "选项": [
    "可去间断点",
    "跳跃间断点",
@@ -19895,7 +20042,7 @@ window.__TIKU__ = [
    "连续点"
   ],
   "答案": "C",
-  "解析": "x=0处无定义，且lim(x→0)(x+2)/(x²-x)=∞，为无穷间断点。",
+  "解析": "x=0处无定义，且$\\lim_{x\\to 0}\\frac{(x+2)}{(x^{2}-x)}=\\infty $，为无穷间断点。",
   "考点": "1-3 函数的连续性",
   "章节": "01-函数与极限"
  },
@@ -19909,7 +20056,7 @@ window.__TIKU__ = [
   "题目": "证明方程x=asin x+b（a>0,b>0）至少有一个不超过a+b的正根。",
   "选项": [],
   "答案": "证明",
-  "解析": "令f(x)=asin x+b-x，在[0,a+b]上连续。f(0)=b>0，f(a+b)=asin(a+b)-a≤0。若f(a+b)=0则a+b是根；若f(a+b)<0，由零点定理存在ξ∈(0,a+b)使f(ξ)=0。",
+  "解析": "令f(x)=asin x+b-x，在[0,a+b]上连续。f(0)=b>0，$f(a+b)=asin(a+b)-a\\leq 0$。若f(a+b)=0则a+b是根；若f(a+b)<0，由零点定理存在$ξ\\in (0,a+b)$使f(ξ)=0。",
   "考点": "1-3 函数的连续性",
   "章节": "03-中值定理与导数应用"
  },
@@ -19920,10 +20067,10 @@ window.__TIKU__ = [
   "题型": "填空",
   "材料": "",
   "passage": "",
-  "题目": "函数f(x)在x=3处连续，且lim(x→3)(f(x)-5)/(x-3)=2，则f(3)=？",
+  "题目": "函数f(x)在x=3处连续，且$\\lim_{x\\to 3}$(f(x)-5)/(x-3)=2，则f(3)=？",
   "选项": [],
   "答案": "5",
-  "解析": "极限存在说明f(x)-5→0，故f(3)=5。",
+  "解析": "极限存在说明$f(x)-5\\to 0$，故f(3)=5。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19934,7 +20081,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "已知函数f(x)={x²sin(1/x), x<0; 1, x=0; e^(1/x)-1, x>0}，则x=0是函数f(x)的（ ）",
+  "题目": "已知函数f(x)=$\\begin{cases}x^{2}\\sin(\\frac{1}{x}), x\\lt 0 \\\\ 1, x=0 \\\\ e^{\\frac{1}{x}}-1, x\\gt 0\\end{cases}$，则x=0是函数f(x)的（ ）",
   "选项": [
    "可去间断点",
    "跳跃间断点",
@@ -19942,7 +20089,7 @@ window.__TIKU__ = [
    "连续点"
   ],
   "答案": "B",
-  "解析": "左极限lim x²sin(1/x)=0，右极限lim(e^(1/x)-1)=-1，左右极限存在但不相等，为跳跃间断点。",
+  "解析": "左极限lim $x^{2}\\sin(\\frac{1}{x}$)=0，右极限lim($e^{\\frac{1}{x}}$-1)=-1，左右极限存在但不相等，为跳跃间断点。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19953,14 +20100,15 @@ window.__TIKU__ = [
   "题型": "证明",
   "材料": "",
   "passage": "",
-  "题目": "设函数f(x)在区间[0,1]上连续，且满足0≤f(x)≤1，证明：在[0,1]上至少存在一点ξ，使得f(ξ)=ξ。",
+  "题目": "设函数f(x)在区间[0,1]上连续，且满足$0\\leq f(x)\\leq 1$，证明：在[0,1]上至少存在一点ξ，使得f(ξ)=ξ。",
   "选项": [],
   "答案": "证明",
-  "解析": "令g(x)=f(x)-x，在[0,1]上连续。g(0)=f(0)≥0，g(1)=f(1)-1≤0。若g(0)=0或g(1)=0则结论成立；否则g(0)>0且g(1)<0，由零点定理存在ξ使g(ξ)=0，即f(ξ)=ξ。",
+  "解析": "令g(x)=f(x)-x，在[0,1]上连续。$g(0)=f(0)\\geq 0$，$g(1)=f(1)-1\\leq 0$。若g(0)=0或g(1)=0则结论成立；否则g(0)>0且g(1)<0，由零点定理存在ξ使g(ξ)=0，即f(ξ)=ξ。",
   "考点": "1-3 函数的连续性",
   "章节": "99-综合"
  }
 ];
+
 window.__KEY_ITEMS__ = [
  {
   "id": "练习-高数-计算-001",
@@ -21783,963 +21931,1923 @@ window.__KEY_ITEMS__ = [
   "章节": "06-微分方程"
  }
 ];
+
 window.__TIKU_META__ = {baseQid: 1};
+
 try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_sync&&_sync["高数"]&&_sync["高数"].tiku){window.__TIKU__=_sync["高数"].tiku;}}catch(e){}
+
 (function(){
+
   "use strict";
+
   var MATH = true;
+
   var SUBJECT = "高数";
+
   var IS_EN = SUBJECT === "英语";
+
   var ALL = (window.__TIKU__||[]).slice();
+
   var KEY_ITEMS=(window.__KEY_ITEMS__||[]).slice();
+
   var BASE_QID = parseInt((window.__TIKU_META__&&window.__TIKU_META__.baseQid)||1,10);
+
   var storeKey = "高数_tiku_v1";
+
   var done={}, basket=[], nextId=BASE_QID;
+
   try{ var saved=JSON.parse(localStorage.getItem(storeKey)||"{}")||{}; done=saved.dn||{}; basket=saved.bk||[]; nextId=saved.nx||BASE_QID; }catch(e){}
+
   function save(){ try{ localStorage.setItem(storeKey, JSON.stringify({dn:done,bk:basket,nx:nextId})); }catch(e){} }
 
+
+
   function $(id){ return document.getElementById(id); }
+
   function escHtml(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
   function showToast(msg, ms){
+
     var el=document.getElementById("toast");
+
     if(!el) return;
+
     el.textContent=msg; el.style.display="block";
+
     clearTimeout(el._t);
+
     el._t=setTimeout(function(){ el.style.display="none"; }, ms||4200);
-  }
-  function copyText(txt){
-    var done=false;
-    try{
-      if(navigator.clipboard&&navigator.clipboard.writeText){
-        navigator.clipboard.writeText(txt).then(function(){done=true;}).catch(function(){});
-      }
-    }catch(e){}
-    return done;
-  }
-  function fracIt(x){
-    // 全角数字/斜杠先转半角（导入的题常见全角写法）
-    x=x.replace(/[０-９]/g, function(c){ return String.fromCharCode(c.charCodeAt(0)-0xFEE0); }).replace(/／/g,"/");
-    // unicode 上下标转 KaTeX（组合成花括号上标，防渲染报错红显）：3ⁿ⁺¹ → 3^{n+1}
-    var sup={'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','ⁿ':'n','ⁱ':'i','⁺':'+','⁻':'-'};
-    x=x.replace(/([0-9a-zA-Z\)\]\}])[⁰¹²³⁴⁵⁶⁷⁸⁹ⁿⁱ⁺⁻]+/g, function(m,base){
-      return base+'^{'+m.slice(1).replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹ⁿⁱ⁺⁻]/g,function(c){return sup[c];})+'}';
-    });
-    var sub={'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9','ₙ':'n','ₓ':'x'};
-    x=x.replace(/([0-9a-zA-Z\)\]\}])[₀₁₂₃₄₅₆₇₈₉ₙₓ]+/g, function(m,base){
-      return base+'_{'+m.slice(1).replace(/[₀₁₂₃₄₅₆₇₈₉ₙₓ]/g,function(c){return sub[c];})+'}';
-    });
-    // 根号：√(x) → \sqrt{x}；√x → \sqrt{x}
-    x=x.replace(/√\(([^()]*)\)/g,"\\sqrt{$1}").replace(/√([0-9a-zA-Z]+)/g,"\\sqrt{$1}");
-    // 圈数字转 (数字)，防 KaTeX 不支持红显（①→(1)）
-    x=x.replace(/[①-⑨]/g,function(c){return '('+(c.charCodeAt(0)-0x2460+1)+')';}).replace(/⑩/g,"(10)");
-    x=x.replace(/(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)/g,"\\frac{$1}{$2}");
-    x=x.replace(/\b([a-zA-Z])\/(\d+(?:\.\d+)?)\b/g,"\\frac{$1}{$2}");
-    x=x.replace(/\b(\d+(?:\.\d+)?)\/([a-zA-Z])\b/g,"\\frac{$1}{$2}");
-    x=x.replace(/\b([a-zA-Z])\/([a-zA-Z])\b/g,"\\frac{$1}{$2}");
-    return x;
-  }
-  function renderMath(s){
-    var t=escHtml(s);
-    // 保护反引号代码块（如Excel公式 $A$1、Shell $var），避免被KaTeX当数学公式
-    var codes=[];
-    t=t.replace(/`([^`]*)`/g, function(_,c){ codes.push(c); return "\u0000CODE"+(codes.length-1)+"\u0000"; });
-    // 保护 Excel 单元格绝对/混合引用（$A$1、$A1、A$1），避免被KaTeX当数学公式
-    var xls=[];
-    t=t.replace(/\$[A-Z]{1,3}\$[0-9]{1,7}|\$[A-Z]{1,3}[0-9]{1,7}|[A-Z]{1,3}\$[0-9]{1,7}/g, function(m){ xls.push(m); return "\u0000XLS"+(xls.length-1)+"\u0000"; });
-    function restoreXls(t){
-      return t.replace(/\u0000XLS(\d+)\u0000/g, function(_,i){ return xls[+i]||""; });
-    }
-    function restore(t){
-      return t.replace(/\u0000CODE(\d+)\u0000/g, function(_,i){
-        return '<code style="background:rgba(0,0,0,0.06);border-radius:4px;padding:1px 6px;font-family:Consolas,Monaco,monospace;font-size:0.9em;color:#B44244;white-space:pre-wrap;word-break:break-all;">'+(codes[+i]||"")+'</code>';
-      });
-    }
-    if(!MATH || typeof katex==="undefined") return restoreXls(restore(t));
-    function unesc(x){ return x.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&quot;/g,'"'); }
-    try{
-      // 裸分数（未写$）自动包成数学块，渲染为分数横线（覆盖数字/数字、括号/数字、字母/数字、表达式/括号等导入题常见写法）
-      t=t.replace(/(?<![\d\/／])([０-９\d]{1,3}(?:[．.]\d+)?)[\/／]([０-９\d]{1,3}(?:[．.]\d+)?)(?![\d\/／])/g, function(_,a,b){
-        var A=a.replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);});
-        var B=b.replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);});
-        return "$$\\frac{"+A+"}{"+B+"}$$";
-      });
-      t=t.replace(/(\([^()]*\))\/(\d{1,3}(?:\.\d+)?)/g, "$$\\frac{$1}{$2}$$");
-      t=t.replace(/(\d{1,3}(?:\.\d+)?)\/([\[(][^[\]()]*[)\]])(?!\d)/g, "$$\\frac{$1}{$2}$$");
-      t=t.replace(/(\d{1,3}(?:\.\d+)?)\/(\[[^\]\[]*\])/g, "$$\\frac{$1}{$2}$$");
-      t=t.replace(/(\[[^\]\[]*\])\/(\[[^\]\[]*\])/g, "$$\\frac{$1}{$2}$$");
-      t=t.replace(/(\([^()]*\))\/(\([^()]*\))/g, "$$\\frac{$1}{$2}$$");
-      t=t.replace(/(?<![\d\/a-zA-Z])([a-z])\/(\d{1,3}(?:\.\d+)?)(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
-      t=t.replace(/(?<![\d\/a-zA-Z])(\d{1,3}(?:\.\d+)?)\/([a-z])(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
-      t=t.replace(/(?<![\d\/a-zA-Z])(\d{1,3}[a-z])\/(\d{1,3}(?:\.\d+)?)(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
-      t=t.replace(/(?<![\d\/a-zA-Z])([0-9a-zA-Z][0-9a-zA-Z^+*\-.]{0,12})\/(\([^()]*\))(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
-      t=t.replace(/(\d{1,3})\/([a-z]+[0-9]*\([^()]*\)[a-z0-9^+*\-.]{0,12})(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
-      t=t.replace(/\$\$([\s\S]+?)\$\$/g,function(_,x){ return '<div class="math-inline" style="margin:6px 0;">'+katex.renderToString(fracIt(unesc(x)),{displayMode:true,throwOnError:false})+'</div>'; });
-      t=t.replace(/\$([^$\n]+?)\$/g,function(_,x){ return '<span class="math-inline">'+katex.renderToString(fracIt(unesc(x)),{displayMode:false,throwOnError:false})+'</span>'; });
-    }catch(e){}
-    return restoreXls(restore(t));
-  }
-  // 英语刷题：把文本中的英文单词标记为可点击，点击加入生词本
-  var SHENGCI_KEY="yingyu_shengci_v1";
-  function loadShengci(){ try{ return JSON.parse(localStorage.getItem(SHENGCI_KEY)||"{}")||{}; }catch(e){ return {}; } }
-  function saveShengci(obj){ try{ localStorage.setItem(SHENGCI_KEY,JSON.stringify(obj)); }catch(e){} }
-  function isShengci(word){ var sc=loadShengci(); return !!sc[word.toLowerCase()]; }
-  function addShengci(word){
-    var w=word.toLowerCase();
-    var sc=loadShengci();
-    if(sc[w]){ showToast("「"+word+"」已在生词本中"); return false; }
-    sc[w]={t:new Date().toISOString().slice(0,10),s:""};
-    saveShengci(sc);
-    showToast("已加入生词本："+word);
-    return true;
-  }
-  function markWords(text){
-    if(!IS_EN) return renderMath(text);
-    var t=escHtml(text);
-    // 反引号代码块不标记生词
-    var codes=[];
-    t=t.replace(/`([^`]*)`/g, function(_,c){ codes.push(c); return "\u0000CODE"+(codes.length-1)+"\u0000"; });
-    // 匹配2个字母以上的英文单词（含连字符、撇号），不匹配纯数字
-    t=t.replace(/\b([a-zA-Z][a-zA-Z'-]{1,})\b/g, function(m,w){
-      var cls="word-clickable"+(isShengci(w)?" word-saved":"");
-      return '<span class="'+cls+'" data-word="'+w.toLowerCase()+'">'+m+'</span>';
-    });
-    t=t.replace(/\u0000CODE(\d+)\u0000/g, function(_,i){
-      return '<code style="background:rgba(0,0,0,0.06);border-radius:4px;padding:1px 6px;font-family:Consolas,Monaco,monospace;font-size:0.9em;color:#B44244;white-space:pre-wrap;word-break:break-all;">'+(codes[+i]||"")+'</code>';
-    });
-    return t;
+
   }
 
-  if(IS_EN){
-    var hintEl=document.querySelector(".hint");
-    if(hintEl) hintEl.innerHTML+='<br><span style="color:#2B5A9E;">💡 英语刷题：点击<b>题目/阅读材料</b>中的蓝色单词可加入生词本（粉色=已加入）；选项整体是答题按钮，点击选项直接作答。完形填空可点「查看本篇全文」看完整文章。</span>';
+  function copyText(txt){
+
+    var done=false;
+
+    try{
+
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+
+        navigator.clipboard.writeText(txt).then(function(){done=true;}).catch(function(){});
+
+      }
+
+    }catch(e){}
+
+    return done;
+
   }
-  // 完形填空弹窗
-  function openPassage(text){
-    if(!text) return;
-    var modal=$("passageModal"), content=$("passageContent");
-    content.innerHTML=markWords(text);
-    modal.style.display="flex";
-    // 弹窗内单词点击加入生词本
-    content.querySelectorAll(".word-clickable").forEach(function(el){
-      el.addEventListener("click", function(e){
-        e.stopPropagation();
-        var w=el.getAttribute("data-word");
-        if(w && addShengci(w)) el.classList.add("word-saved");
-      });
+
+  function fracIt(x){
+
+    // 全角数字/斜杠先转半角（导入的题常见全角写法）
+
+    x=x.replace(/[０-９]/g, function(c){ return String.fromCharCode(c.charCodeAt(0)-0xFEE0); }).replace(/／/g,"/");
+
+    // unicode 上下标转 KaTeX（组合成花括号上标，防渲染报错红显）：3ⁿ⁺¹ → 3^{n+1}
+
+    var sup={'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','ⁿ':'n','ⁱ':'i','⁺':'+','⁻':'-'};
+
+    x=x.replace(/([0-9a-zA-Z\)\]\}])[⁰¹²³⁴⁵⁶⁷⁸⁹ⁿⁱ⁺⁻]+/g, function(m,base){
+
+      return base+'^{'+m.slice(1).replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹ⁿⁱ⁺⁻]/g,function(c){return sup[c];})+'}';
+
     });
+
+    var sub={'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9','ₙ':'n','ₓ':'x'};
+
+    x=x.replace(/([0-9a-zA-Z\)\]\}])[₀₁₂₃₄₅₆₇₈₉ₙₓ]+/g, function(m,base){
+
+      return base+'_{'+m.slice(1).replace(/[₀₁₂₃₄₅₆₇₈₉ₙₓ]/g,function(c){return sub[c];})+'}';
+
+    });
+
+    // 根号：√(x) → \sqrt{x}；√x → \sqrt{x}
+
+    x=x.replace(/√\(([^()]*)\)/g,"\\sqrt{$1}").replace(/√([0-9a-zA-Z]+)/g,"\\sqrt{$1}");
+
+    // 圈数字转 (数字)，防 KaTeX 不支持红显（①→(1)）
+
+    x=x.replace(/[①-⑨]/g,function(c){return '('+(c.charCodeAt(0)-0x2460+1)+')';}).replace(/⑩/g,"(10)");
+
+    x=x.replace(/(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)/g,"\\frac{$1}{$2}");
+
+    x=x.replace(/\b([a-zA-Z])\/(\d+(?:\.\d+)?)\b/g,"\\frac{$1}{$2}");
+
+    x=x.replace(/\b(\d+(?:\.\d+)?)\/([a-zA-Z])\b/g,"\\frac{$1}{$2}");
+
+    x=x.replace(/\b([a-zA-Z])\/([a-zA-Z])\b/g,"\\frac{$1}{$2}");
+
+    return x;
+
   }
+
+  function renderMath(s){
+
+    var t=escHtml(s);
+
+    // 保护反引号代码块（如Excel公式 $A$1、Shell $var），避免被KaTeX当数学公式
+
+    var codes=[];
+
+    t=t.replace(/`([^`]*)`/g, function(_,c){ codes.push(c); return "\u0000CODE"+(codes.length-1)+"\u0000"; });
+
+    // 保护 Excel 单元格绝对/混合引用（$A$1、$A1、A$1），避免被KaTeX当数学公式
+
+    var xls=[];
+
+    t=t.replace(/\$[A-Z]{1,3}\$[0-9]{1,7}|\$[A-Z]{1,3}[0-9]{1,7}|[A-Z]{1,3}\$[0-9]{1,7}/g, function(m){ xls.push(m); return "\u0000XLS"+(xls.length-1)+"\u0000"; });
+
+    function restoreXls(t){
+
+      return t.replace(/\u0000XLS(\d+)\u0000/g, function(_,i){ return xls[+i]||""; });
+
+    }
+
+    function restore(t){
+
+      return t.replace(/\u0000CODE(\d+)\u0000/g, function(_,i){
+
+        return '<code style="background:rgba(0,0,0,0.06);border-radius:4px;padding:1px 6px;font-family:Consolas,Monaco,monospace;font-size:0.9em;color:#B44244;white-space:pre-wrap;word-break:break-all;">'+(codes[+i]||"")+'</code>';
+
+      });
+
+    }
+
+    if(!MATH || typeof katex==="undefined") return restoreXls(restore(t));
+
+    function unesc(x){ return x.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&quot;/g,'"'); }
+
+    try{
+
+      // 裸分数（未写$）自动包成数学块，渲染为分数横线（覆盖数字/数字、括号/数字、字母/数字、表达式/括号等导入题常见写法）
+
+      t=t.replace(/(?<![\d\/／])([０-９\d]{1,3}(?:[．.]\d+)?)[\/／]([０-９\d]{1,3}(?:[．.]\d+)?)(?![\d\/／])/g, function(_,a,b){
+
+        var A=a.replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);});
+
+        var B=b.replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);});
+
+        return "$$\\frac{"+A+"}{"+B+"}$$";
+
+      });
+
+      t=t.replace(/(\([^()]*\))\/(\d{1,3}(?:\.\d+)?)/g, "$$\\frac{$1}{$2}$$");
+
+      t=t.replace(/(\d{1,3}(?:\.\d+)?)\/([\[(][^[\]()]*[)\]])(?!\d)/g, "$$\\frac{$1}{$2}$$");
+
+      t=t.replace(/(\d{1,3}(?:\.\d+)?)\/(\[[^\]\[]*\])/g, "$$\\frac{$1}{$2}$$");
+
+      t=t.replace(/(\[[^\]\[]*\])\/(\[[^\]\[]*\])/g, "$$\\frac{$1}{$2}$$");
+
+      t=t.replace(/(\([^()]*\))\/(\([^()]*\))/g, "$$\\frac{$1}{$2}$$");
+
+      t=t.replace(/(?<![\d\/a-zA-Z])([a-z])\/(\d{1,3}(?:\.\d+)?)(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
+
+      t=t.replace(/(?<![\d\/a-zA-Z])(\d{1,3}(?:\.\d+)?)\/([a-z])(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
+
+      t=t.replace(/(?<![\d\/a-zA-Z])(\d{1,3}[a-z])\/(\d{1,3}(?:\.\d+)?)(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
+
+      t=t.replace(/(?<![\d\/a-zA-Z])([0-9a-zA-Z][0-9a-zA-Z^+*\-.]{0,12})\/(\([^()]*\))(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
+
+      t=t.replace(/(\d{1,3})\/([a-z]+[0-9]*\([^()]*\)[a-z0-9^+*\-.]{0,12})(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
+
+      t=t.replace(/\$\$([\s\S]+?)\$\$/g,function(_,x){ return '<div class="math-inline" style="margin:6px 0;">'+katex.renderToString(fracIt(unesc(x)),{displayMode:true,throwOnError:false})+'</div>'; });
+
+      t=t.replace(/\$([^$\n]+?)\$/g,function(_,x){ return '<span class="math-inline">'+katex.renderToString(fracIt(unesc(x)),{displayMode:false,throwOnError:false})+'</span>'; });
+
+    }catch(e){}
+
+    return restoreXls(restore(t));
+
+  }
+
+  // 英语刷题：把文本中的英文单词标记为可点击，点击加入生词本
+
+  var SHENGCI_KEY="yingyu_shengci_v1";
+
+  function loadShengci(){ try{ return JSON.parse(localStorage.getItem(SHENGCI_KEY)||"{}")||{}; }catch(e){ return {}; } }
+
+  function saveShengci(obj){ try{ localStorage.setItem(SHENGCI_KEY,JSON.stringify(obj)); }catch(e){} }
+
+  function isShengci(word){ var sc=loadShengci(); return !!sc[word.toLowerCase()]; }
+
+  function addShengci(word){
+
+    var w=word.toLowerCase();
+
+    var sc=loadShengci();
+
+    if(sc[w]){ showToast("「"+word+"」已在生词本中"); return false; }
+
+    sc[w]={t:new Date().toISOString().slice(0,10),s:""};
+
+    saveShengci(sc);
+
+    showToast("已加入生词本："+word);
+
+    return true;
+
+  }
+
+  function markWords(text){
+
+    if(!IS_EN) return renderMath(text);
+
+    var t=escHtml(text);
+
+    // 反引号代码块不标记生词
+
+    var codes=[];
+
+    t=t.replace(/`([^`]*)`/g, function(_,c){ codes.push(c); return "\u0000CODE"+(codes.length-1)+"\u0000"; });
+
+    // 匹配2个字母以上的英文单词（含连字符、撇号），不匹配纯数字
+
+    t=t.replace(/\b([a-zA-Z][a-zA-Z'-]{1,})\b/g, function(m,w){
+
+      var cls="word-clickable"+(isShengci(w)?" word-saved":"");
+
+      return '<span class="'+cls+'" data-word="'+w.toLowerCase()+'">'+m+'</span>';
+
+    });
+
+    t=t.replace(/\u0000CODE(\d+)\u0000/g, function(_,i){
+
+      return '<code style="background:rgba(0,0,0,0.06);border-radius:4px;padding:1px 6px;font-family:Consolas,Monaco,monospace;font-size:0.9em;color:#B44244;white-space:pre-wrap;word-break:break-all;">'+(codes[+i]||"")+'</code>';
+
+    });
+
+    return t;
+
+  }
+
+
+
+  if(IS_EN){
+
+    var hintEl=document.querySelector(".hint");
+
+    if(hintEl) hintEl.innerHTML+='<br><span style="color:#2B5A9E;">💡 英语刷题：点击<b>题目/阅读材料</b>中的蓝色单词可加入生词本（粉色=已加入）；选项整体是答题按钮，点击选项直接作答。完形填空可点「查看本篇全文」看完整文章。</span>';
+
+  }
+
+  // 完形填空弹窗
+
+  function openPassage(text){
+
+    if(!text) return;
+
+    var modal=$("passageModal"), content=$("passageContent");
+
+    content.innerHTML=markWords(text);
+
+    modal.style.display="flex";
+
+    // 弹窗内单词点击加入生词本
+
+    content.querySelectorAll(".word-clickable").forEach(function(el){
+
+      el.addEventListener("click", function(e){
+
+        e.stopPropagation();
+
+        var w=el.getAttribute("data-word");
+
+        if(w && addShengci(w)) el.classList.add("word-saved");
+
+      });
+
+    });
+
+  }
+
   function closePassage(){ $("passageModal").style.display="none"; }
+
   var _pc=$("passageClose"); if(_pc) _pc.onclick=closePassage;
+
   var _pm=$("passageModal"); if(_pm) _pm.addEventListener("click", function(e){ if(e.target===_pm) closePassage(); });
+
   document.addEventListener("keydown", function(e){ if(e.key==="Escape" && $("passageModal") && $("passageModal").style.display==="flex") closePassage(); });
+
   var topics=[];
+
   ALL.forEach(function(it){ if(topics.indexOf(it["专题"])<0) topics.push(it["专题"]); });
+
   topics.sort();
+
   topics.forEach(function(t){ var o=document.createElement("option"); o.value=t; o.textContent=t; $("selTopic").appendChild(o); });
 
+
+
   // 考点筛选（仅高数）
+
   if(SUBJECT==="高数"){
+
     var selK=$("selKaodian");
+
     if(selK){
+
       selK.style.display="inline-block";
+
       var kaodians=[];
+
       ALL.forEach(function(it){ var kd=it["考点"]||"99-综合"; if(kaodians.indexOf(kd)<0) kaodians.push(kd); });
+
       kaodians.sort();
+
       kaodians.forEach(function(k){ var o=document.createElement("option"); o.value=k; o.textContent=k; selK.appendChild(o); });
+
     }
+
   }
+
+
 
   var mode="shuffle"; // shuffle|order|key|undone|basket
+
   var clozeFullMode=false;
+
   try{ clozeFullMode=localStorage.getItem("yingyu_cloze_full")==="1"; }catch(e){}
+
   if(IS_EN){
+
     var btnCM=$("btnClozeMode");
+
     if(btnCM){
+
       btnCM.style.display="inline-block";
+
       btnCM.textContent=clozeFullMode?"完形全文：开":"完形全文：关";
+
       btnCM.onclick=function(){
+
         clozeFullMode=!clozeFullMode;
+
         try{ localStorage.setItem("yingyu_cloze_full", clozeFullMode?"1":"0"); }catch(e){}
+
         btnCM.textContent=clozeFullMode?"完形全文：开":"完形全文：关";
+
         show();
+
       };
+
     }
+
   }
+
   var list=[], idx=0, revealed=false, answered=false;
+
   function setMode(m){
+
     mode=m;
+
     ["btnShuffle","btnOrder","btnKey","btnUndone","btnBasket"].forEach(function(id){
+
       $("btnShuffle").classList.remove("on");$("btnOrder").classList.remove("on");$("btnKey").classList.remove("on");$("btnUndone").classList.remove("on");$("btnBasket").classList.remove("on");
+
     });
+
     if(m==="shuffle")$("btnShuffle").classList.add("on");
+
     else if(m==="order")$("btnOrder").classList.add("on");
+
     else if(m==="key")$("btnKey").classList.add("on");
+
     else if(m==="undone")$("btnUndone").classList.add("on");
+
     else if(m==="basket")$("btnBasket").classList.add("on");
+
     reload();
+
   }
+
   function findSimilar(it0){
+
     var t0=it0["专题"]||"", k0=it0["考点"]||"";
+
     var out=[], seen={};
+
     function push(c){ if(!seen[c.id]){ seen[c.id]=1; out.push(c); } }
+
     ALL.forEach(function(c){ if(c.id!==it0.id && c["专题"]===t0 && c["考点"]===k0) push(c); });
+
     ALL.forEach(function(c){ if(c.id!==it0.id && c["专题"]===t0) push(c); });
+
     if(!out.length) ALL.forEach(function(c){ if(c.id!==it0.id && c["题型"]===it0["题型"]) push(c); });
+
     return out.slice(0,3);
+
   }
+
   function pool(){
+
     var t=$("selTopic").value;
+
     var kd=$("selKaodian")?$("selKaodian").value:"";
+
     var keySet={};
+
     if(mode==="key"){ KEY_ITEMS.forEach(function(k){ keySet[k.id]=1; }); }
+
     var base=ALL.filter(function(it){
+
       if(t && it["专题"]!==t) return false;
+
       if(kd && (it["考点"]||"99-综合")!==kd) return false;
+
       if(mode==="basket") return basket.indexOf(it.id)>=0;
+
       if(mode==="undone") return !done[it.id];
+
       if(mode==="key") return !!keySet[it.id];
+
       return true;
+
     });
+
     if(mode==="shuffle"){
+
       var arr=base.slice(); for(var i=arr.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=arr[i];arr[i]=arr[j];arr[j]=tmp;}
+
       return arr;
+
     }
+
     return base;
+
   }
+
   function answerIndex(it){
+
     var ans=String(it["答案"]||"").trim();
+
     if(/^[A-H]$/.test(ans)) return ans.charCodeAt(0)-65;
+
     if(it["选项"]&&it["选项"].length) return it["选项"].indexOf(ans);
+
     return -1;
+
   }
+
   function stats(){
+
     var doneN=Object.keys(done).length;
+
     $("nTotal").textContent=ALL.length;
+
     $("nDone").textContent=doneN;
+
     $("nLeft").textContent=list.length;
+
     $("nBasket").textContent=basket.length;
+
     renderBasket();
+
   }
+
   function renderBasket(){
+
     var box=$("basketList");
+
     if(!basket.length){ box.innerHTML='<span style="color:var(--sub)">暂无错题。做题时点「做错了·记入错题」即可入篮。</span>'; return; }
+
     var html="";
+
     basket.forEach(function(id){
+
       var it=null; ALL.forEach(function(x){ if(x.id===id) it=x; });
+
       if(!it) return;
+
       html+='<div><span>'+escHtml((it["题型"]||"")+" · "+it["题目"]).replace(/<span>.*?<\/span>/g,"")+'</span><button data-rm="'+id+'">移除</button></div>';
+
     });
+
     box.innerHTML=html;
+
     box.querySelectorAll("button[data-rm]").forEach(function(b){
+
       b.addEventListener("click",function(){ basket=basket.filter(function(x){return x!==b.getAttribute("data-rm");}); save(); reload(); stats(); });
+
     });
+
   }
+
   function show(){
+
     var box=$("card");
+
     if(!list.length){
+
       box.innerHTML='<div class="empty">当前范围没有题目。<br>换一个专题 / 模式，或点击「重置进度」重新开始。</div>';
+
       ["btnShowA","btnOK","btnNO","btnPrev","btnNext"].forEach(function(id){ var el=$(id); if(el) el.style.visibility="hidden"; });
+
       
+
       return;
+
     }
+
     ["btnShowA","btnOK","btnNO","btnPrev","btnNext"].forEach(function(id){ var el=$(id); if(el) el.style.visibility="visible"; });
+
     var it=list[idx];
+
     revealed=false; answered=false;
+
     var html='<div class="meta">';
+
     html+='<span class="tag qid">'+escHtml(it.id)+'</span><span class="tag">'+escHtml(it["专题"])+'</span><span class="tag">'+escHtml(it["题型"]||"")+'</span>'+((it["来源"]&&String(it["来源"]).indexOf("真题")>=0)?'<span class="tag src">'+escHtml(it["来源"])+'</span>':'');
+
     if(done[it.id]) html+='<span class="tag" style="background:rgba(82,196,26,0.14);color:#3E8C13;">已完成</span>';
+
     if(basket.indexOf(it.id)>=0) html+='<span class="tag" style="background:rgba(234,102,104,0.14);color:#B44244;">已入篮</span>';
+
     html+='</div>';
+
     if(it["材料"]) html+='<div class="material">'+markWords(it["材料"])+'</div>';
+
     if(IS_EN && clozeFullMode && it["passage"]){
+
       html+='<div class="material" style="border-left-color:#EAA7B2;max-height:300px;overflow-y:auto;">'+markWords(it["passage"])+'</div>';
+
     }
+
     html+='<div class="qtext">'+markWords(it["题目"])+'</div>';
+
     if(IS_EN && it["passage"]) html+='<div style="margin-bottom:10px;"><button id="btnPassage" style="background:#9BBBF4;color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;">📖 查看本篇全文</button></div>';
+
     if(it["选项"]&&it["选项"].length){
+
       html+='<ul class="opts">';
+
       var letters="ABCDEFGH";
+
       it["选项"].forEach(function(o,i){
+
         html+='<li data-i="'+i+'"><span class="opt-letter">'+letters[i]+'</span>'+renderMath(String(o).replace(/^[A-Z][\.、]\s*/, ''))+'</li>';
+
       });
+
       html+='</ul>';
+
     } else if(it["题型"]==="单选"||it["题型"]==="多选"){
+
       html+='<div style="background:#FFF1F0;border:1px solid #FFCCC7;border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13px;color:#CF1322;">⚠ 本题选项数据缺失（可能是早期存入时未保存选项）。建议删除此题后重新做题存入。</div>';
+
     }
+
     html+='<div class="feedback" id="fb"></div>';
+
     html+='<div class="answer" id="ans"></div>';
+
     html+='<div class="btns">';
+
     html+='<button id="btnShowA">显示答案 / 解析</button>';
+
     html+='<button id="btnOK" class="g" style="display:none;">做对了 ✔</button>';
+
     html+='<button id="btnNO" class="r" style="display:none;">做错了 · 记入错题</button>';
+
     html+='<button id="btnSkip">跳过</button>';
+
     html+='<button id="btnAITeach">AI 讲题</button>';
+
     html+='</div>';
+
     var similar=findSimilar(it);
+
     html+='<div class="similar"><div>再来一道同专题题</div>'
+
       +(similar.length?similar.map(function(c,n){return '<a href="#" data-similar="'+n+'">'+renderMath(c.id+' · '+(c["题目"]||"未命名"))+'</a>';}).join(""):'<span>暂无同专题题。</span>')
+
       +'</div>';
+
     html+='<div class="nav"><button id="btnPrev">‹ 上一题</button><span style="font-size:12px;color:var(--sub);align-self:center;">'+(idx+1)+' / '+list.length+'</span><button id="btnNext">下一题 ›</button></div>';
+
     box.innerHTML=html;
+
     box.querySelectorAll("a[data-similar]").forEach(function(link){
+
       link.addEventListener("click",function(e){
+
         e.preventDefault();
+
         var cand=similar[Number(link.getAttribute("data-similar"))];
+
         if(!cand) return;
+
         list=[cand].concat(list.filter(function(x){return x.id!==cand.id;}));
+
         idx=0; revealed=false; show();
+
       });
+
     });
+
     // 英语刷题：点击单词加入生词本
+
     if(IS_EN){
+
       box.querySelectorAll(".word-clickable").forEach(function(el){
+
         el.addEventListener("click", function(e){
+
           e.stopPropagation();
+
           var w=el.getAttribute("data-word");
+
           if(w && addShengci(w)){
+
             el.classList.add("word-saved");
+
           }
+
         });
+
       });
+
       // 完形填空：查看本篇全文
+
       var btnP=$("btnPassage");
+
       if(btnP) btnP.onclick=function(){ openPassage(it["passage"]); };
+
     }
+
+
 
     var ansBox=$("ans"), fb=$("fb");
+
     function renderAnswer(){
+
       var a="<div class='k'>答案："+renderMath(it["答案"])+"</div>";
+
       if(it["解析"]) a+="<br>"+renderMath(it["解析"]);
+
       if(it["来源"]&&String(it["来源"]).indexOf("真题")>=0) a+="<br><span style='color:var(--sub)'>来源："+escHtml(it["来源"])+"</span>";
+
       ansBox.innerHTML=a;
+
       ansBox.style.display="block";
+
     }
+
     function markOK(){
+
       done[it.id]=1; answered=true; save();
+
       // 同步更新复习进度：标记为已掌握，今日学习不再显示
+
       try{
+
         var rkey="高数_cuowuji_v2";
+
         var rsaved=JSON.parse(localStorage.getItem(rkey)||"{}")||{};
+
         var rpm=rsaved.pm||{}, rst=rsaved.st||{}, rrv=rsaved.rv||{};
+
         var old=rpm[it.id]||{}, level=Math.min((Number(old.level)||0)+1,4);
+
         var days=[7,7,14,30,45][level];
+
         var now=new Date(); var y=now.getFullYear(), m=String(now.getMonth()+1).padStart(2,"0"), d=String(now.getDate()).padStart(2,"0");
+
         var today=y+"-"+m+"-"+d;
+
         var nd=new Date(now.getTime()+days*86400000);
+
         var next=nd.getFullYear()+"-"+String(nd.getMonth()+1).padStart(2,"0")+"-"+String(nd.getDate()).padStart(2,"0");
+
         rpm[it.id]={last:today,next:next,level:level};
+
         rst[it.id]="已掌握"; rrv[it.id]=today;
+
         localStorage.setItem(rkey,JSON.stringify({st:rst,rv:rrv,pm:rpm}));
+
       }catch(e){}
+
       fb.innerHTML="✔ 答对了"; fb.className="feedback ok"; fb.style.display="block";
+
       $("btnOK").style.display="none"; $("btnNO").style.display="none";
+
       if(basket.indexOf(it.id)>=0){ basket=basket.filter(function(x){return x!==it.id;}); save(); stats(); }
+
       stats();
+
     }
+
     function markNO(){
+
       if(basket.indexOf(it.id)<0) basket.push(it.id);
+
       done[it.id]=1; // 答错也算已完成（做过了），避免"只看未做"重复显示
+
       save(); stats();
+
       fb.innerHTML="已记入错题篮子（可点下方「存入错题本」批量入库）"; fb.className="feedback no"; fb.style.display="block";
+
       $("btnNO").style.display="none"; $("btnOK").style.display="none";
+
     }
+
     // 选择题作答
+
     var opts=box.querySelectorAll(".opts li");
+
     if(opts.length){
+
       var multi=(it["题型"]==="多选");
+
       if(multi){
+
         // 多选题：点选 toggle，提交时与答案集合比较
+
         opts.forEach(function(li){
+
           li.addEventListener("click",function(){
+
             if(answered||revealed) return;
+
             li.classList.toggle("sel");
+
           });
+
         });
+
         var subBtn=document.createElement("button");
+
         subBtn.id="btnSubmit"; subBtn.textContent="提交答案"; subBtn.className="m";
+
         var btns=box.querySelector(".btns");
+
         btns.insertBefore(subBtn, btns.firstChild);
+
         subBtn.addEventListener("click",function(){
+
           if(answered||revealed) return;
+
           var selSet=[];
+
           opts.forEach(function(o,i){ if(o.classList.contains("sel")) selSet.push(i); });
+
           var ans=String(it["答案"]||"").trim(), okSet=[];
+
           for(var k=0;k<ans.length;k++){ var c=ans.charCodeAt(k)-65; if(c>=0&&c<opts.length) okSet.push(c); }
+
           var correct=selSet.length===okSet.length && okSet.every(function(x){return selSet.indexOf(x)>=0;});
+
           opts.forEach(function(o,i){
+
             o.classList.remove("sel");
+
             if(okSet.indexOf(i)>=0) o.classList.add("right");
+
             else if(selSet.indexOf(i)>=0) o.classList.add("wrong");
+
           });
+
           if(correct){
+
             markOK(); renderAnswer();
+
           }else{
+
             fb.innerHTML="✘ 答错了，正确答案是 "+String(it["答案"])+"。"; fb.className="feedback no"; fb.style.display="block";
+
             revealed=true; answered=true; renderAnswer();
+
             $("btnNO").style.display="inline-block";
+
           }
+
         });
+
       }else{
+
       opts.forEach(function(li){
+
         li.addEventListener("click",function(){
+
           if(answered||revealed) return;
+
           var ai=answerIndex(it), sel=parseInt(li.getAttribute("data-i"),10);
+
           if(sel===ai){
+
             li.classList.add("right");
+
             fb.innerHTML="✔ 答对了！"; fb.className="feedback ok"; fb.style.display="block";
+
             revealed=true; answered=true; markOK();
+
             renderAnswer();
+
           }else{
+
             li.classList.add("wrong");
+
             opts.forEach(function(o){ if(parseInt(o.getAttribute("data-i"),10)===ai) o.classList.add("right"); });
+
             fb.innerHTML="✘ 答错了，正确答案是 "+String(it["答案"])+"。"; fb.className="feedback no"; fb.style.display="block";
+
             revealed=true; answered=true;
+
             renderAnswer();
+
             $("btnNO").style.display="inline-block";
+
           }
+
         });
+
       });
+
       }
+
       $("btnShowA").addEventListener("click",function(){
+
         if(revealed) return;
+
         revealed=true; renderAnswer();
+
         $("btnOK").style.display="inline-block";
+
         $("btnNO").style.display="inline-block";
+
       });
+
     }else{
+
       // 无选项题：显示答案后判定
+
       $("btnShowA").addEventListener("click",function(){
+
         if(revealed) return;
+
         revealed=true; renderAnswer();
+
         $("btnOK").style.display="inline-block";
+
         $("btnNO").style.display="inline-block";
+
       });
+
     }
+
     $("btnOK").addEventListener("click",markOK);
+
     $("btnNO").addEventListener("click",markNO);
+
     $("btnSkip").addEventListener("click",function(){ if(idx<list.length-1){idx++;show();} else {idx=0;show();} });
+
     $("btnPrev").addEventListener("click",function(){ idx=(idx-1+list.length)%list.length; show(); });
+
     $("btnNext").addEventListener("click",function(){ idx=(idx+1)%list.length; show(); });
+
     var aiBtn=$("btnAITeach");
+
     if(aiBtn) aiBtn.addEventListener("click",function(){
+
       var it=list[idx];
+
       if(!it){ showToast("暂无题目"); return; }
+
       var p="请帮我讲解这道专升本题目，讲清楚考点和解题思路：\n\n";
+
       p+="【题型】"+(it["题型"]||"")+"\n";
+
       p+="【题目】"+(it["题目"]||"")+"\n";
+
       if(it["材料"]) p+="【材料】"+it["材料"]+"\n";
+
       if(it["选项"]&&it["选项"].length){
+
         var L="ABCDEFGH";
+
         p+="【选项】\n"+it["选项"].map(function(o,i){ return L[i]+". "+o; }).join("\n");
+
       }
+
       p+="\n【答案】"+(it["答案"]||"")+"\n";
+
       if(it["解析"]&&it["解析"]!=="（本题未附解析）") p+="【解析】"+it["解析"]+"\n";
+
       p+="\n请分点讲解：1) 考点是什么；2) 为什么选这个答案；3) 其他选项错在哪。";
+
       if(window.AIAsk){ window.AIAsk(p, "AI讲题 · "+it.id); }
+
       else{ showToast("AI 助手未加载，请刷新页面"); }
+
     });
+
     stats();
+
   }
+
   function reload(){
+
     list=pool(); idx=0; show();
+
   }
+
+
 
   $("selTopic").addEventListener("change",reload);
+
   var selK2=$("selKaodian"); if(selK2) selK2.addEventListener("change",reload);
+
   $("btnShuffle").addEventListener("click",function(){setMode("shuffle");});
+
   $("btnOrder").addEventListener("click",function(){setMode("order");});
+
   $("btnUndone").addEventListener("click",function(){setMode("undone");});
+
   $("btnBasket").addEventListener("click",function(){setMode("basket");});
+
   $("btnKey").addEventListener("click",function(){setMode("key");});
+
   $("btnReset").addEventListener("click",function(){
+
     // 两次点击确认（避免原生弹窗在 file:// 下的不稳定）
+
     if(this._arm){
+
       done={}; basket=[]; nextId=BASE_QID; save();
+
       this._arm=false; this.textContent="重置进度";
+
       this.style.background=""; this.style.color="";
+
       showToast("已重置本学科刷题进度，正在刷新...");
+
       setTimeout(function(){ location.reload(); }, 500);
+
     }else{
+
       this._arm=true; this.textContent="再点一次确认重置";
+
       this.style.background="#EA6668"; this.style.color="#fff";
+
       var self=this;
+
       setTimeout(function(){ self._arm=false; self.textContent="重置进度"; self.style.background=""; self.style.color=""; }, 3000);
+
     }
+
   });
+
   $("btnClearBasket").addEventListener("click",function(){
+
     if(!basket.length) return;
+
     basket=[]; save(); reload(); stats();
+
   });
+
   // 导出
+
   function fmtDate(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+
   function buildExport(){
+
     var out="";
+
     basket.forEach(function(id){
+
       var it=null; ALL.forEach(function(x){ if(x.id===id) it=x; });
+
       if(!it) return;
+
       out+="## Q-"+String(nextId).padStart(3,"0")+"\n";
+
       out+="- 章节："+escHtml(it["章节"]||"99-综合")+"\n";
+
       out+="- 日期："+fmtDate(new Date())+"\n";
+
       out+="- 状态：待复习\n";
+
       out+="- 题型："+(it["题型"]||"选择")+"\n";
+
       var q=it["题目"]; if(it["材料"]) q=(it["材料"]+"\n\n"+q);
+
       out+="- 题目："+q+"\n";
+
       if(it["选项"]&&it["选项"].length){
+
         var letters="ABCDEFGH";
+
         var optsStr=it["选项"].map(function(o,i){return letters[i]+". "+o;}).join(" / ");
+
         out+="- 选项："+optsStr+"\n";
+
       }
+
       out+="- 答案："+it["答案"]+"\n";
+
       var jx=it["解析"]||"";
+
       if(it["来源"]&&String(it["来源"]).indexOf("真题")>=0) jx=(jx?jx+" ":"")+"（来源："+it["来源"]+"）";
+
       out+="- 解析："+jx+"\n\n";
+
       nextId++;
+
     });
+
     return out.trim();
+
   }
+
   function showManualExport(txt){
+
     var box=$("expBox"), ta=$("expText");
+
     ta.value=txt;
+
     box.style.display="block";
+
     ta.select();
+
     ta.setSelectionRange(0, txt.length);
+
     var copied=copyText(txt);
+
     basket=[]; save(); reload(); stats();
+
     showToast(copied ? "已复制到剪贴板。请粘贴到《错题本.md》末尾后运行 build.py。" :
+
       "错题文本已生成，请全选复制后粘贴到《错题本.md》末尾。", 6000);
+
   }
+
   $("btnExport").addEventListener("click",async function(){
+
     if(!basket.length){ showToast("错题篮子为空，先做题并把错题记入篮子。"); return; }
+
     var txt=buildExport();
+
     var button=this;
+
     button.disabled=true; button.textContent="正在存入…";
+
     // 构建本地错题JSON（手机APK/离线环境用）
+
     var localErrors=[];
+
     var todayStr=new Date().toISOString().slice(0,10);
+
     basket.forEach(function(qid){
+
       var it=ALL.find(function(x){return x.id===qid;});
+
       if(it){
+
         localErrors.push({
+
           id:"L-"+qid, 题目:it.题目||"", 选项:it.选项||[],
+
           答案:it.答案||"", 解析:it.解析||"",
+
           章节:it.章节||it.专题||"综合", 题型:it.题型||"单选",
+
           来源:it.来源||"题库", 状态:"待复习", 日期:todayStr
+
         });
+
       }
+
     });
+
     // 方式1：尝试server API（电脑端）
+
     var serverOk=false;
+
     try{
+
       var res=await fetch("/api/append-error", {
+
         method:"POST",
+
         headers:{"Content-Type":"application/json"},
+
         body:JSON.stringify({subject:"高数", text:txt})
+
       });
+
       var data=await res.json();
+
       if(res.ok){ nextId=parseInt(data.nextId,10)||nextId; serverOk=true; }
+
     }catch(e){}
+
     // 方式2：server成功则清空本地错题（已写入错题本.md）；失败才写入localStorage
+
     try{
+
       var lkey="高数_errorbook_local";
+
       if(serverOk){
+
         localStorage.removeItem(lkey);
+
       }else{
+
         var existing=JSON.parse(localStorage.getItem(lkey)||"[]");
+
         localErrors.forEach(function(ne){
+
           // 按id去重：同一题累计错误次数，不同题即使答案相同也新增
+
           var found=existing.find(function(e){return e.id===ne.id;});
+
           if(found){ found.错误次数=(found.错误次数||1)+1; }
+
           else{ existing.push(ne); }
+
         });
+
         localStorage.setItem(lkey, JSON.stringify(existing));
+
       }
+
     }catch(e){}
+
     basket=[]; save(); reload(); stats();
+
     $("expBox").style.display="none";
+
     if(serverOk){
+
       showToast("已存入错题本，复习页已更新。", 4000);
+
     }else{
+
       showToast("已存入本地错题本（"+localErrors.length+"题），复习页自动读取。", 4000);
+
     }
+
     button.disabled=false; button.textContent="存入错题本";
+
   });
+
   // 初始
+
   setMode("shuffle");
+
 })();
+
 </script>
+
+
 
 <div id="aiFab" title="AI 学习助手">🤖</div>
+
 <div id="aiPanel" style="display:none;">
+
   <div id="aiHead"><span>AI 学习助手</span><button id="aiClose" aria-label="关闭">×</button></div>
+
   <div id="aiMsgs"></div>
+
   <div id="aiInputRow">
+
     <input id="aiInput" placeholder="问学习问题，或点题目的「AI讲题」…" maxlength="2000">
+
     <button id="aiSend">发送</button>
+
   </div>
+
 </div>
+
 <style>
+
 #aiFab{position:fixed;right:16px;bottom:16px;width:52px;height:52px;border-radius:50%;
+
   background:linear-gradient(135deg,#4F7CF7,#6A5AF9);color:#fff;font-size:24px;
+
   display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:9999;
+
   box-shadow:0 4px 14px rgba(79,124,247,.4);-webkit-tap-highlight-color:transparent;user-select:none;}
+
 #aiPanel{position:fixed;right:16px;bottom:80px;width:min(360px,calc(100vw - 32px));height:min(480px,calc(100vh - 120px));
+
   background:#fff;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.18);z-index:9999;
+
   display:flex;flex-direction:column;overflow:hidden;border:1px solid #E4E3DD;}
+
 #aiHead{background:linear-gradient(135deg,#4F7CF7,#6A5AF9);color:#fff;padding:10px 14px;
+
   font-size:14px;font-weight:600;display:flex;justify-content:space-between;align-items:center;}
+
 #aiClose{background:rgba(255,255,255,.2);border:none;color:#fff;width:26px;height:26px;
+
   border-radius:50%;font-size:16px;line-height:1;cursor:pointer;}
+
 #aiMsgs{flex:1;overflow-y:auto;padding:12px;background:#FAF9F6;display:flex;flex-direction:column;gap:8px;font-size:14px;}
+
 .ai-msg{max-width:88%;padding:8px 11px;border-radius:12px;white-space:pre-wrap;word-break:break-word;line-height:1.55;}
+
 .ai-user{align-self:flex-end;background:#4F7CF7;color:#fff;border-bottom-right-radius:4px;}
+
 .ai-bot{align-self:flex-start;background:#fff;border:1px solid #E4E3DD;border-bottom-left-radius:4px;color:#1A1B1C;}
+
 .ai-bot.err{color:#B44244;background:#FDF0EF;}
+
 .ai-typing{color:#6B7280;font-style:italic;}
+
 .ai-msg .ai-math{display:inline-block;margin:2px 2px;}
+
 .ai-msg .ai-math-plain{font-family:Consolas,Monaco,monospace;font-size:0.92em;background:rgba(79,124,247,0.07);border-radius:4px;padding:0 4px;}
+
 .ai-msg strong{font-weight:700;}
+
 #aiInputRow{display:flex;gap:8px;padding:10px;border-top:1px solid #E4E3DD;background:#fff;}
+
 #aiInput{flex:1;border:1px solid #D8D6CF;border-radius:10px;padding:8px 11px;font-size:14px;outline:none;min-width:0;}
+
 #aiInput:focus{border-color:#4F7CF7;}
+
 #aiSend{background:#4F7CF7;color:#fff;border:none;border-radius:10px;padding:0 16px;font-size:14px;cursor:pointer;font-weight:600;}
+
 @media (max-width:480px){#aiPanel{right:8px;bottom:76px;width:calc(100vw - 16px);}}
+
 </style>
+
 <script>
+
 (function(){
+
   var API="https://ai.scgsstudy.top";
+
   var fab=document.getElementById("aiFab");
+
   var panel=document.getElementById("aiPanel");
+
   var msgs=document.getElementById("aiMsgs");
+
   var input=document.getElementById("aiInput");
+
   var send=document.getElementById("aiSend");
+
   var close=document.getElementById("aiClose");
+
   if(!fab||!panel) return;
+
   var open=false;
+
   function toggle(force){
+
     open=(typeof force==="boolean")?force:!open;
+
     panel.style.display=open?"flex":"none";
+
     if(open&&input) input.focus();
+
   }
+
   fab.addEventListener("click",function(){ toggle(); });
+
   if(close) close.addEventListener("click",function(){ toggle(false); });
+
   function escAI(x){ return String(x).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
   function plainMath(x){
+
     return String(x)
+
       .replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g,function(_,a,b){ return "("+a+"/"+b+")"; })
+
       .replace(/\\sqrt(\[[^{}\]]*\])?\{([^{}]+)\}/g,function(_,r,b){ return r?"("+b+")^(1/"+String(r).replace(/[\[\]]/g,"")+")":"√("+b+")"; })
+
       .replace(/\\dfrac\{([^{}]+)\}\{([^{}]+)\}/g,function(_,a,b){ return "("+a+"/"+b+")"; })
+
       .replace(/\\lim_?\{?([^{}]*)\}?/g,"lim→$1")
+
       .replace(/\\infty/g,"∞").replace(/\\to/g,"→").replace(/\\rightarrow/g,"→")
+
       .replace(/\\cdot/g,"·").replace(/\\times/g,"×").replace(/\\pm/g,"±")
+
       .replace(/\\le/g,"≤").replace(/\\ge/g,"≥").replace(/\\ne/g,"≠").replace(/\\approx/g,"≈")
+
       .replace(/\\left/g,"").replace(/\\right/g,"")
+
       .replace(/\\big|\\Big/g,"").replace(/\\([a-zA-Z]+)/g,"$1")
+
       .replace(/\\,/g," ").replace(/\\ /g," ")
+
       .replace(/[{}]/g,"");
+
   }
+
   function renderAI(text){
+
     if(!text) return "";
+
     var t=escAI(text);
+
     // 代码块先保护
+
     var codes=[];
+
     t=t.replace(/`([^`]*)`/g,function(_,c){ codes.push(c); return "\u0000C"+(codes.length-1)+"\u0000"; });
+
     function fmt(x,display){
+
       // 反转义：公式内容从已转义文本中提取，需还原 < > & 再给 KaTeX
+
       var raw=x.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&");
+
       try{
+
         if(typeof katex!=="undefined"&&katex.renderToString){
+
           return '<span class="ai-math">'+katex.renderToString(raw,{displayMode:display,throwOnError:false})+'</span>';
+
         }
+
       }catch(e){}
+
       return '<span class="ai-math-plain">'+plainMath(raw)+'</span>';
+
     }
+
     t=t.replace(/\$\$([\s\S]+?)\$\$/g,function(_,x){ return fmt(x,true); });
+
     t=t.replace(/\\\[([\s\S]+?)\\\]/g,function(_,x){ return fmt(x,true); });
+
     t=t.replace(/\$([^$\n]+?)\$/g,function(_,x){ return fmt(x,false); });
+
     t=t.replace(/\\\(([^\\]+?)\\\)/g,function(_,x){ return fmt(x,false); });
+
     t=t.replace(/\*\*([^*\n]+)\*\*/g,"<strong>$1</strong>");
+
     t=t.replace(/\u0000C(\d+)\u0000/g,function(_,i){
+
       return '<code style="background:rgba(0,0,0,0.06);border-radius:4px;padding:1px 5px;font-family:Consolas,Monaco,monospace;font-size:0.9em;color:#B44244;white-space:pre-wrap;word-break:break-all;">'+escAI(codes[+i]||"")+'</code>';
+
     });
+
     return t;
+
   }
+
   function append(role,text,cls){
+
     var d=document.createElement("div");
+
     d.className="ai-msg "+(role==="user"?"ai-user":"ai-bot")+(cls?" "+cls:"");
+
     if(role==="bot"&&!cls){ d.innerHTML=renderAI(text); }
+
     else{ d.textContent=text; }
+
     if(msgs) msgs.appendChild(d);
+
     if(msgs) msgs.scrollTop=msgs.scrollHeight;
+
     return d;
+
   }
+
   function ask(q,title){
+
     if(!q||!q.trim()) return;
+
     toggle(true);
+
     var finalQ=title?("【"+title+"】\n"+q):q;
+
     append("user",finalQ);
+
     var typing=append("bot","思考中…","ai-typing");
+
     fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},
+
       body:JSON.stringify({messages:[
+
         {role:"system",content:"你是四川专升本学习助手，擅长高等数学、计算机基础、大学英语。数学公式用LaTeX：行内 $...$，独立公式 $$...$$。解题铁律：1) 仔细审题，先明确题目问什么；2) 每一步计算必须准确，临界点、极值点等关键结果要代入验算；3) 只讲解与本题直接相关的内容，严禁添加与解题无关的表述（如多余的零点、无关性质、无关定理）；4) 术语严格准确：临界点=导数零点，零点=函数值为0的点，单调区间、极值、拐点等概念不可混用或并列；5) 不确定的地方明确说，不编造；6) 分点清晰，面向专升本考生，用中文。"},
+
         {role:"user",content:finalQ}
+
       ],max_tokens:700})})
+
       .then(function(r){
+
         if(!r.ok) return r.text().then(function(t){ throw new Error("服务返回 "+r.status+(t.length<150?": "+t:"")); });
+
         return r.json();
+
       })
+
       .then(function(j){
+
         var c=(j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content)||"(空回复)";
+
         typing.className="ai-msg ai-bot";
+
         typing.innerHTML=renderAI(c);
+
       })
+
       .catch(function(e){
+
         typing.className="ai-msg ai-bot err";
+
         typing.textContent="请求失败："+e.message;
+
       });
+
   }
+
   if(send) send.addEventListener("click",function(){ var v=input.value; if(v.trim()){ input.value=""; ask(v); } });
+
   if(input) input.addEventListener("keydown",function(e){ if(e.key==="Enter"&&!e.shiftKey){ e.preventDefault(); var v=input.value; if(v.trim()){ input.value=""; ask(v); } } });
+
   window.AIAsk=ask;
+
 })();
+
 </script>
+
+
 
 <div id="subModal" style="display:none;position:fixed;inset:0;z-index:99990;background:rgba(15,23,42,0.55);backdrop-filter:blur(3px);justify-content:center;align-items:center;padding:16px;">
+
   <div style="background:#fff;border-radius:16px;max-width:560px;width:100%;max-height:92vh;overflow-y:auto;padding:22px 24px;box-sizing:border-box;box-shadow:0 20px 60px rgba(0,0,0,0.25);">
+
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+
       <div style="font-size:19px;font-weight:700;color:#1A1B1C;">📮 投稿题目</div>
+
       <div id="subClose" style="cursor:pointer;font-size:22px;color:#8a8f98;line-height:1;padding:2px 8px;">×</div>
+
     </div>
+
     <div style="display:flex;gap:8px;margin-bottom:16px;border-bottom:2px solid #f0f0f0;padding-bottom:0;">
+
       <button id="tabImage" type="button" style="flex:1;padding:10px;border:none;border-bottom:3px solid #4F7CF7;background:transparent;color:#4F7CF7;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:-2px;">📷 上传图片</button>
+
       <button id="tabManual" type="button" style="flex:1;padding:10px;border:none;border-bottom:3px solid transparent;background:transparent;color:#6B7280;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:-2px;">✏️ 手动填写</button>
+
     </div>
+
+
 
     <!-- ===== 上传图片模式 ===== -->
+
     <div id="panelImage">
+
       <div style="font-size:13px;color:#6B7280;margin-bottom:10px;line-height:1.6;">拍照或上传题目图片，管理员会识别题目并整理入库。</div>
+
       <div id="dropZone" style="border:2px dashed #d1d5db;border-radius:12px;padding:28px 16px;text-align:center;cursor:pointer;background:#fafafa;transition:all 0.2s;">
+
         <div style="font-size:34px;margin-bottom:6px;">📷</div>
+
         <div style="font-size:14px;color:#374151;font-weight:600;">点击选择图片 或 拖拽到这里</div>
+
         <div style="font-size:12px;color:#9ca3af;margin-top:4px;">支持 JPG/PNG，可多选，总大小≤18MB</div>
+
         <input type="file" id="fileInput" accept="image/*" multiple style="display:none;">
+
       </div>
+
       <div id="previewArea" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;"></div>
+
       <div style="margin-top:14px;">
+
         <div style="font-size:13px;color:#374151;margin-bottom:5px;">科目 <span style="color:#e5484d;">*</span></div>
+
         <select id="subSubjectImg" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;background:#fff;">
+
           <option value="高数">高等数学</option>
+
           <option value="计算机">计算机基础</option>
+
           <option value="英语">大学英语</option>
+
         </select>
+
       </div>
+
       <div style="margin-top:12px;">
+
         <div style="font-size:13px;color:#374151;margin-bottom:5px;">备注（可选）</div>
+
         <textarea id="subNoteImg" rows="2" placeholder="如：2025年真题、第3页等" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;resize:vertical;font-family:inherit;line-height:1.5;"></textarea>
+
       </div>
+
     </div>
+
+
 
     <!-- ===== 手动填写模式 ===== -->
+
     <div id="panelManual" style="display:none;">
+
       <div style="font-size:13px;color:#6B7280;margin-bottom:14px;line-height:1.6;">手动填写题目信息，带 <span style="color:#e5484d;">*</span> 为必填。</div>
+
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+
         <div>
+
           <div style="font-size:13px;color:#374151;margin-bottom:5px;">科目 <span style="color:#e5484d;">*</span></div>
+
           <select id="subSubject" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;background:#fff;">
+
             <option value="高数">高等数学</option>
+
             <option value="计算机">计算机基础</option>
+
             <option value="英语">大学英语</option>
+
           </select>
+
         </div>
+
         <div>
+
           <div style="font-size:13px;color:#374151;margin-bottom:5px;">题型</div>
+
           <select id="subType" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;background:#fff;">
+
             <option value="单选">单选题</option>
+
             <option value="多选">多选题</option>
+
             <option value="判断">判断题</option>
+
             <option value="填空">填空题</option>
+
             <option value="简答">简答题</option>
+
             <option value="完形">完形填空</option>
+
             <option value="翻译">翻译题</option>
+
             <option value="其他">其他</option>
+
           </select>
+
         </div>
+
       </div>
+
       <div style="margin-bottom:12px;">
+
         <div style="font-size:13px;color:#374151;margin-bottom:5px;">题目内容 <span style="color:#e5484d;">*</span></div>
+
         <textarea id="subQuestion" rows="4" placeholder="题目内容，可含公式（用 $...$ 包裹）" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;resize:vertical;font-family:inherit;line-height:1.5;"></textarea>
+
       </div>
+
       <div style="margin-bottom:12px;">
+
         <div style="font-size:13px;color:#374151;margin-bottom:5px;">选项（每行一个，如 A.xxx）</div>
+
         <textarea id="subOptions" rows="3" placeholder="A. 选项一&#10;B. 选项二&#10;C. 选项三&#10;D. 选项四" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;resize:vertical;font-family:inherit;line-height:1.5;"></textarea>
+
       </div>
+
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+
         <div>
+
           <div style="font-size:13px;color:#374151;margin-bottom:5px;">答案</div>
+
           <input id="subAnswer" type="text" placeholder="如：B 或 具体答案" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;" />
+
         </div>
+
         <div>
+
           <div style="font-size:13px;color:#374151;margin-bottom:5px;">题目来源</div>
+
           <input id="subSource" type="text" placeholder="如：真题2025 / 自编 / 机构" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;" />
+
         </div>
+
       </div>
+
       <div style="margin-bottom:16px;">
+
         <div style="font-size:13px;color:#374151;margin-bottom:5px;">备注（可选）</div>
+
         <textarea id="subNote" rows="2" placeholder="想补充的任何说明" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;resize:vertical;font-family:inherit;line-height:1.5;"></textarea>
+
       </div>
+
     </div>
+
+
 
     <div id="subMsg" style="font-size:13px;margin-bottom:12px;display:none;padding:9px 12px;border-radius:9px;line-height:1.5;"></div>
+
     <div style="display:flex;gap:10px;justify-content:flex-end;">
+
       <button id="subCancel" type="button" style="padding:10px 20px;border:1px solid #d1d5db;border-radius:10px;background:#fff;color:#374151;font-size:14px;cursor:pointer;">取消</button>
+
       <button id="subSend" type="button" style="padding:10px 22px;border:none;border-radius:10px;background:#4F7CF7;color:#fff;font-size:14px;font-weight:600;cursor:pointer;">提交投稿</button>
+
     </div>
+
   </div>
+
 </div>
+
 <button id="subFab" title="投稿题目" style="position:fixed;right:22px;bottom:96px;z-index:99970;width:50px;height:50px;border-radius:50%;border:none;background:linear-gradient(135deg,#4F7CF7,#8B5CF6);color:#fff;font-size:22px;cursor:pointer;box-shadow:0 6px 20px rgba(79,124,247,0.4);display:flex;align-items:center;justify-content:center;">📮</button>
+
 <script>
+
 (function(){
+
   var modal=document.getElementById('subModal'), fab=document.getElementById('subFab');
+
   var close=document.getElementById('subClose'), cancel=document.getElementById('subCancel'), send=document.getElementById('subSend');
+
   var msg=document.getElementById('subMsg'), subAPI="https://ai.scgsstudy.top/api/submit";
+
   if(!modal||!fab) return;
 
+
+
   // Tab 切换
+
   var tabImage=document.getElementById('tabImage'), tabManual=document.getElementById('tabManual');
+
   var panelImage=document.getElementById('panelImage'), panelManual=document.getElementById('panelManual');
+
   var currentTab='image';
+
   function switchTab(tab){
+
     currentTab=tab;
+
     if(tab==='image'){
+
       tabImage.style.color='#4F7CF7'; tabImage.style.borderBottomColor='#4F7CF7';
+
       tabManual.style.color='#6B7280'; tabManual.style.borderBottomColor='transparent';
+
       panelImage.style.display=''; panelManual.style.display='none';
+
     } else {
+
       tabManual.style.color='#4F7CF7'; tabManual.style.borderBottomColor='#4F7CF7';
+
       tabImage.style.color='#6B7280'; tabImage.style.borderBottomColor='transparent';
+
       panelManual.style.display=''; panelImage.style.display='none';
+
     }
+
   }
+
   if(tabImage) tabImage.addEventListener('click',function(){ switchTab('image'); });
+
   if(tabManual) tabManual.addEventListener('click',function(){ switchTab('manual'); });
 
+
+
   // 图片上传
+
   var fileInput=document.getElementById('fileInput'), dropZone=document.getElementById('dropZone'), previewArea=document.getElementById('previewArea');
+
   var uploadedImages=[]; // {filename, base64}
+
   function renderPreview(){
+
     if(!previewArea) return;
+
     previewArea.innerHTML='';
+
     uploadedImages.forEach(function(img,idx){
+
       var wrap=document.createElement('div');
+
       wrap.style.cssText='position:relative;width:80px;height:80px;border-radius:8px;overflow:hidden;border:1px solid #e5e7eb;';
+
       var im=document.createElement('img');
+
       im.src=img.base64; im.style.cssText='width:100%;height:100%;object-fit:cover;';
+
       var del=document.createElement('div');
+
       del.textContent='×'; del.style.cssText='position:absolute;top:2px;right:2px;width:20px;height:20px;background:rgba(0,0,0,0.6);color:#fff;border-radius:50%;font-size:14px;line-height:20px;text-align:center;cursor:pointer;';
+
       del.addEventListener('click',function(e){ e.stopPropagation(); uploadedImages.splice(idx,1); renderPreview(); });
+
       wrap.appendChild(im); wrap.appendChild(del);
+
       previewArea.appendChild(wrap);
+
     });
+
   }
+
   function handleFiles(files){
+
     if(!files||!files.length) return;
+
     var remaining=Array.prototype.slice.call(files);
+
     function processNext(){
+
       if(!remaining.length){ renderPreview(); return; }
+
       var file=remaining.shift();
+
       if(!file.type||file.type.indexOf('image/')!==0){ processNext(); return; }
+
       var reader=new FileReader();
+
       reader.onload=function(e){
+
         uploadedImages.push({filename:file.name||'image.jpg', base64:e.target.result});
+
         processNext();
+
       };
+
       reader.onerror=function(){ processNext(); };
+
       reader.readAsDataURL(file);
+
     }
+
     processNext();
+
   }
+
   if(dropZone&&fileInput){
+
     dropZone.addEventListener('click',function(){ fileInput.click(); });
+
     fileInput.addEventListener('change',function(e){ handleFiles(e.target.files); fileInput.value=''; });
+
     dropZone.addEventListener('dragover',function(e){ e.preventDefault(); dropZone.style.borderColor='#4F7CF7'; dropZone.style.background='#f0f4ff'; });
+
     dropZone.addEventListener('dragleave',function(){ dropZone.style.borderColor='#d1d5db'; dropZone.style.background='#fafafa'; });
+
     dropZone.addEventListener('drop',function(e){ e.preventDefault(); dropZone.style.borderColor='#d1d5db'; dropZone.style.background='#fafafa'; handleFiles(e.dataTransfer.files); });
+
   }
+
+
 
   function show(s){ modal.style.display=s?'flex':'none'; }
+
   function tip(t,ok){ if(!msg) return; msg.style.display='block'; msg.style.background=ok?'rgba(240,253,244,0.9)':'rgba(254,242,242,0.9)'; msg.style.color=ok?'#16a34a':'#dc2626'; msg.textContent=t; }
+
   window.openSubmit=function(subject){
+
     var s1=document.getElementById('subSubject'), s2=document.getElementById('subSubjectImg');
+
     if(subject){ var map={高数:'高数',计算机:'计算机',英语:'英语'}; if(map[subject]){ if(s1)s1.value=map[subject]; if(s2)s2.value=map[subject]; } }
+
     if(msg) msg.style.display='none';
+
     show(true);
+
   };
+
   fab.addEventListener('click',function(){
+
     var t=document.title||'';
+
     var guess='';
+
     if(t.indexOf('计算机')>=0){ guess='计算机'; }
+
     else if(t.indexOf('英语')>=0){ guess='英语'; }
+
     else if(t.indexOf('高数')>=0||t.indexOf('高等数学')>=0){ guess='高数'; }
+
     window.openSubmit(guess||undefined);
+
   });
+
   if(close) close.addEventListener('click',function(){ show(false); });
+
   if(cancel) cancel.addEventListener('click',function(){ show(false); });
+
   modal.addEventListener('click',function(e){ if(e.target===modal) show(false); });
 
+
+
   send.addEventListener('click',function(){
+
     if(currentTab==='image'){
+
       // 图片模式
+
       if(uploadedImages.length===0){ tip('请至少选择一张图片',false); return; }
+
       var subject=document.getElementById('subSubjectImg').value;
+
       var note=document.getElementById('subNoteImg').value.trim();
+
       send.disabled=true; send.textContent='上传中…';
+
       fetch(subAPI,{method:'POST',headers:{'Content-Type':'application/json'},
+
         body:JSON.stringify({type:'image',subject:subject,note:note,images:uploadedImages})})
+
         .then(function(r){ return r.json().then(function(j){ return {ok:r.ok,j:j}; }); })
+
         .then(function(res){
+
           send.disabled=false; send.textContent='提交投稿';
+
           if(res.ok&&res.j.success){
+
             tip('图片上传成功！我们会尽快识别题目并审核入库。',true);
+
             uploadedImages=[]; renderPreview();
+
             document.getElementById('subNoteImg').value='';
+
             setTimeout(function(){ show(false); }, 1800);
+
           } else {
+
             tip((res.j&&res.j.error)||'上传失败，请重试',false);
+
           }
+
         })
+
         .catch(function(e){ send.disabled=false; send.textContent='提交投稿'; tip('网络错误：'+e.message,false); });
+
     } else {
+
       // 手动模式
+
       var subject=document.getElementById('subSubject').value;
+
       var qtype=document.getElementById('subType').value;
+
       var question=document.getElementById('subQuestion').value.trim();
+
       var options=document.getElementById('subOptions').value.trim();
+
       var answer=document.getElementById('subAnswer').value.trim();
+
       var source=document.getElementById('subSource').value.trim();
+
       var note=document.getElementById('subNote').value.trim();
+
       if(question.length<3){ tip('题目内容不能为空（至少3个字）',false); return; }
+
       send.disabled=true; send.textContent='提交中…';
+
       fetch(subAPI,{method:'POST',headers:{'Content-Type':'application/json'},
+
         body:JSON.stringify({subject:subject,qtype:qtype,question:question,options:options,answer:answer,source:source,note:note})})
+
         .then(function(r){ return r.json().then(function(j){ return {ok:r.ok,j:j}; }); })
+
         .then(function(res){
+
           send.disabled=false; send.textContent='提交投稿';
+
           if(res.ok&&res.j.success){
+
             tip('投稿成功！管理员审核后会尽快入库，谢谢你的贡献。',true);
+
             document.getElementById('subQuestion').value='';
+
             document.getElementById('subOptions').value='';
+
             document.getElementById('subAnswer').value='';
+
             document.getElementById('subSource').value='';
+
             document.getElementById('subNote').value='';
+
             setTimeout(function(){ show(false); }, 1800);
+
           } else {
+
             tip((res.j&&res.j.error)||'提交失败，请重试',false);
+
           }
+
         })
+
         .catch(function(e){ send.disabled=false; send.textContent='提交投稿'; tip('网络错误：'+e.message,false); });
+
     }
+
   });
+
 })();
+
 </script>
 
+
 </body>
+
 </html>
+

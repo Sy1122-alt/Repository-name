@@ -1,113 +1,221 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN">
+
 <head>
+
 <meta charset="utf-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <meta name="theme-color" content="#22304A">
+
 <link rel="manifest" href="manifest.json?v=20260911">
+
 <link rel="apple-touch-icon" href="icon-192.png">
+
 <title>学习平台</title>
+
 <style>
+
 :root{--text:#1A1B1C;--sub:#6B7280;--bg:#F4F3EE;--card:#FFFFFF;--border:#E4E3DD;}
+
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+
 body{font-family:'Roboto','PingFang SC','Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);padding:16px;line-height:1.6;}
+
 .wrap{max-width:720px;margin:0 auto;}
+
 h1{font-size:20px;font-weight:700;margin-bottom:2px;}
+
 .sub{font-size:12px;color:var(--sub);margin-bottom:16px;}
+
 .grid{display:flex;gap:12px;flex-wrap:wrap;}
+
 .sc{flex:1 1 200px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;text-decoration:none;color:var(--text);display:block;}
+
 .sc:hover{border-color:var(--c);}
+
 .sc.sc2{border-style:dashed;}
+
 .sc-icon{width:38px;height:38px;border-radius:10px;background:var(--c);color:#22304A;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+
 .sc-name{font-size:16px;font-weight:700;margin-bottom:4px;}
+
 .sc-desc{font-size:12px;color:var(--sub);margin-bottom:8px;}
+
 .sc-stat{font-size:12px;font-weight:600;color:#33475C;}
+
 .h2{font-size:13px;font-weight:700;margin:18px 0 8px;color:var(--sub);}
+
 .note{font-size:12px;color:var(--sub);margin-top:20px;line-height:1.8;background:var(--card);border:1px dashed var(--border);border-radius:12px;padding:12px 14px;}
+
 .daily-total{font-size:13px;color:var(--sub);margin-bottom:8px;}
+
 .daily-total b{font-size:18px;color:var(--text);margin:0 3px;}
+
 .daily-empty{font-size:12px;color:var(--sub);padding:10px 0;}
+
 .daily-card{position:relative;}
+
 .daily-count{font-size:20px;font-weight:700;margin:2px 0;}
+
 .daily-focus{font-size:12px;color:var(--sub);}
+
 .quality{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-top:18px;font-size:12px;}
+
 .quality-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px;}
+
 .quality-head strong{font-size:13px;}
+
 .quality-ok{color:#3E8C13;font-weight:600;}
+
 .quality-bad{color:#B44244;font-weight:600;}
+
 .quality-list{margin-top:8px;max-height:260px;overflow:auto;}
+
 .quality-list div{padding:4px 0;border-top:1px solid var(--border);}
+
 .quality-list .error{color:#B44244;}
+
 .quality-list .warning{color:#8A5B00;}
+
 /* 移动端适配 */
+
 @media (max-width:480px){
+
   .sc{min-height:80px;}
+
   .sc-name{font-size:15px;}
+
   .sc-stat{font-size:13px;}
+
 }
+
 </style>
+
 </head>
+
 <body>
+
 <div class="wrap">
+
   <h1>学习平台</h1>
+
   <div style="background:rgba(250,173,20,0.12);border:1px solid rgba(250,173,20,0.35);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:#8C6D1F;line-height:1.7;">📌 学习数据（错题 / 复习进度 / 单词标记）保存在<b>本设备浏览器</b>中：清理浏览器缓存、更换设备或使用无痕模式会导致进度丢失。建议定期在「复习页 / 生词本」中使用<b>导出</b>功能备份。</div>
+
   <div class="h2">今日学习 · 错题复习</div>
+
   <div class="daily-total">今天需要复习 <b id="dailyTotal">0</b> 题</div>
+
   <div class="grid" id="dailyList"></div>
+
   <div class="h2">题库刷题（做错 → 一键入篮 → 自动存入错题本）</div>
+
   <div class="grid">
+
   <a class="sc sc2" href="../计算机/题库页.html" style="--c:#9BBBF4;">
+
     <div class="sc-icon">CS</div>
+
     <div class="sc-name">计算机 · 刷题库</div>
+
     <div class="sc-desc">答题判对错 · 做错一键入篮存入</div>
+
     <div class="sc-stat">共 1037 题</div>
+
   </a>
+
 
   <a class="sc sc2" href="../高数/题库页.html" style="--c:#94D8C3;">
+
     <div class="sc-icon">Σ</div>
+
     <div class="sc-name">高等数学 · 刷题库</div>
+
     <div class="sc-desc">答题判对错 · 做错一键入篮存入</div>
+
     <div class="sc-stat">共 1219 题</div>
+
   </a>
+
 
   <a class="sc sc2" href="../英语/题库页.html" style="--c:#C9A7E8;">
+
     <div class="sc-icon">EN</div>
+
     <div class="sc-name">英语 · 刷题库</div>
+
     <div class="sc-desc">答题判对错 · 做错一键入篮存入</div>
+
     <div class="sc-stat">共 853 题</div>
+
   </a>
-  </div>
-  <div class="h2">英语单词</div>
-  <div class="grid">
-  <a class="sc sc2" href="../英语/错题集/单词本.html" style="--c:#9BBBF4;">
-    <div class="sc-icon">EN</div>
-    <div class="sc-name">英语 · 单词本</div>
-    <div class="sc-desc">5210 词 · 翻卡记忆 · 标星生词 · 通用/四级区分</div>
-    <div class="sc-stat">浏览 / 搜索 / 翻卡</div>
-  </a>
-  <a class="sc sc2" href="../英语/错题集/生词本.html" style="--c:#EAA7B2;">
-    <div class="sc-icon">★</div>
-    <div class="sc-name">英语 · 生词本</div>
-    <div class="sc-desc">标星生词 + 手动记录 · 翻卡复习</div>
-    <div class="sc-stat">导出 / 复制 W- 格式</div>
-  </a>
-  </div>
-  <div class="h2">共建题库</div>
-  <div class="grid">
-    <a href="contribute.html" class="card sc" style="text-decoration:none;color:inherit;display:block;">
-      <div class="sc-icon" style="font-size:28px;">✍</div>
-      <div class="sc-name" style="font-size:16px;font-weight:600;margin:6px 0;">贡献题目</div>
-      <div class="sc-desc" style="font-size:12px;color:var(--sub);">填写题目 → 生成标准格式 → 复制发给站长 → 审核后加入题库</div>
-    </a>
-  </div>
-  <div class="quality">
-    <div class="quality-head"><strong>题库质量检查</strong><span id="qualitySummary"></span></div>
-    <div id="qualitySubjects"></div>
-    <div class="quality-list" id="qualityIssues"></div>
+
   </div>
 
+  <div class="h2">英语单词</div>
+
+  <div class="grid">
+
+  <a class="sc sc2" href="../英语/错题集/单词本.html" style="--c:#9BBBF4;">
+
+    <div class="sc-icon">EN</div>
+
+    <div class="sc-name">英语 · 单词本</div>
+
+    <div class="sc-desc">5210 词 · 翻卡记忆 · 标星生词 · 通用/四级区分</div>
+
+    <div class="sc-stat">浏览 / 搜索 / 翻卡</div>
+
+  </a>
+
+  <a class="sc sc2" href="../英语/错题集/生词本.html" style="--c:#EAA7B2;">
+
+    <div class="sc-icon">★</div>
+
+    <div class="sc-name">英语 · 生词本</div>
+
+    <div class="sc-desc">标星生词 + 手动记录 · 翻卡复习</div>
+
+    <div class="sc-stat">导出 / 复制 W- 格式</div>
+
+  </a>
+
+  </div>
+
+  <div class="h2">共建题库</div>
+
+  <div class="grid">
+
+    <a href="contribute.html" class="card sc" style="text-decoration:none;color:inherit;display:block;">
+
+      <div class="sc-icon" style="font-size:28px;">✍</div>
+
+      <div class="sc-name" style="font-size:16px;font-weight:600;margin:6px 0;">贡献题目</div>
+
+      <div class="sc-desc" style="font-size:12px;color:var(--sub);">填写题目 → 生成标准格式 → 复制发给站长 → 审核后加入题库</div>
+
+    </a>
+
+  </div>
+
+  <div class="quality">
+
+    <div class="quality-head"><strong>题库质量检查</strong><span id="qualitySummary"></span></div>
+
+    <div id="qualitySubjects"></div>
+
+    <div class="quality-list" id="qualityIssues"></div>
+
+  </div>
+
+
+
 </div>
+
 <script>
+
 window.__DAILY__ = [
  {
   "name": "计算机",
@@ -131,6 +239,7 @@ window.__DAILY__ = [
   "items": []
  }
 ];
+
 window.__QUALITY__ = {
  "generatedAt": "2026-09-11",
  "subjects": [
@@ -284,442 +393,881 @@ window.__QUALITY__ = {
   "questions": 3109
  }
 };
+
 (function(){
+
   var subjects=window.__DAILY__||[];
+
   function dateText(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+
   function today(){ return dateText(new Date()); }
+
   function due(item, plan){
+
     var next=plan[item.id]&&plan[item.id].next;
+
     return !next || next<=today();
+
   }
+
   var total=0, box=document.getElementById("dailyList");
+
   subjects.forEach(function(subject){
+
     var _added=0;
+
     // 本设备点过「删除所有错题」：不再统计题库错题
+
     try{ if(localStorage.getItem(subject.name+"_errorbook_deleted_all")) subject.items=[]; }catch(e){}
+
     // 合并本地存储的错题（手机APK/离线环境自动存入的）
+
     try{
+
       var _local=JSON.parse(localStorage.getItem(subject.name+"_errorbook_local")||"[]");
+
       _local.forEach(function(le){
+
         // 按id去重：不同题目即使答案相同也保留
+
         var dup=subject.items.find(function(it){ return it.id===le.id; });
+
         if(dup) return;
+
         // 本地错题无选项时，从题库按题目内容相似度补全选项
+
         if(!le["选项"] || !le["选项"].length){
+
           var qShort=(le["题目"]||"").replace(/\s/g,"").slice(0,25);
+
           var match=subject.items.find(function(it){
+
             var itShort=(it["题目"]||"").replace(/\s/g,"").slice(0,25);
+
             return itShort&&qShort&&(itShort.indexOf(qShort)>=0||qShort.indexOf(itShort)>=0);
+
           });
+
           if(match&&match["选项"]&&match["选项"].length) le["选项"]=match["选项"].slice();
+
         }
+
         subject.items.push(le); _added++;
+
       });
+
     }catch(e){}
+
     var saved={};
+
     try{ saved=JSON.parse(localStorage.getItem(subject.name+"_cuowuji_v2")||"{}")||{}; }catch(e){}
+
     var plan=saved.pm||{}, dueItems=subject.items.filter(function(item){ return due(item,plan); });
+
     total+=dueItems.length;
+
     var chapters={};
+
     dueItems.forEach(function(item){ var chapter=item["章节"]||"未分类"; chapters[chapter]=(chapters[chapter]||0)+(Number(item["错误次数"])||0)+1; });
+
     var focus=Object.keys(chapters).sort(function(a,b){ return chapters[b]-chapters[a]; })[0]||"暂无到期题";
+
     var totalN=subject.items.length;
+
     var reviewN=subject.items.filter(function(it){return it["状态"]!=="已掌握";}).length;
+
     var dueTxt=dueItems.length?dueItems.length+' 题':'暂无到期';
+
     var info='错题 '+totalN+' · 待复习 '+reviewN+(totalN&&_added?'（含本地'+_added+'题）':'')+' · 优先：'+focus;
+
     var card=document.createElement("a");
+
     card.className="sc daily-card"; card.href=subject.rel; card.style.setProperty("--c",subject.color);
+
     card.innerHTML='<div class="sc-name">'+subject.label+' · 今日到期</div><div class="daily-count">'+dueTxt+'</div><div class="daily-focus">'+info+'</div>';
+
     box.appendChild(card);
+
   });
+
   document.getElementById("dailyTotal").textContent=total;
+
   if(!subjects.length) box.innerHTML='<div class="daily-empty">暂无错题，先从题库开始练习。</div>';
+
 })();
+
 (function(){
+
   var report=window.__QUALITY__||{}, summary=report.summary||{};
+
   var total=(summary.errors||0)+(summary.warnings||0);
+
   var summaryBox=document.getElementById("qualitySummary");
+
   summaryBox.className=total?"quality-bad":"quality-ok";
+
   summaryBox.textContent=total?(summary.errors+" 个错误，"+summary.warnings+" 个提醒"):"未发现问题";
+
   document.getElementById("qualitySubjects").textContent=(report.subjects||[]).map(function(x){return x.name+"：错题"+x.errorBook+" 条，题库"+x.questionBank+" 题";}).join("　");
+
   var box=document.getElementById("qualityIssues");
+
   if(!total){ box.textContent="构建时间："+(report.generatedAt||""); return; }
+
   box.innerHTML=(report.issues||[]).slice(0,80).map(function(x){return '<div class="'+x.level+'">['+x.subject+'] '+x.source+' '+(x.item||"")+'：'+x.message+'</div>';}).join("");
+
 })();
+
 </script>
+
+
 
 <div id="aiFab" title="AI 学习助手">🤖</div>
+
 <div id="aiPanel" style="display:none;">
+
   <div id="aiHead"><span>AI 学习助手</span><button id="aiClose" aria-label="关闭">×</button></div>
+
   <div id="aiMsgs"></div>
+
   <div id="aiInputRow">
+
     <input id="aiInput" placeholder="问学习问题，或点题目的「AI讲题」…" maxlength="2000">
+
     <button id="aiSend">发送</button>
+
   </div>
+
 </div>
+
 <style>
+
 #aiFab{position:fixed;right:16px;bottom:16px;width:52px;height:52px;border-radius:50%;
+
   background:linear-gradient(135deg,#4F7CF7,#6A5AF9);color:#fff;font-size:24px;
+
   display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:9999;
+
   box-shadow:0 4px 14px rgba(79,124,247,.4);-webkit-tap-highlight-color:transparent;user-select:none;}
+
 #aiPanel{position:fixed;right:16px;bottom:80px;width:min(360px,calc(100vw - 32px));height:min(480px,calc(100vh - 120px));
+
   background:#fff;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.18);z-index:9999;
+
   display:flex;flex-direction:column;overflow:hidden;border:1px solid #E4E3DD;}
+
 #aiHead{background:linear-gradient(135deg,#4F7CF7,#6A5AF9);color:#fff;padding:10px 14px;
+
   font-size:14px;font-weight:600;display:flex;justify-content:space-between;align-items:center;}
+
 #aiClose{background:rgba(255,255,255,.2);border:none;color:#fff;width:26px;height:26px;
+
   border-radius:50%;font-size:16px;line-height:1;cursor:pointer;}
+
 #aiMsgs{flex:1;overflow-y:auto;padding:12px;background:#FAF9F6;display:flex;flex-direction:column;gap:8px;font-size:14px;}
+
 .ai-msg{max-width:88%;padding:8px 11px;border-radius:12px;white-space:pre-wrap;word-break:break-word;line-height:1.55;}
+
 .ai-user{align-self:flex-end;background:#4F7CF7;color:#fff;border-bottom-right-radius:4px;}
+
 .ai-bot{align-self:flex-start;background:#fff;border:1px solid #E4E3DD;border-bottom-left-radius:4px;color:#1A1B1C;}
+
 .ai-bot.err{color:#B44244;background:#FDF0EF;}
+
 .ai-typing{color:#6B7280;font-style:italic;}
+
 .ai-msg .ai-math{display:inline-block;margin:2px 2px;}
+
 .ai-msg .ai-math-plain{font-family:Consolas,Monaco,monospace;font-size:0.92em;background:rgba(79,124,247,0.07);border-radius:4px;padding:0 4px;}
+
 .ai-msg strong{font-weight:700;}
+
 #aiInputRow{display:flex;gap:8px;padding:10px;border-top:1px solid #E4E3DD;background:#fff;}
+
 #aiInput{flex:1;border:1px solid #D8D6CF;border-radius:10px;padding:8px 11px;font-size:14px;outline:none;min-width:0;}
+
 #aiInput:focus{border-color:#4F7CF7;}
+
 #aiSend{background:#4F7CF7;color:#fff;border:none;border-radius:10px;padding:0 16px;font-size:14px;cursor:pointer;font-weight:600;}
+
 @media (max-width:480px){#aiPanel{right:8px;bottom:76px;width:calc(100vw - 16px);}}
+
 </style>
+
 <script>
+
 (function(){
+
   var API="https://ai.scgsstudy.top";
+
   var fab=document.getElementById("aiFab");
+
   var panel=document.getElementById("aiPanel");
+
   var msgs=document.getElementById("aiMsgs");
+
   var input=document.getElementById("aiInput");
+
   var send=document.getElementById("aiSend");
+
   var close=document.getElementById("aiClose");
+
   if(!fab||!panel) return;
+
   var open=false;
+
   function toggle(force){
+
     open=(typeof force==="boolean")?force:!open;
+
     panel.style.display=open?"flex":"none";
+
     if(open&&input) input.focus();
+
   }
+
   fab.addEventListener("click",function(){ toggle(); });
+
   if(close) close.addEventListener("click",function(){ toggle(false); });
+
   function escAI(x){ return String(x).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
   function plainMath(x){
+
     return String(x)
+
       .replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g,function(_,a,b){ return "("+a+"/"+b+")"; })
+
       .replace(/\\sqrt(\[[^{}\]]*\])?\{([^{}]+)\}/g,function(_,r,b){ return r?"("+b+")^(1/"+String(r).replace(/[\[\]]/g,"")+")":"√("+b+")"; })
+
       .replace(/\\dfrac\{([^{}]+)\}\{([^{}]+)\}/g,function(_,a,b){ return "("+a+"/"+b+")"; })
+
       .replace(/\\lim_?\{?([^{}]*)\}?/g,"lim→$1")
+
       .replace(/\\infty/g,"∞").replace(/\\to/g,"→").replace(/\\rightarrow/g,"→")
+
       .replace(/\\cdot/g,"·").replace(/\\times/g,"×").replace(/\\pm/g,"±")
+
       .replace(/\\le/g,"≤").replace(/\\ge/g,"≥").replace(/\\ne/g,"≠").replace(/\\approx/g,"≈")
+
       .replace(/\\left/g,"").replace(/\\right/g,"")
+
       .replace(/\\big|\\Big/g,"").replace(/\\([a-zA-Z]+)/g,"$1")
+
       .replace(/\\,/g," ").replace(/\\ /g," ")
+
       .replace(/[{}]/g,"");
+
   }
+
   function renderAI(text){
+
     if(!text) return "";
+
     var t=escAI(text);
+
     // 代码块先保护
+
     var codes=[];
+
     t=t.replace(/`([^`]*)`/g,function(_,c){ codes.push(c); return "\u0000C"+(codes.length-1)+"\u0000"; });
+
     function fmt(x,display){
+
       // 反转义：公式内容从已转义文本中提取，需还原 < > & 再给 KaTeX
+
       var raw=x.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&");
+
       try{
+
         if(typeof katex!=="undefined"&&katex.renderToString){
+
           return '<span class="ai-math">'+katex.renderToString(raw,{displayMode:display,throwOnError:false})+'</span>';
+
         }
+
       }catch(e){}
+
       return '<span class="ai-math-plain">'+plainMath(raw)+'</span>';
+
     }
+
     t=t.replace(/\$\$([\s\S]+?)\$\$/g,function(_,x){ return fmt(x,true); });
+
     t=t.replace(/\\\[([\s\S]+?)\\\]/g,function(_,x){ return fmt(x,true); });
+
     t=t.replace(/\$([^$\n]+?)\$/g,function(_,x){ return fmt(x,false); });
+
     t=t.replace(/\\\(([^\\]+?)\\\)/g,function(_,x){ return fmt(x,false); });
+
     t=t.replace(/\*\*([^*\n]+)\*\*/g,"<strong>$1</strong>");
+
     t=t.replace(/\u0000C(\d+)\u0000/g,function(_,i){
+
       return '<code style="background:rgba(0,0,0,0.06);border-radius:4px;padding:1px 5px;font-family:Consolas,Monaco,monospace;font-size:0.9em;color:#B44244;white-space:pre-wrap;word-break:break-all;">'+escAI(codes[+i]||"")+'</code>';
+
     });
+
     return t;
+
   }
+
   function append(role,text,cls){
+
     var d=document.createElement("div");
+
     d.className="ai-msg "+(role==="user"?"ai-user":"ai-bot")+(cls?" "+cls:"");
+
     if(role==="bot"&&!cls){ d.innerHTML=renderAI(text); }
+
     else{ d.textContent=text; }
+
     if(msgs) msgs.appendChild(d);
+
     if(msgs) msgs.scrollTop=msgs.scrollHeight;
+
     return d;
+
   }
+
   function ask(q,title){
+
     if(!q||!q.trim()) return;
+
     toggle(true);
+
     var finalQ=title?("【"+title+"】\n"+q):q;
+
     append("user",finalQ);
+
     var typing=append("bot","思考中…","ai-typing");
+
     fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},
+
       body:JSON.stringify({messages:[
+
         {role:"system",content:"你是四川专升本学习助手，擅长高等数学、计算机基础、大学英语。数学公式用LaTeX：行内 $...$，独立公式 $$...$$。解题铁律：1) 仔细审题，先明确题目问什么；2) 每一步计算必须准确，临界点、极值点等关键结果要代入验算；3) 只讲解与本题直接相关的内容，严禁添加与解题无关的表述（如多余的零点、无关性质、无关定理）；4) 术语严格准确：临界点=导数零点，零点=函数值为0的点，单调区间、极值、拐点等概念不可混用或并列；5) 不确定的地方明确说，不编造；6) 分点清晰，面向专升本考生，用中文。"},
+
         {role:"user",content:finalQ}
+
       ],max_tokens:700})})
+
       .then(function(r){
+
         if(!r.ok) return r.text().then(function(t){ throw new Error("服务返回 "+r.status+(t.length<150?": "+t:"")); });
+
         return r.json();
+
       })
+
       .then(function(j){
+
         var c=(j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content)||"(空回复)";
+
         typing.className="ai-msg ai-bot";
+
         typing.innerHTML=renderAI(c);
+
       })
+
       .catch(function(e){
+
         typing.className="ai-msg ai-bot err";
+
         typing.textContent="请求失败："+e.message;
+
       });
+
   }
+
   if(send) send.addEventListener("click",function(){ var v=input.value; if(v.trim()){ input.value=""; ask(v); } });
+
   if(input) input.addEventListener("keydown",function(e){ if(e.key==="Enter"&&!e.shiftKey){ e.preventDefault(); var v=input.value; if(v.trim()){ input.value=""; ask(v); } } });
+
   window.AIAsk=ask;
+
 })();
+
 </script>
+
+
 
 <div id="subModal" style="display:none;position:fixed;inset:0;z-index:99990;background:rgba(15,23,42,0.55);backdrop-filter:blur(3px);justify-content:center;align-items:center;padding:16px;">
+
   <div style="background:#fff;border-radius:16px;max-width:560px;width:100%;max-height:92vh;overflow-y:auto;padding:22px 24px;box-sizing:border-box;box-shadow:0 20px 60px rgba(0,0,0,0.25);">
+
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+
       <div style="font-size:19px;font-weight:700;color:#1A1B1C;">📮 投稿题目</div>
+
       <div id="subClose" style="cursor:pointer;font-size:22px;color:#8a8f98;line-height:1;padding:2px 8px;">×</div>
+
     </div>
+
     <div style="display:flex;gap:8px;margin-bottom:16px;border-bottom:2px solid #f0f0f0;padding-bottom:0;">
+
       <button id="tabImage" type="button" style="flex:1;padding:10px;border:none;border-bottom:3px solid #4F7CF7;background:transparent;color:#4F7CF7;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:-2px;">📷 上传图片</button>
+
       <button id="tabManual" type="button" style="flex:1;padding:10px;border:none;border-bottom:3px solid transparent;background:transparent;color:#6B7280;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:-2px;">✏️ 手动填写</button>
+
     </div>
+
+
 
     <!-- ===== 上传图片模式 ===== -->
+
     <div id="panelImage">
+
       <div style="font-size:13px;color:#6B7280;margin-bottom:10px;line-height:1.6;">拍照或上传题目图片，管理员会识别题目并整理入库。</div>
+
       <div id="dropZone" style="border:2px dashed #d1d5db;border-radius:12px;padding:28px 16px;text-align:center;cursor:pointer;background:#fafafa;transition:all 0.2s;">
+
         <div style="font-size:34px;margin-bottom:6px;">📷</div>
+
         <div style="font-size:14px;color:#374151;font-weight:600;">点击选择图片 或 拖拽到这里</div>
+
         <div style="font-size:12px;color:#9ca3af;margin-top:4px;">支持 JPG/PNG，可多选，总大小≤18MB</div>
+
         <input type="file" id="fileInput" accept="image/*" multiple style="display:none;">
+
       </div>
+
       <div id="previewArea" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;"></div>
+
       <div style="margin-top:14px;">
+
         <div style="font-size:13px;color:#374151;margin-bottom:5px;">科目 <span style="color:#e5484d;">*</span></div>
+
         <select id="subSubjectImg" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;background:#fff;">
+
           <option value="高数">高等数学</option>
+
           <option value="计算机">计算机基础</option>
+
           <option value="英语">大学英语</option>
+
         </select>
+
       </div>
+
       <div style="margin-top:12px;">
+
         <div style="font-size:13px;color:#374151;margin-bottom:5px;">备注（可选）</div>
+
         <textarea id="subNoteImg" rows="2" placeholder="如：2025年真题、第3页等" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;resize:vertical;font-family:inherit;line-height:1.5;"></textarea>
+
       </div>
+
     </div>
+
+
 
     <!-- ===== 手动填写模式 ===== -->
+
     <div id="panelManual" style="display:none;">
+
       <div style="font-size:13px;color:#6B7280;margin-bottom:14px;line-height:1.6;">手动填写题目信息，带 <span style="color:#e5484d;">*</span> 为必填。</div>
+
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+
         <div>
+
           <div style="font-size:13px;color:#374151;margin-bottom:5px;">科目 <span style="color:#e5484d;">*</span></div>
+
           <select id="subSubject" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;background:#fff;">
+
             <option value="高数">高等数学</option>
+
             <option value="计算机">计算机基础</option>
+
             <option value="英语">大学英语</option>
+
           </select>
+
         </div>
+
         <div>
+
           <div style="font-size:13px;color:#374151;margin-bottom:5px;">题型</div>
+
           <select id="subType" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;background:#fff;">
+
             <option value="单选">单选题</option>
+
             <option value="多选">多选题</option>
+
             <option value="判断">判断题</option>
+
             <option value="填空">填空题</option>
+
             <option value="简答">简答题</option>
+
             <option value="完形">完形填空</option>
+
             <option value="翻译">翻译题</option>
+
             <option value="其他">其他</option>
+
           </select>
+
         </div>
+
       </div>
+
       <div style="margin-bottom:12px;">
+
         <div style="font-size:13px;color:#374151;margin-bottom:5px;">题目内容 <span style="color:#e5484d;">*</span></div>
+
         <textarea id="subQuestion" rows="4" placeholder="题目内容，可含公式（用 $...$ 包裹）" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;resize:vertical;font-family:inherit;line-height:1.5;"></textarea>
+
       </div>
+
       <div style="margin-bottom:12px;">
+
         <div style="font-size:13px;color:#374151;margin-bottom:5px;">选项（每行一个，如 A.xxx）</div>
+
         <textarea id="subOptions" rows="3" placeholder="A. 选项一&#10;B. 选项二&#10;C. 选项三&#10;D. 选项四" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;resize:vertical;font-family:inherit;line-height:1.5;"></textarea>
+
       </div>
+
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+
         <div>
+
           <div style="font-size:13px;color:#374151;margin-bottom:5px;">答案</div>
+
           <input id="subAnswer" type="text" placeholder="如：B 或 具体答案" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;" />
+
         </div>
+
         <div>
+
           <div style="font-size:13px;color:#374151;margin-bottom:5px;">题目来源</div>
+
           <input id="subSource" type="text" placeholder="如：真题2025 / 自编 / 机构" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;" />
+
         </div>
+
       </div>
+
       <div style="margin-bottom:16px;">
+
         <div style="font-size:13px;color:#374151;margin-bottom:5px;">备注（可选）</div>
+
         <textarea id="subNote" rows="2" placeholder="想补充的任何说明" style="width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;box-sizing:border-box;resize:vertical;font-family:inherit;line-height:1.5;"></textarea>
+
       </div>
+
     </div>
+
+
 
     <div id="subMsg" style="font-size:13px;margin-bottom:12px;display:none;padding:9px 12px;border-radius:9px;line-height:1.5;"></div>
+
     <div style="display:flex;gap:10px;justify-content:flex-end;">
+
       <button id="subCancel" type="button" style="padding:10px 20px;border:1px solid #d1d5db;border-radius:10px;background:#fff;color:#374151;font-size:14px;cursor:pointer;">取消</button>
+
       <button id="subSend" type="button" style="padding:10px 22px;border:none;border-radius:10px;background:#4F7CF7;color:#fff;font-size:14px;font-weight:600;cursor:pointer;">提交投稿</button>
+
     </div>
+
   </div>
+
 </div>
+
 <button id="subFab" title="投稿题目" style="position:fixed;right:22px;bottom:96px;z-index:99970;width:50px;height:50px;border-radius:50%;border:none;background:linear-gradient(135deg,#4F7CF7,#8B5CF6);color:#fff;font-size:22px;cursor:pointer;box-shadow:0 6px 20px rgba(79,124,247,0.4);display:flex;align-items:center;justify-content:center;">📮</button>
+
 <script>
+
 (function(){
+
   var modal=document.getElementById('subModal'), fab=document.getElementById('subFab');
+
   var close=document.getElementById('subClose'), cancel=document.getElementById('subCancel'), send=document.getElementById('subSend');
+
   var msg=document.getElementById('subMsg'), subAPI="https://ai.scgsstudy.top/api/submit";
+
   if(!modal||!fab) return;
 
+
+
   // Tab 切换
+
   var tabImage=document.getElementById('tabImage'), tabManual=document.getElementById('tabManual');
+
   var panelImage=document.getElementById('panelImage'), panelManual=document.getElementById('panelManual');
+
   var currentTab='image';
+
   function switchTab(tab){
+
     currentTab=tab;
+
     if(tab==='image'){
+
       tabImage.style.color='#4F7CF7'; tabImage.style.borderBottomColor='#4F7CF7';
+
       tabManual.style.color='#6B7280'; tabManual.style.borderBottomColor='transparent';
+
       panelImage.style.display=''; panelManual.style.display='none';
+
     } else {
+
       tabManual.style.color='#4F7CF7'; tabManual.style.borderBottomColor='#4F7CF7';
+
       tabImage.style.color='#6B7280'; tabImage.style.borderBottomColor='transparent';
+
       panelManual.style.display=''; panelImage.style.display='none';
+
     }
+
   }
+
   if(tabImage) tabImage.addEventListener('click',function(){ switchTab('image'); });
+
   if(tabManual) tabManual.addEventListener('click',function(){ switchTab('manual'); });
 
+
+
   // 图片上传
+
   var fileInput=document.getElementById('fileInput'), dropZone=document.getElementById('dropZone'), previewArea=document.getElementById('previewArea');
+
   var uploadedImages=[]; // {filename, base64}
+
   function renderPreview(){
+
     if(!previewArea) return;
+
     previewArea.innerHTML='';
+
     uploadedImages.forEach(function(img,idx){
+
       var wrap=document.createElement('div');
+
       wrap.style.cssText='position:relative;width:80px;height:80px;border-radius:8px;overflow:hidden;border:1px solid #e5e7eb;';
+
       var im=document.createElement('img');
+
       im.src=img.base64; im.style.cssText='width:100%;height:100%;object-fit:cover;';
+
       var del=document.createElement('div');
+
       del.textContent='×'; del.style.cssText='position:absolute;top:2px;right:2px;width:20px;height:20px;background:rgba(0,0,0,0.6);color:#fff;border-radius:50%;font-size:14px;line-height:20px;text-align:center;cursor:pointer;';
+
       del.addEventListener('click',function(e){ e.stopPropagation(); uploadedImages.splice(idx,1); renderPreview(); });
+
       wrap.appendChild(im); wrap.appendChild(del);
+
       previewArea.appendChild(wrap);
+
     });
+
   }
+
   function handleFiles(files){
+
     if(!files||!files.length) return;
+
     var remaining=Array.prototype.slice.call(files);
+
     function processNext(){
+
       if(!remaining.length){ renderPreview(); return; }
+
       var file=remaining.shift();
+
       if(!file.type||file.type.indexOf('image/')!==0){ processNext(); return; }
+
       var reader=new FileReader();
+
       reader.onload=function(e){
+
         uploadedImages.push({filename:file.name||'image.jpg', base64:e.target.result});
+
         processNext();
+
       };
+
       reader.onerror=function(){ processNext(); };
+
       reader.readAsDataURL(file);
+
     }
+
     processNext();
+
   }
+
   if(dropZone&&fileInput){
+
     dropZone.addEventListener('click',function(){ fileInput.click(); });
+
     fileInput.addEventListener('change',function(e){ handleFiles(e.target.files); fileInput.value=''; });
+
     dropZone.addEventListener('dragover',function(e){ e.preventDefault(); dropZone.style.borderColor='#4F7CF7'; dropZone.style.background='#f0f4ff'; });
+
     dropZone.addEventListener('dragleave',function(){ dropZone.style.borderColor='#d1d5db'; dropZone.style.background='#fafafa'; });
+
     dropZone.addEventListener('drop',function(e){ e.preventDefault(); dropZone.style.borderColor='#d1d5db'; dropZone.style.background='#fafafa'; handleFiles(e.dataTransfer.files); });
+
   }
+
+
 
   function show(s){ modal.style.display=s?'flex':'none'; }
+
   function tip(t,ok){ if(!msg) return; msg.style.display='block'; msg.style.background=ok?'rgba(240,253,244,0.9)':'rgba(254,242,242,0.9)'; msg.style.color=ok?'#16a34a':'#dc2626'; msg.textContent=t; }
+
   window.openSubmit=function(subject){
+
     var s1=document.getElementById('subSubject'), s2=document.getElementById('subSubjectImg');
+
     if(subject){ var map={高数:'高数',计算机:'计算机',英语:'英语'}; if(map[subject]){ if(s1)s1.value=map[subject]; if(s2)s2.value=map[subject]; } }
+
     if(msg) msg.style.display='none';
+
     show(true);
+
   };
+
   fab.addEventListener('click',function(){
+
     var t=document.title||'';
+
     var guess='';
+
     if(t.indexOf('计算机')>=0){ guess='计算机'; }
+
     else if(t.indexOf('英语')>=0){ guess='英语'; }
+
     else if(t.indexOf('高数')>=0||t.indexOf('高等数学')>=0){ guess='高数'; }
+
     window.openSubmit(guess||undefined);
+
   });
+
   if(close) close.addEventListener('click',function(){ show(false); });
+
   if(cancel) cancel.addEventListener('click',function(){ show(false); });
+
   modal.addEventListener('click',function(e){ if(e.target===modal) show(false); });
 
+
+
   send.addEventListener('click',function(){
+
     if(currentTab==='image'){
+
       // 图片模式
+
       if(uploadedImages.length===0){ tip('请至少选择一张图片',false); return; }
+
       var subject=document.getElementById('subSubjectImg').value;
+
       var note=document.getElementById('subNoteImg').value.trim();
+
       send.disabled=true; send.textContent='上传中…';
+
       fetch(subAPI,{method:'POST',headers:{'Content-Type':'application/json'},
+
         body:JSON.stringify({type:'image',subject:subject,note:note,images:uploadedImages})})
+
         .then(function(r){ return r.json().then(function(j){ return {ok:r.ok,j:j}; }); })
+
         .then(function(res){
+
           send.disabled=false; send.textContent='提交投稿';
+
           if(res.ok&&res.j.success){
+
             tip('图片上传成功！我们会尽快识别题目并审核入库。',true);
+
             uploadedImages=[]; renderPreview();
+
             document.getElementById('subNoteImg').value='';
+
             setTimeout(function(){ show(false); }, 1800);
+
           } else {
+
             tip((res.j&&res.j.error)||'上传失败，请重试',false);
+
           }
+
         })
+
         .catch(function(e){ send.disabled=false; send.textContent='提交投稿'; tip('网络错误：'+e.message,false); });
+
     } else {
+
       // 手动模式
+
       var subject=document.getElementById('subSubject').value;
+
       var qtype=document.getElementById('subType').value;
+
       var question=document.getElementById('subQuestion').value.trim();
+
       var options=document.getElementById('subOptions').value.trim();
+
       var answer=document.getElementById('subAnswer').value.trim();
+
       var source=document.getElementById('subSource').value.trim();
+
       var note=document.getElementById('subNote').value.trim();
+
       if(question.length<3){ tip('题目内容不能为空（至少3个字）',false); return; }
+
       send.disabled=true; send.textContent='提交中…';
+
       fetch(subAPI,{method:'POST',headers:{'Content-Type':'application/json'},
+
         body:JSON.stringify({subject:subject,qtype:qtype,question:question,options:options,answer:answer,source:source,note:note})})
+
         .then(function(r){ return r.json().then(function(j){ return {ok:r.ok,j:j}; }); })
+
         .then(function(res){
+
           send.disabled=false; send.textContent='提交投稿';
+
           if(res.ok&&res.j.success){
+
             tip('投稿成功！管理员审核后会尽快入库，谢谢你的贡献。',true);
+
             document.getElementById('subQuestion').value='';
+
             document.getElementById('subOptions').value='';
+
             document.getElementById('subAnswer').value='';
+
             document.getElementById('subSource').value='';
+
             document.getElementById('subNote').value='';
+
             setTimeout(function(){ show(false); }, 1800);
+
           } else {
+
             tip((res.j&&res.j.error)||'提交失败，请重试',false);
+
           }
+
         })
+
         .catch(function(e){ send.disabled=false; send.textContent='提交投稿'; tip('网络错误：'+e.message,false); });
+
     }
+
   });
+
 })();
+
 </script>
 
+
 </body>
+
 </html>
+
