@@ -2706,7 +2706,7 @@ INDEX_HTML = r"""<!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#22304A">
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="manifest.json?v=20260911">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>学习平台</title>
 <style>
