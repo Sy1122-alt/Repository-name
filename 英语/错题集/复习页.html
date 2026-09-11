@@ -10173,6 +10173,8 @@ window.__TIKU_SIMPLE__ = [
     });
     // 根号：√(x) → \sqrt{x}；√x → \sqrt{x}
     x=x.replace(/√\(([^()]*)\)/g,"\\sqrt{$1}").replace(/√([0-9a-zA-Z]+)/g,"\\sqrt{$1}");
+    // 圈数字转 (数字)，防 KaTeX 不支持红显（①→(1)）
+    x=x.replace(/[①-⑨]/g,function(c){return '('+(c.charCodeAt(0)-0x2460+1)+')';}).replace(/⑩/g,"(10)");
     x=x.replace(/(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)/g,"\\frac{$1}{$2}");
     x=x.replace(/\b([a-zA-Z])\/(\d+(?:\.\d+)?)\b/g,"\\frac{$1}{$2}");
     x=x.replace(/\b(\d+(?:\.\d+)?)\/([a-zA-Z])\b/g,"\\frac{$1}{$2}");
