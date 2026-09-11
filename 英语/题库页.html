@@ -16635,6 +16635,8 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     return done;
   }
   function fracIt(x){
+    // 全角数字/斜杠先转半角（导入的题常见全角写法）
+    x=x.replace(/[０-９]/g, function(c){ return String.fromCharCode(c.charCodeAt(0)-0xFEE0); }).replace(/／/g,"/");
     x=x.replace(/(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)/g,"\\frac{$1}{$2}");
     x=x.replace(/\b([a-zA-Z])\/(\d+(?:\.\d+)?)\b/g,"\\frac{$1}{$2}");
     x=x.replace(/\b(\d+(?:\.\d+)?)\/([a-zA-Z])\b/g,"\\frac{$1}{$2}");
@@ -16660,8 +16662,20 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     if(!MATH || typeof katex==="undefined") return restoreXls(restore(t));
     function unesc(x){ return x.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&quot;/g,'"'); }
     try{
-      // 裸分数（未写$的 数字/数字）自动包成数学块，渲染为分数横线（排除4位年份等长数字）
-      t=t.replace(/(?<![\d/])(\d{1,3}(?:\.\d+)?)\/(\d{1,3}(?:\.\d+)?)(?![\d/])/g, "$$\\frac{$1}{$2}$$");
+      // 裸分数（未写$）自动包成数学块，渲染为分数横线（覆盖数字/数字、括号/数字、字母/数字、表达式/括号等导入题常见写法）
+      t=t.replace(/(?<![\d\/／])([０-９\d]{1,3}(?:[．.]\d+)?)[\/／]([０-９\d]{1,3}(?:[．.]\d+)?)(?![\d\/／])/g, function(_,a,b){
+        var A=a.replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);});
+        var B=b.replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);});
+        return "$$\\frac{"+A+"}{"+B+"}$$";
+      });
+      t=t.replace(/(\([^()]*\))\/(\d{1,3}(?:\.\d+)?)/g, "$$\\frac{$1}{$2}$$");
+      t=t.replace(/(\d{1,3}(?:\.\d+)?)\/([\[(][^[\]()]*[)\]])(?!\d)/g, "$$\\frac{$1}{$2}$$");
+      t=t.replace(/(\d{1,3}(?:\.\d+)?)\/(\[[^\]\[]*\])/g, "$$\\frac{$1}{$2}$$");
+      t=t.replace(/(?<![\d\/a-zA-Z])([a-z])\/(\d{1,3}(?:\.\d+)?)(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
+      t=t.replace(/(?<![\d\/a-zA-Z])(\d{1,3}(?:\.\d+)?)\/([a-z])(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
+      t=t.replace(/(?<![\d\/a-zA-Z])(\d{1,3}[a-z])\/(\d{1,3}(?:\.\d+)?)(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
+      t=t.replace(/(?<![\d\/a-zA-Z])([0-9a-zA-Z][0-9a-zA-Z^+*\-.]{0,12})\/(\([^()]*\))(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
+      t=t.replace(/(\d{1,3})\/([a-z]+[0-9]*\([^()]*\)[a-z0-9^+*\-.]{0,12})(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
       t=t.replace(/\$\$([\s\S]+?)\$\$/g,function(_,x){ return '<div class="math-inline" style="margin:6px 0;">'+katex.renderToString(fracIt(unesc(x)),{displayMode:true,throwOnError:false})+'</div>'; });
       t=t.replace(/\$([^$\n]+?)\$/g,function(_,x){ return '<span class="math-inline">'+katex.renderToString(fracIt(unesc(x)),{displayMode:false,throwOnError:false})+'</span>'; });
     }catch(e){}

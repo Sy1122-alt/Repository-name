@@ -1200,6 +1200,7 @@ __KATEX_CSS__
     <button id="btnDue">今日应复习</button>
     <button id="btnReset">重置进度</button>
     <button id="btnExportLocal">导出本地错题</button>
+    <button id="btnClearAll" style="background:#EA6668;color:#fff;">删除所有错题</button>
     <button id="btnRestoreDeleted" style="display:none;">恢复已删错题</button>
   </div>
 
@@ -1327,6 +1328,8 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
     return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   }
   function fracIt(x){
+    // 全角数字/斜杠先转半角（导入的题常见全角写法）
+    x=x.replace(/[０-９]/g, function(c){ return String.fromCharCode(c.charCodeAt(0)-0xFEE0); }).replace(/／/g,"/");
     x=x.replace(/(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)/g,"\\frac{$1}{$2}");
     x=x.replace(/\b([a-zA-Z])\/(\d+(?:\.\d+)?)\b/g,"\\frac{$1}{$2}");
     x=x.replace(/\b(\d+(?:\.\d+)?)\/([a-zA-Z])\b/g,"\\frac{$1}{$2}");
@@ -1352,8 +1355,20 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
     if(!MATH || typeof katex==="undefined") return restoreXls(restore(t));
     function unesc(x){ return x.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&quot;/g,'"'); }
     try{
-      // 裸分数（未写$的 数字/数字）自动包成数学块，渲染为分数横线（排除4位年份等长数字）
-      t = t.replace(/(?<![\d/])(\d{1,3}(?:\.\d+)?)\/(\d{1,3}(?:\.\d+)?)(?![\d/])/g, "$$\\frac{$1}{$2}$$");
+      // 裸分数（未写$）自动包成数学块，渲染为分数横线（覆盖数字/数字、括号/数字、字母/数字、表达式/括号等导入题常见写法）
+      t = t.replace(/(?<![\d\/／])([０-９\d]{1,3}(?:[．.]\d+)?)[\/／]([０-９\d]{1,3}(?:[．.]\d+)?)(?![\d\/／])/g, function(_,a,b){
+        var A=a.replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);});
+        var B=b.replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);});
+        return "$$\\frac{"+A+"}{"+B+"}$$";
+      });
+      t = t.replace(/(\([^()]*\))\/(\d{1,3}(?:\.\d+)?)/g, "$$\\frac{$1}{$2}$$");
+      t = t.replace(/(\d{1,3}(?:\.\d+)?)\/([\[(][^[\]()]*[)\]])(?!\d)/g, "$$\\frac{$1}{$2}$$");
+      t = t.replace(/(\d{1,3}(?:\.\d+)?)\/(\[[^\]\[]*\])/g, "$$\\frac{$1}{$2}$$");
+      t = t.replace(/(?<![\d\/a-zA-Z])([a-z])\/(\d{1,3}(?:\.\d+)?)(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
+      t = t.replace(/(?<![\d\/a-zA-Z])(\d{1,3}(?:\.\d+)?)\/([a-z])(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
+      t = t.replace(/(?<![\d\/a-zA-Z])(\d{1,3}[a-z])\/(\d{1,3}(?:\.\d+)?)(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
+      t = t.replace(/(?<![\d\/a-zA-Z])([0-9a-zA-Z][0-9a-zA-Z^+*\-.]{0,12})\/(\([^()]*\))(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
+      t = t.replace(/(\d{1,3})\/([a-z]+[0-9]*\([^()]*\)[a-z0-9^+*\-.]{0,12})(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
       t = t.replace(/\$\$([\s\S]+?)\$\$/g, function(_,x){
         return '<div class="math-inline" style="margin:6px 0;">'+katex.renderToString(fracIt(unesc(x)),{displayMode:true,throwOnError:false})+'</div>';
       });
@@ -1463,6 +1478,7 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
     var reasonHtml='<div class="reason-tools"><span>这次为什么错？</span>'
       +'<select id="reasonPick"><option value="">选择错因</option><option>概念不清</option><option>公式记错</option><option>方法不会</option><option>计算失误</option><option>审题失误</option><option>词汇不懂</option><option>语法不清</option><option>理解偏差</option><option>粗心</option><option>其他</option></select>'
       +'<button id="reasonSave">记录错因</button></div>';
+    if(!it["同类题"] || !it["同类题"].length) it["同类题"]=findSimilar(it);
     var similarHtml='<div class="similar"><div>再来一道同章节题</div>'
       +((it["同类题"]||[]).length?(it["同类题"]||[]).map(function(candidate,n){return '<a href="#" data-similar="'+n+'">'+renderMath(candidate.id+' · '+(candidate["题目"]||"未命名"))+'</a>';}).join(""):'<span>当前题库暂无可推荐的同章节题。</span>')
       +'</div>';
@@ -1629,6 +1645,15 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
       var self=this;
       setTimeout(function(){ self._arm=false; self.textContent="重置进度"; self.style.background=""; self.style.color=""; }, 3000);
     }
+  };
+  var clearAll=$("btnClearAll"); if(clearAll) clearAll.onclick=function(){
+    if(!confirm("确定删除所有错题？将同时清除本设备上的题库错题与本地错题（错题本.md 文件本身不动，仅本设备不再显示），此操作不可恢复！")) return;
+    try{
+      var lkey="__SUBJECT___errorbook_local";
+      localStorage.removeItem(lkey);
+      localStorage.setItem("__SUBJECT___errorbook_deleted_all","1");
+    }catch(e){}
+    location.reload();
   };
   var restoreDel=$("btnRestoreDeleted");
   if(restoreDel){
@@ -1894,7 +1919,7 @@ def build_review(sub):
         katex_css = '<link rel="stylesheet" href="../../SCGSstudy/katex/katex.min.css">'
         katex_js = "../../SCGSstudy/katex/katex.min.js"
     # 题库精简数据（仅id+题目+选项），用于补全本地错题缺失的选项
-    tiku_simple = [{"id": t["id"], "题目": t["题目"], "选项": t["选项"], "章节": t.get("章节", "")} for t in tiku_items]
+    tiku_simple = [{"id": t["id"], "题目": t["题目"], "选项": t["选项"], "章节": t.get("章节", ""), "题型": t.get("题型", "")} for t in tiku_items]
     html = (REVIEW_HTML
             .replace("__LABEL__", sub["label"])
             .replace("__COLOR__", sub["color"])
@@ -2177,6 +2202,8 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     return done;
   }
   function fracIt(x){
+    // 全角数字/斜杠先转半角（导入的题常见全角写法）
+    x=x.replace(/[０-９]/g, function(c){ return String.fromCharCode(c.charCodeAt(0)-0xFEE0); }).replace(/／/g,"/");
     x=x.replace(/(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)/g,"\\frac{$1}{$2}");
     x=x.replace(/\b([a-zA-Z])\/(\d+(?:\.\d+)?)\b/g,"\\frac{$1}{$2}");
     x=x.replace(/\b(\d+(?:\.\d+)?)\/([a-zA-Z])\b/g,"\\frac{$1}{$2}");
@@ -2202,8 +2229,20 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     if(!MATH || typeof katex==="undefined") return restoreXls(restore(t));
     function unesc(x){ return x.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&quot;/g,'"'); }
     try{
-      // 裸分数（未写$的 数字/数字）自动包成数学块，渲染为分数横线（排除4位年份等长数字）
-      t=t.replace(/(?<![\d/])(\d{1,3}(?:\.\d+)?)\/(\d{1,3}(?:\.\d+)?)(?![\d/])/g, "$$\\frac{$1}{$2}$$");
+      // 裸分数（未写$）自动包成数学块，渲染为分数横线（覆盖数字/数字、括号/数字、字母/数字、表达式/括号等导入题常见写法）
+      t=t.replace(/(?<![\d\/／])([０-９\d]{1,3}(?:[．.]\d+)?)[\/／]([０-９\d]{1,3}(?:[．.]\d+)?)(?![\d\/／])/g, function(_,a,b){
+        var A=a.replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);});
+        var B=b.replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);});
+        return "$$\\frac{"+A+"}{"+B+"}$$";
+      });
+      t=t.replace(/(\([^()]*\))\/(\d{1,3}(?:\.\d+)?)/g, "$$\\frac{$1}{$2}$$");
+      t=t.replace(/(\d{1,3}(?:\.\d+)?)\/([\[(][^[\]()]*[)\]])(?!\d)/g, "$$\\frac{$1}{$2}$$");
+      t=t.replace(/(\d{1,3}(?:\.\d+)?)\/(\[[^\]\[]*\])/g, "$$\\frac{$1}{$2}$$");
+      t=t.replace(/(?<![\d\/a-zA-Z])([a-z])\/(\d{1,3}(?:\.\d+)?)(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
+      t=t.replace(/(?<![\d\/a-zA-Z])(\d{1,3}(?:\.\d+)?)\/([a-z])(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
+      t=t.replace(/(?<![\d\/a-zA-Z])(\d{1,3}[a-z])\/(\d{1,3}(?:\.\d+)?)(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
+      t=t.replace(/(?<![\d\/a-zA-Z])([0-9a-zA-Z][0-9a-zA-Z^+*\-.]{0,12})\/(\([^()]*\))(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
+      t=t.replace(/(\d{1,3})\/([a-z]+[0-9]*\([^()]*\)[a-z0-9^+*\-.]{0,12})(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
       t=t.replace(/\$\$([\s\S]+?)\$\$/g,function(_,x){ return '<div class="math-inline" style="margin:6px 0;">'+katex.renderToString(fracIt(unesc(x)),{displayMode:true,throwOnError:false})+'</div>'; });
       t=t.replace(/\$([^$\n]+?)\$/g,function(_,x){ return '<span class="math-inline">'+katex.renderToString(fracIt(unesc(x)),{displayMode:false,throwOnError:false})+'</span>'; });
     }catch(e){}
