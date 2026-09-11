@@ -1,9 +1,10 @@
 {
-  "name": "专升本错题本",
-  "short_name": "错题本",
-  "description": "四川专升本三科错题复习、题库刷题、英语单词记忆",
-  "start_url": "/错题本/index.html",
-  "scope": "/",
+  "name": "专升本刷题站",
+  "short_name": "专升本题库",
+  "description": "四川专升本三科题库刷题、错题复习、英语单词记忆",
+  "start_url": "index.html",
+  "scope": "./",
+  "id": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#F4F3EE",
@@ -11,13 +12,13 @@
   "lang": "zh-CN",
   "icons": [
     {
-      "src": "/错题本/icon-192.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/错题本/icon-512.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
