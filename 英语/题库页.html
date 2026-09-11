@@ -16637,6 +16637,17 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
   function fracIt(x){
     // 全角数字/斜杠先转半角（导入的题常见全角写法）
     x=x.replace(/[０-９]/g, function(c){ return String.fromCharCode(c.charCodeAt(0)-0xFEE0); }).replace(/／/g,"/");
+    // unicode 上下标转 KaTeX（组合成花括号上标，防渲染报错红显）：3ⁿ⁺¹ → 3^{n+1}
+    var sup={'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','ⁿ':'n','ⁱ':'i','⁺':'+','⁻':'-'};
+    x=x.replace(/([0-9a-zA-Z\)\]\}])[⁰¹²³⁴⁵⁶⁷⁸⁹ⁿⁱ⁺⁻]+/g, function(m,base){
+      return base+'^{'+m.slice(1).replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹ⁿⁱ⁺⁻]/g,function(c){return sup[c];})+'}';
+    });
+    var sub={'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9','ₙ':'n','ₓ':'x'};
+    x=x.replace(/([0-9a-zA-Z\)\]\}])[₀₁₂₃₄₅₆₇₈₉ₙₓ]+/g, function(m,base){
+      return base+'_{'+m.slice(1).replace(/[₀₁₂₃₄₅₆₇₈₉ₙₓ]/g,function(c){return sub[c];})+'}';
+    });
+    // 根号：√(x) → \sqrt{x}；√x → \sqrt{x}
+    x=x.replace(/√\(([^()]*)\)/g,"\\sqrt{$1}").replace(/√([0-9a-zA-Z]+)/g,"\\sqrt{$1}");
     x=x.replace(/(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)/g,"\\frac{$1}{$2}");
     x=x.replace(/\b([a-zA-Z])\/(\d+(?:\.\d+)?)\b/g,"\\frac{$1}{$2}");
     x=x.replace(/\b(\d+(?:\.\d+)?)\/([a-zA-Z])\b/g,"\\frac{$1}{$2}");
@@ -16671,6 +16682,8 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
       t=t.replace(/(\([^()]*\))\/(\d{1,3}(?:\.\d+)?)/g, "$$\\frac{$1}{$2}$$");
       t=t.replace(/(\d{1,3}(?:\.\d+)?)\/([\[(][^[\]()]*[)\]])(?!\d)/g, "$$\\frac{$1}{$2}$$");
       t=t.replace(/(\d{1,3}(?:\.\d+)?)\/(\[[^\]\[]*\])/g, "$$\\frac{$1}{$2}$$");
+      t=t.replace(/(\[[^\]\[]*\])\/(\[[^\]\[]*\])/g, "$$\\frac{$1}{$2}$$");
+      t=t.replace(/(\([^()]*\))\/(\([^()]*\))/g, "$$\\frac{$1}{$2}$$");
       t=t.replace(/(?<![\d\/a-zA-Z])([a-z])\/(\d{1,3}(?:\.\d+)?)(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
       t=t.replace(/(?<![\d\/a-zA-Z])(\d{1,3}(?:\.\d+)?)\/([a-z])(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
       t=t.replace(/(?<![\d\/a-zA-Z])(\d{1,3}[a-z])\/(\d{1,3}(?:\.\d+)?)(?![\d\/a-zA-Z])/g, "$$\\frac{$1}{$2}$$");
