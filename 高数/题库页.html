@@ -45,6 +45,8 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
 .sel-group select{flex:0 1 auto;min-width:0;max-width:46vw;}
 .sel-group{display:flex;gap:6px;flex-wrap:nowrap;min-width:0;}
 .sel-group select{flex:0 1 auto;min-width:0;max-width:46vw;}
+.sel-group{display:flex;gap:6px;flex-wrap:nowrap;min-width:0;}
+.sel-group select{flex:0 1 auto;min-width:0;max-width:46vw;}
 
 .toolbar select,.toolbar button{font-size:13px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);cursor:pointer;}
 
@@ -19504,7 +19506,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "下列函数在给定变化过程中是无穷小量的有（ ）个。\n(1) $2^{-}$ˣ-1（$x\\to 0$）；(2) $2^{-}$ˣ（$x\\to +\\infty $）；(3) $\\ln$ x（$x\\to 1$）；(4) $\\frac{1}{(1+x^{2})}$（$x\\to 0$）",
+  "题目": "下列函数在给定变化过程中是无穷小量的有（ ）个。\n(1) $2^{-x}$-1（$x\\to 0$）；(2) $2^{-x}$（$x\\to +\\infty $）；(3) $\\ln$ x（$x\\to 1$）；(4) $\\frac{1}{(1+x^{2})}$（$x\\to 0$）",
   "选项": [
    "0",
    "1",
@@ -19512,7 +19514,7 @@ window.__TIKU__ = [
    "3"
   ],
   "答案": "D",
-  "解析": "(1)lim($2^{-}$ˣ-1)=0；$(2)x\\to +\\infty $时$2^{-}ˣ\\to 0$；(3)lim $\\ln$ x=0；(4)lim $\\frac{1}{(1+x^{2})}$=1≠0。共3个无穷小量。",
+  "解析": "(1)lim($2^{-x}$-1)=0；$(2)x\\to +\\infty $时$2^{-x}\\to 0$；(3)lim $\\ln$ x=0；(4)lim $\\frac{1}{(1+x^{2})}$=1≠0。共3个无穷小量。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19635,11 +19637,11 @@ window.__TIKU__ = [
   "选项": [
    "$\\sin$ $\\frac{x}{\\sqrt{x}}$",
    "$\\ln(1+x^{2}$)",
-   "eˣ-1",
+   "$e^{x}$-1",
    "$1-\\cos$ x"
   ],
   "答案": "C",
-  "解析": "A为$\\infty $（高阶无穷大）；B为$x^{2}$（高阶）；C中eˣ-1~x（等价）；D中$1-\\cos$ x~$\\frac{x^{2}}{2}$（高阶）。",
+  "解析": "A为$\\infty $（高阶无穷大）；B为$x^{2}$（高阶）；C中$e^{x}$-1~x（等价）；D中$1-\\cos$ x~$\\frac{x^{2}}{2}$（高阶）。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19703,12 +19705,12 @@ window.__TIKU__ = [
   "题目": "当$x\\to 0$时，与x是等价无穷小量的是（ ）",
   "选项": [
    "$\\sqrt{1+2x}$-1",
-   "2ˣ-1",
+   "$2^{x}$-1",
    "$x-\\sin$ x",
    "$\\arctan$ $x^{2}$"
   ],
   "答案": "A",
-  "解析": "A中$\\sqrt{1+2x}$-1~x；B中2ˣ-1~xln2；C中$x-\\sin$ x~$\\frac{x^{3}}{6}$；D中$\\arctan$ $x^{2}$~$x^{2}$。仅A与x等价。",
+  "解析": "A中$\\sqrt{1+2x}$-1~x；B中$2^{x}$-1~xln2；C中$x-\\sin$ x~$\\frac{x^{3}}{6}$；D中$\\arctan$ $x^{2}$~$x^{2}$。仅A与x等价。",
   "考点": "1-2 极限",
   "章节": "01-函数与极限"
  },
@@ -19934,10 +19936,10 @@ window.__TIKU__ = [
   "题型": "计算",
   "材料": "",
   "passage": "",
-  "题目": "求 $\\lim_{x\\to 0}\\frac{(eˣ+x-1)}{(2x)}$",
+  "题目": "求 $\\lim_{x\\to 0}\\frac{(e^{x}+x-1)}{(2x)}$",
   "选项": [],
   "答案": "1",
-  "解析": "拆分=lim$\\frac{(eˣ-1)}{(2x)}$+lim $\\frac{x}{(2x)}$=$\\frac{1}{2}$+$\\frac{1}{2}$=1。",
+  "解析": "拆分=lim$\\frac{(e^{x}-1)}{(2x)}$+lim $\\frac{x}{(2x)}$=$\\frac{1}{2}$+$\\frac{1}{2}$=1。",
   "考点": "99-综合",
   "章节": "99-综合"
  },

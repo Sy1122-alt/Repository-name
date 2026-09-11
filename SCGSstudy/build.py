@@ -464,6 +464,7 @@ def clean_topic_title(raw):
 
 
 
+
 # ============================================================
 # 站长错题 LaTeX 化（构建期转换，参考正常题标准形式）
 
@@ -921,7 +922,7 @@ def latexify_text(s):
     # 乘号
     s = re.sub(r'(?<=[0-9a-zA-Z\)\]])×(?=[0-9a-zA-Z(\[])', r'\\times ', s)
     # 上下标组合
-    s = re.sub(r'([0-9a-zA-Z\)\]\}])[⁰¹²³⁴⁵⁶⁷⁸⁹ⁿⁱ⁺⁻]+',
+    s = re.sub(r'([0-9a-zA-Z\)\]\}])[⁰¹²³⁴⁵⁶⁷⁸⁹ⁿⁱ⁺⁻ˣ]+',
                lambda m: m.group(1) + '^{' + ''.join(SUP[c] for c in m.group()[1:]) + '}', s)
     s = re.sub(r'([0-9a-zA-Z\)\]\}])[₀₁₂₃₄₅₆₇₈₉ₙₓ]+',
                lambda m: m.group(1) + '_{' + ''.join(SUB[c] for c in m.group()[1:]) + '}', s)
@@ -2608,6 +2609,8 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
 .stat .l{font-size:11px;color:var(--sub);}
 .stat.hot{border-color:var(--accent);}
 .toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.sel-group{display:flex;gap:6px;flex-wrap:nowrap;min-width:0;}
+.sel-group select{flex:0 1 auto;min-width:0;max-width:46vw;}
 .sel-group{display:flex;gap:6px;flex-wrap:nowrap;min-width:0;}
 .sel-group select{flex:0 1 auto;min-width:0;max-width:46vw;}
 .sel-group{display:flex;gap:6px;flex-wrap:nowrap;min-width:0;}
