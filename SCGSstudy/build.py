@@ -460,253 +460,308 @@ def clean_topic_title(raw):
     return t or "综合"
 
 
-# ============================================================
-# 站长错题 LaTeX 化（构建期转换，参考正常题标准形式）
-SUP = {'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','ⁿ':'n','ⁱ':'i','⁺':'+','⁻':'-'}
-SUB = {'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9','ₙ':'n','ₓ':'x'}
-FULL = str.maketrans({'０':'0','１':'1','２':'2','３':'3','４':'4','５':'5','６':'6','７':'7','８':'8','９':'9','／':'/','．':'.'})
-
-def _match_paren(s, start, op='(', cl=')'):
-    depth = 0
-    for i in range(start, len(s)):
-        if s[i] == op:
-            depth += 1
-        elif s[i] == cl:
-            depth -= 1
-            if depth == 0:
-                return i
-    return -1
-
-def _match_brace(s, start):
-    d = 0
-    for i in range(start, len(s)):
-        if s[i] == '{':
-            d += 1
-        elif s[i] == '}':
-            d -= 1
-            if d == 0:
-                return i
-    return -1
-
-def _num_over_paren_index(s):
-    while True:
-        m = re.search(r'(?<![0-9a-zA-Z/])(\d+(?:\.\d+)?)/([\[(])', s)
-        if not m:
-            return s
-        num = m.group(1)
-        k = m.start(2)
-        op = s[k]
-        cl = ']' if op == '[' else ')'
-        end = _match_paren(s, k, op, cl)
-        if end < 0:
-            return s
-        den = s[k:end+1]
-        s = s[:m.start(0)] + r'\frac{' + num + '}{' + den + '}' + s[end+1:]
-
-def _num_over_func_index(s):
-    while True:
-        m = re.search(r'(?<![0-9a-zA-Z/])(\d+(?:\.\d+)?)/([a-z]+[0-9]*\()', s)
-        if not m:
-            return s
-        num = m.group(1)
-        k = m.start(2)
-        k2 = m.end(2) - 1
-        end = _match_paren(s, k2)
-        if end < 0:
-            return s
-        den = s[k:end+1]
-        s = s[:m.start(0)] + r'\frac{' + num + '}{' + den + '}' + s[end+1:]
-
-def _power_paren_index(s):
-    while True:
-        m = re.search(r'\^\(', s)
-        if not m:
-            return s
-        k = m.end() - 1
-        end = _match_paren(s, k)
-        if end < 0:
-            return s
-        expr = s[k+1:end]
-        s = s[:m.start(0)] + '^{' + expr + '}' + s[end+1:]
-
-def convert_fracs(s):
-    for _ in range(12):
-        s0 = s
-        s = re.sub(r'(\([^()]*\))/(\([^()]*\))', r'\\frac{\1}{\2}', s)
-        s = _num_over_paren_index(s)
-        s = re.sub(r'(\([^()]*\))/(\d+(?:\.\d+)?)(?![0-9a-zA-Z/])', r'\\frac{\1}{\2}', s)
-        s = re.sub(r'(?<![0-9a-zA-Z/])(\d+(?:\.\d+)?)/(\d+(?:\.\d+)?)(?![0-9a-zA-Z/])', r'\\frac{\1}{\2}', s)
-        s = re.sub(r'(?<![0-9a-zA-Z/])([0-9]*[a-z]\d*)/(\d+(?:\.\d+)?)(?![0-9a-zA-Z/])', r'\\frac{\1}{\2}', s)
-        s = re.sub(r'(?<![0-9a-zA-Z/])(\d+(?:\.\d+)?)/([a-z])(?![0-9a-zA-Z/])', r'\\frac{\1}{\2}', s)
-        s = _num_over_func_index(s)
-        s = re.sub(r'(?<![0-9a-zA-Z/])([0-9a-zA-Z][0-9a-zA-Z^+*\-.]{0,12})/(\([^()]*\))(?![0-9a-zA-Z])', r'\\frac{\1}{\2}', s)
-        s = re.sub(r'(\[[^\]\[]*\])\/(\[[^\]\[]*\])', r'\\frac{\1}{\2}', s)
-        s = re.sub(r'(?<![0-9a-zA-Z/])(\d+(?:\.\d+)?)/(\[[^\]\[]*\])', r'\\frac{\1}{\2}', s)
-        if s == s0:
-            break
-    return s
-
-def _wrap_cmd(s):
-    """\begin{cases}...\end{cases} \sqrt{...} \frac{a}{b} \lim_{...} x^{...} 整体包 $"""
-    cmds = [('\\sqrt[3]{', 8), ('\\sqrt{', 5), ('\\frac{', 5), ('\\lim_{', 5)]
-    out = []
-    i = 0
-    n = len(s)
-    while i < n:
-        hit = False
-        if s.startswith('\\begin{cases}', i):
-            j = s.find('\\end{cases}', i)
-            if j > 0:
-                out.append('$' + s[i:j+11] + '$')
-                i = j + 11
-                continue
-        for cmd, off in cmds:
-            if s.startswith(cmd, i):
-                end = _match_brace(s, i + off)
-                if end > 0:
-                    # \frac 需两组花括号
-                    if cmd == '\\frac{':
-                        end2 = _match_brace(s, end + 1)
-                        if end2 < 0:
-                            break
-                        end = end2
-                    out.append('$' + s[i:end+1] + '$')
-                    i = end + 1
-                    hit = True
-                    break
-        if hit:
-            continue
-        # ^\{...} 幂组：x^{...} 整体包（含前面的字符）
-        if s[i] == '^' and i + 1 < n and s[i+1] == '{':
-            start = i
-            if i > 0 and (s[i-1].isalnum() or s[i-1] in ')]'):
-                start = i - 1
-            end = _match_brace(s, i + 1)
-            if end > 0:
-                if start < i:
-                    del out[-(i - start):]
-                out.append('$' + s[start:end+1] + '$')
-                i = end + 1
-                continue
-        out.append(s[i])
-        i += 1
-    return ''.join(out)
-
-def _math_sym(m):
-    t = m.group(1)
-    t = t.replace('∪', r'\cup ').replace('∩', r'\cap ').replace('∈', r'\in ')
-    t = t.replace('∞', r'\infty ').replace('≥', r'\geq ').replace('≤', r'\leq ')
-    t = t.replace('→', r'\to ')
-    t = t.replace('<', r'\lt ').replace('>', r'\gt ')
-    t = re.sub(r'(?<![\\a-zA-Z])(arcsin|arccos|arctan|ln|log)(\d+)', r'\\\1_{\2}', t)
-    t = re.sub(r'(?<![\\a-zA-Z])(arcsin|arccos|arctan|ln|log|sin|cos|tan)\b', r'\\\1', t)
-    return '$' + t + '$'
-
-def _brace_case(s):
-    """分段函数 f(x)={a; b} → f(x)=\begin{cases}a \\ b\end{cases}"""
-    while True:
-        m = re.search(r'(?<=[=(])\{', s)
-        if not m:
-            return s
-        k = m.start()
-        end = _match_brace(s, k)
-        if end < 0:
-            return s
-        inner = s[k+1:end]
-        parts = [p.strip() for p in inner.split(';')]
-        cases = r' \\ '.join(parts)
-        s = s[:k] + r'\begin{cases}' + cases + r'\end{cases}' + s[end+1:]
-
-def latexify_text(s):
-    s = s.translate(FULL)
-    # 圈数字
-    s = re.sub(r'[①-⑨]', lambda m: '(%d)' % (ord(m.group())-0x2460+1), s)
-    s = s.replace('⑩', '(10)')
-    # 分段函数花括号
-    s = _brace_case(s)
-    # 乘号
-    s = re.sub(r'(?<=[0-9a-zA-Z\)\]])×(?=[0-9a-zA-Z(\[])', r'\\times ', s)
-    # 上下标组合
-    s = re.sub(r'([0-9a-zA-Z\)\]\}])[⁰¹²³⁴⁵⁶⁷⁸⁹ⁿⁱ⁺⁻]+',
-               lambda m: m.group(1) + '^{' + ''.join(SUP[c] for c in m.group()[1:]) + '}', s)
-    s = re.sub(r'([0-9a-zA-Z\)\]\}])[₀₁₂₃₄₅₆₇₈₉ₙₓ]+',
-               lambda m: m.group(1) + '_{' + ''.join(SUB[c] for c in m.group()[1:]) + '}', s)
-    # lim(...) → \lim_{...}
-    s = re.sub(r'lim\(([^()]*)\)',
-               lambda m: r'\lim_{' + m.group(1).replace('→∞', r'\to\infty').replace('→', r'\to ') + '}', s)
-    # log2( ln2( → \log_{2}(
-    s = re.sub(r'(?<![a-zA-Z])(log|ln)(\d+)\(', r'\\\1_{\2}(', s)
-    # 根号：√(...)（嵌套反复）→ \sqrt{...}，再 √x
-    for _ in range(6):
-        s2 = re.sub(r'√\(([^()]*)\)', r'\\sqrt{\1}', s)
-        if s2 == s:
-            break
-        s = s2
-    s = re.sub(r'√([0-9a-zA-Z]+)', r'\\sqrt{\1}', s)
-    # 立方根：∛(...) → \sqrt[3]{...}；∛x^{..} → \sqrt[3]{x^{..}}；∛x → \sqrt[3]{x}
-    for _ in range(4):
-        s2 = re.sub(r'∛\(([^()]*)\)', r'\\sqrt[3]{\1}', s)
-        if s2 == s:
-            break
-        s = s2
-    s = re.sub(r'∛([0-9a-zA-Z]+)(\^\{[^}]*\})', r'\\sqrt[3]{\1\2}', s)
-    s = re.sub(r'∛([0-9a-zA-Z]+)', r'\\sqrt[3]{\1}', s)
-    # 根号（索引拼接保护）
-    sqrt_holder = []
-    def _protect_sqrt(s):
-        out = []
-        i = 0
-        while True:
-            j = s.find('\\sqrt{', i)
-            if j < 0:
-                out.append(s[i:])
-                break
-            out.append(s[i:j])
-            end = _match_brace(s, j + 5)
-            if end < 0:
-                out.append(s[j:])
-                break
-            sqrt_holder.append(s[j:end+1])
-            out.append('\x00S%d\x00' % (len(sqrt_holder)-1))
-            i = end + 1
-        return ''.join(out)
-    s = _protect_sqrt(s)
-    # 除式
-    s = convert_fracs(s)
-    # 还原根号
-    for idx, v in enumerate(sqrt_holder):
-        s = s.replace('\x00S%d\x00' % idx, v)
-    # ^(expr) → ^{expr}
-    s = _power_paren_index(s)
-    # 轮1：命令片段整体包 $
-    s = _wrap_cmd(s)
-    # 轮1.5：已转义命令单独包 $
-    s = re.sub(r'(?<![0-9a-zA-Z\\])(\\times|\\sin|\\cos|\\tan|\\ln|\\log|\\arcsin|\\arctan|\\arccos)(?![a-zA-Z])', r'$\1$', s)
-    # 占位 $ 区域
-    wrapped = []
-    def _hold_w(m):
-        wrapped.append(m.group(0))
-        return '\x00W%d\x00' % (len(wrapped)-1)
-    s = re.sub(r'\$[^$]+\$', _hold_w, s)
-    # 轮2：纯符号片段
-    s = re.sub(r'([^\u4e00-\u9fff\s，。、；：！？“”‘’（）【】《》\*\\$\x00]+)',
-               lambda m: '$' + m.group(1) + '$'
-               if re.search(r'\^\{|_\{|→|≤|≥|∈|∪|∩|∞|\barcsin|\barctan|\bln|\blog|\bsin|\bcos|\btan', m.group(1))
-               else m.group(1),
-               s)
-    # 还原轮1区域
-    for idx, v in enumerate(wrapped):
-        s = s.replace('\x00W%d\x00' % idx, v)
-    # 合并相邻 $ 块：$A$$B$ → $AB$
-    for _ in range(5):
-        s2 = re.sub(r'\$([^$]+)\$\$([^$]+)\$', r'$\1\2$', s)
-        if s2 == s:
-            break
-        s = s2
-    # $ 块内 unicode 符号/函数名
-    s = re.sub(r'\$([^$]+)\$', _math_sym, s)
-    return s
-
+
+
+# ============================================================
+# 站长错题 LaTeX 化（构建期转换，参考正常题标准形式）
+
+SUP = {'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','ⁿ':'n','ⁱ':'i','⁺':'+','⁻':'-'}
+SUB = {'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9','ₙ':'n','ₓ':'x'}
+FULL = str.maketrans({'０':'0','１':'1','２':'2','３':'3','４':'4','５':'5','６':'6','７':'7','８':'8','９':'9','／':'/','．':'.'})
+
+def _match_paren(s, start, op='(', cl=')'):
+    depth = 0
+    for i in range(start, len(s)):
+        if s[i] == op:
+            depth += 1
+        elif s[i] == cl:
+            depth -= 1
+            if depth == 0:
+                return i
+    return -1
+
+def _match_brace(s, start):
+    d = 0
+    for i in range(start, len(s)):
+        if s[i] == '{':
+            d += 1
+        elif s[i] == '}':
+            d -= 1
+            if d == 0:
+                return i
+    return -1
+
+def _num_over_paren_index(s):
+    while True:
+        m = re.search(r'(?<![0-9a-zA-Z/])(\d+(?:\.\d+)?)/([\[(])', s)
+        if not m:
+            return s
+        num = m.group(1)
+        k = m.start(2)
+        op = s[k]
+        cl = ']' if op == '[' else ')'
+        end = _match_paren(s, k, op, cl)
+        if end < 0:
+            return s
+        den = s[k:end+1]
+        s = s[:m.start(0)] + r'\frac{' + num + '}{' + den + '}' + s[end+1:]
+
+def _num_over_func_index(s):
+    while True:
+        m = re.search(r'(?<![0-9a-zA-Z/])(\d+(?:\.\d+)?)/([a-z]+[0-9]*\()', s)
+        if not m:
+            return s
+        num = m.group(1)
+        k = m.start(2)
+        k2 = m.end(2) - 1
+        end = _match_paren(s, k2)
+        if end < 0:
+            return s
+        den = s[k:end+1]
+        s = s[:m.start(0)] + r'\frac{' + num + '}{' + den + '}' + s[end+1:]
+
+def _power_paren_index(s):
+    while True:
+        m = re.search(r'\^\(', s)
+        if not m:
+            return s
+        k = m.end() - 1
+        end = _match_paren(s, k)
+        if end < 0:
+            return s
+        expr = s[k+1:end]
+        s = s[:m.start(0)] + '^{' + expr + '}' + s[end+1:]
+
+def _paren_over_paren(s):
+    """(...)/(...) 含嵌套括号与加减运算符的除式 → \frac{...}{...}
+    (f(x)+2)/(x-2) 等：从右往左找最后一个 )/( 组合，平衡配对后转换。"""
+    for _ in range(8):
+        s0 = s
+        m = None
+        for mm in re.finditer(r'\)/(\()', s):
+            m = mm
+        if not m:
+            return s
+        j = m.start()  # ')' 位置
+        k = j + 2      # '(' 位置
+        # 向左找与 j 配对的 '('
+        i = j
+        depth = 0
+        while i >= 0:
+            if s[i] == ')':
+                depth += 1
+            elif s[i] == '(':
+                depth -= 1
+                if depth == 0:
+                    break
+            i -= 1
+        if i < 0 or depth != 0:
+            return s
+        # 向右找与 k 配对的 ')'
+        depth = 0
+        end = -1
+        for p in range(k, len(s)):
+            if s[p] == '(':
+                depth += 1
+            elif s[p] == ')':
+                depth -= 1
+                if depth == 0:
+                    end = p
+                    break
+        if end < 0:
+            return s
+        inner1 = s[i:j+1]
+        inner2 = s[k:end+1]
+        if '/' in inner1 or '/' in inner2:
+            return s
+        s = s[:i] + r'\frac{' + inner1 + '}{' + inner2 + '}' + s[end+1:]
+        if s == s0:
+            return s
+    return s
+
+def convert_fracs(s):
+    for _ in range(12):
+        s0 = s
+        s = _paren_over_paren(s)
+        s = re.sub(r'(\([^()]*\))/(\([^()]*\))', r'\\frac{\1}{\2}', s)
+        s = _num_over_paren_index(s)
+        s = re.sub(r'(\([^()]*\))/(\d+(?:\.\d+)?)(?![0-9a-zA-Z/])', r'\\frac{\1}{\2}', s)
+        s = re.sub(r'(?<![0-9a-zA-Z/])(\d+(?:\.\d+)?)/(\d+(?:\.\d+)?)(?![0-9a-zA-Z/])', r'\\frac{\1}{\2}', s)
+        s = re.sub(r'(?<![0-9a-zA-Z/])([0-9]*[a-z]\d*)/(\d+(?:\.\d+)?)(?![0-9a-zA-Z/])', r'\\frac{\1}{\2}', s)
+        s = re.sub(r'(?<![0-9a-zA-Z/])(\d+(?:\.\d+)?)/([a-z])(?![0-9a-zA-Z/])', r'\\frac{\1}{\2}', s)
+        s = _num_over_func_index(s)
+        s = re.sub(r'(?<![0-9a-zA-Z/])([0-9a-zA-Z][0-9a-zA-Z^+*\-.]{0,12})/(\([^()]*\))(?![0-9a-zA-Z])', r'\\frac{\1}{\2}', s)
+        s = re.sub(r'(\[[^\]\[]*\])\/(\[[^\]\[]*\])', r'\\frac{\1}{\2}', s)
+        s = re.sub(r'(?<![0-9a-zA-Z/])(\d+(?:\.\d+)?)/(\[[^\]\[]*\])', r'\\frac{\1}{\2}', s)
+        s = re.sub(r'(?<![0-9a-zA-Z/])π/(\d+(?:\.\d+)?)(?![0-9a-zA-Z/])', r'\\frac{\\pi}{\1}', s)
+        if s == s0:
+            break
+    return s
+
+def _wrap_cmd(s):
+    """\begin{cases}...\end{cases} \sqrt{...} \frac{a}{b} \lim_{...} x^{...} 整体包 $"""
+    cmds = [('\\sqrt[3]{', 8), ('\\sqrt{', 5), ('\\frac{', 5), ('\\lim_{', 5)]
+    out = []
+    i = 0
+    n = len(s)
+    while i < n:
+        hit = False
+        if s.startswith('\\begin{cases}', i):
+            j = s.find('\\end{cases}', i)
+            if j > 0:
+                out.append('$' + s[i:j+11] + '$')
+                i = j + 11
+                continue
+        for cmd, off in cmds:
+            if s.startswith(cmd, i):
+                end = _match_brace(s, i + off)
+                if end > 0:
+                    # \frac 需两组花括号
+                    if cmd == '\\frac{':
+                        end2 = _match_brace(s, end + 1)
+                        if end2 < 0:
+                            break
+                        end = end2
+                    out.append('$' + s[i:end+1] + '$')
+                    i = end + 1
+                    hit = True
+                    break
+        if hit:
+            continue
+        # ^\{...} 幂组：x^{...} 整体包（含前面的字符）
+        if s[i] == '^' and i + 1 < n and s[i+1] == '{':
+            start = i
+            if i > 0 and (s[i-1].isalnum() or s[i-1] in ')]'):
+                start = i - 1
+            end = _match_brace(s, i + 1)
+            if end > 0:
+                if start < i:
+                    del out[-(i - start):]
+                out.append('$' + s[start:end+1] + '$')
+                i = end + 1
+                continue
+        out.append(s[i])
+        i += 1
+    return ''.join(out)
+
+def _math_sym(m):
+    t = m.group(1)
+    t = t.replace('∪', r'\cup ').replace('∩', r'\cap ').replace('∈', r'\in ')
+    t = t.replace('∞', r'\infty ').replace('≥', r'\geq ').replace('≤', r'\leq ')
+    t = t.replace('→', r'\to ')
+    t = re.sub(r'π/(\d+)', r'\\frac{\\pi}{\1}', t)
+    t = t.replace('π', r'\pi ')
+    t = t.replace('<', r'\lt ').replace('>', r'\gt ')
+    t = re.sub(r'(?<![\\a-zA-Z])(arcsin|arccos|arctan|ln|log)(\d+)', r'\\\1_{\2}', t)
+    t = re.sub(r'(?<![\\a-zA-Z])(arcsin|arccos|arctan|ln|log|sin|cos|tan)\b', r'\\\1', t)
+    return '$' + t + '$'
+
+def _brace_case(s):
+    """分段函数 f(x)={a; b} → f(x)=\begin{cases}a \\ b\end{cases}"""
+    while True:
+        m = re.search(r'(?<=[=(])\{', s)
+        if not m:
+            return s
+        k = m.start()
+        end = _match_brace(s, k)
+        if end < 0:
+            return s
+        inner = s[k+1:end]
+        parts = [p.strip() for p in inner.split(';')]
+        cases = r' \\ '.join(parts)
+        s = s[:k] + r'\begin{cases}' + cases + r'\end{cases}' + s[end+1:]
+
+def latexify_text(s):
+    s = s.translate(FULL)
+    # 圈数字
+    s = re.sub(r'[①-⑨]', lambda m: '(%d)' % (ord(m.group())-0x2460+1), s)
+    s = s.replace('⑩', '(10)')
+    # 分段函数花括号
+    s = _brace_case(s)
+    # 乘号
+    s = re.sub(r'(?<=[0-9a-zA-Z\)\]])×(?=[0-9a-zA-Z(\[])', r'\\times ', s)
+    # 上下标组合
+    s = re.sub(r'([0-9a-zA-Z\)\]\}])[⁰¹²³⁴⁵⁶⁷⁸⁹ⁿⁱ⁺⁻]+',
+               lambda m: m.group(1) + '^{' + ''.join(SUP[c] for c in m.group()[1:]) + '}', s)
+    s = re.sub(r'([0-9a-zA-Z\)\]\}])[₀₁₂₃₄₅₆₇₈₉ₙₓ]+',
+               lambda m: m.group(1) + '_{' + ''.join(SUB[c] for c in m.group()[1:]) + '}', s)
+    # lim(...) → \lim_{...}
+    s = re.sub(r'lim\(([^()]*)\)',
+               lambda m: r'\lim_{' + m.group(1).replace('→∞', r'\to\infty').replace('→', r'\to ') + '}', s)
+    # log2( ln2( → \log_{2}(
+    s = re.sub(r'(?<![a-zA-Z])(log|ln)(\d+)\(', r'\\\1_{\2}(', s)
+    # 根号：√(...)（嵌套反复）→ \sqrt{...}，再 √x
+    for _ in range(6):
+        s2 = re.sub(r'√\(([^()]*)\)', r'\\sqrt{\1}', s)
+        if s2 == s:
+            break
+        s = s2
+    s = re.sub(r'√([0-9a-zA-Z]+)', r'\\sqrt{\1}', s)
+    # 立方根：∛(...) → \sqrt[3]{...}；∛x^{..} → \sqrt[3]{x^{..}}；∛x → \sqrt[3]{x}
+    for _ in range(4):
+        s2 = re.sub(r'∛\(([^()]*)\)', r'\\sqrt[3]{\1}', s)
+        if s2 == s:
+            break
+        s = s2
+    s = re.sub(r'∛([0-9a-zA-Z]+)(\^\{[^}]*\})', r'\\sqrt[3]{\1\2}', s)
+    s = re.sub(r'∛([0-9a-zA-Z]+)', r'\\sqrt[3]{\1}', s)
+    # 根号（索引拼接保护）
+    sqrt_holder = []
+    def _protect_sqrt(s):
+        out = []
+        i = 0
+        while True:
+            j = s.find('\\sqrt{', i)
+            if j < 0:
+                out.append(s[i:])
+                break
+            out.append(s[i:j])
+            end = _match_brace(s, j + 5)
+            if end < 0:
+                out.append(s[j:])
+                break
+            sqrt_holder.append(s[j:end+1])
+            out.append('\x00S%d\x00' % (len(sqrt_holder)-1))
+            i = end + 1
+        return ''.join(out)
+    s = _protect_sqrt(s)
+    # 除式
+    s = convert_fracs(s)
+    # 还原根号
+    for idx, v in enumerate(sqrt_holder):
+        s = s.replace('\x00S%d\x00' % idx, v)
+    # ^(expr) → ^{expr}
+    s = _power_paren_index(s)
+    # 轮1：命令片段整体包 $
+    s = _wrap_cmd(s)
+    # 轮1.5：已转义命令单独包 $
+    s = re.sub(r'(?<![0-9a-zA-Z\\])(\\times|\\sin|\\cos|\\tan|\\ln|\\log|\\arcsin|\\arctan|\\arccos)(?![a-zA-Z])', r'$\1$', s)
+    # 占位 $ 区域
+    wrapped = []
+    def _hold_w(m):
+        wrapped.append(m.group(0))
+        return '\x00W%d\x00' % (len(wrapped)-1)
+    s = re.sub(r'\$[^$]+\$', _hold_w, s)
+    # 轮2：纯符号片段
+    s = re.sub(r'([^\u4e00-\u9fff\s，。、；：！？“”‘’（）【】《》\*\\$\x00]+)',
+               lambda m: '$' + m.group(1) + '$'
+               if re.search(r'\^\{|_\{|→|≤|≥|∈|∪|∩|∞|\barcsin|\barctan|\bln|\blog|\bsin|\bcos|\btan', m.group(1))
+               else m.group(1),
+               s)
+    # 还原轮1区域
+    for idx, v in enumerate(wrapped):
+        s = s.replace('\x00W%d\x00' % idx, v)
+    # 合并相邻 $ 块：$A$$B$ → $AB$
+    for _ in range(5):
+        s2 = re.sub(r'\$([^$]+)\$\$([^$]+)\$', r'$\1\2$', s)
+        if s2 == s:
+            break
+        s = s2
+    # $ 块内 unicode 符号/函数名
+    s = re.sub(r'\$([^$]+)\$', _math_sym, s)
+    return s
+
+
 def parse_tiku(path, subject):
     """解析学科根目录《题库.md》为题目列表（用于刷题页）。"""
     if not path.exists():
@@ -932,16 +987,16 @@ def parse_tiku(path, subject):
                 elif re.search(r"计算[^机]", combined):
                     it["题型"] = "计算"
                 else:
-                    it["题型"] = "简答"
-    # 站长错题：LaTeX 化题目/答案/解析/选项（一次性参考正常题标准形式）
-    for it in items:
-        if it.get("来源") == "站长错题":
-            it["题目"] = latexify_text(it["题目"])
-            it["答案"] = latexify_text(it["答案"])
-            it["解析"] = latexify_text(it["解析"])
-            if it.get("材料"):
-                it["材料"] = latexify_text(it["材料"])
-            it["选项"] = [latexify_text(o) for o in it["选项"]]
+                    it["题型"] = "简答"
+    # 站长错题：LaTeX 化题目/答案/解析/选项（一次性参考正常题标准形式）
+    for it in items:
+        if it.get("来源") == "站长错题":
+            it["题目"] = latexify_text(it["题目"])
+            it["答案"] = latexify_text(it["答案"])
+            it["解析"] = latexify_text(it["解析"])
+            if it.get("材料"):
+                it["材料"] = latexify_text(it["材料"])
+            it["选项"] = [latexify_text(o) for o in it["选项"]]
     return items
 
 
@@ -2309,7 +2364,11 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
 .stat .n{font-size:18px;font-weight:700;}
 .stat .l{font-size:11px;color:var(--sub);}
 .stat.hot{border-color:var(--accent);}
-.toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.sel-group{display:flex;gap:6px;flex-wrap:nowrap;min-width:0;}
+.sel-group select{flex:0 1 auto;min-width:0;max-width:46vw;}
+.sel-group{display:flex;gap:6px;flex-wrap:nowrap;min-width:0;}
+.sel-group select{flex:0 1 auto;min-width:0;max-width:46vw;}
 .toolbar select,.toolbar button{font-size:13px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);cursor:pointer;}
 .toolbar button.primary{background:var(--accent-d);color:#fff;border-color:var(--accent-d);font-weight:600;}
 .toolbar button.on{background:var(--accent);border-color:var(--accent);color:#1A1B1C;font-weight:600;}
@@ -2391,9 +2450,11 @@ __KATEX_CSS__
     <div class="stat hot"><div class="n" id="nBasket">0</div><div class="l">错题篮子</div></div>
   </div>
 
-  <div class="toolbar">
-    <select id="selTopic"><option value="">全部专题</option></select>
-    <select id="selKaodian" style="display:none;"><option value="">全部考点</option></select>
+  <div class="toolbar">
+    <div class="sel-group">
+      <select id="selTopic"><option value="">全部专题</option></select>
+      <select id="selKaodian" style="display:none;"><option value="">全部考点</option></select>
+    </div>
     <button id="btnShuffle" class="primary">随机抽题</button>
     <button id="btnOrder">顺序浏览</button>
     <button id="btnKey">重点题</button>

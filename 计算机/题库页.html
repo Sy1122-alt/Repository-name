@@ -37,6 +37,10 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
 .stat.hot{border-color:var(--accent);}
 
 .toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.sel-group{display:flex;gap:6px;flex-wrap:nowrap;min-width:0;}
+.sel-group select{flex:0 1 auto;min-width:0;max-width:46vw;}
+.sel-group{display:flex;gap:6px;flex-wrap:nowrap;min-width:0;}
+.sel-group select{flex:0 1 auto;min-width:0;max-width:46vw;}
 
 .toolbar select,.toolbar button{font-size:13px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);cursor:pointer;}
 
@@ -201,10 +205,10 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
 
 
   <div class="toolbar">
-
-    <select id="selTopic"><option value="">全部专题</option></select>
-
-    <select id="selKaodian" style="display:none;"><option value="">全部考点</option></select>
+    <div class="sel-group">
+      <select id="selTopic"><option value="">全部专题</option></select>
+      <select id="selKaodian" style="display:none;"><option value="">全部考点</option></select>
+    </div>
 
     <button id="btnShuffle" class="primary">随机抽题</button>
 
