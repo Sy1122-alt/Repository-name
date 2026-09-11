@@ -1200,6 +1200,7 @@ __KATEX_CSS__
     <button id="btnDue">今日应复习</button>
     <button id="btnReset">重置进度</button>
     <button id="btnExportLocal">导出本地错题</button>
+    <button id="btnClearAll" style="background:#EA6668;color:#fff;">删除所有错题</button>
   </div>
 
   <div id="card"></div>
@@ -1604,6 +1605,15 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
       var self=this;
       setTimeout(function(){ self._arm=false; self.textContent="重置进度"; self.style.background=""; self.style.color=""; }, 3000);
     }
+  };
+  var clearAll=$("btnClearAll"); if(clearAll) clearAll.onclick=function(){
+    if(!confirm("确定删除所有错题？将同时清除本设备上的题库错题与本地错题（错题本.md 文件本身不动，仅本设备不再显示），此操作不可恢复！")) return;
+    try{
+      var lkey="__SUBJECT___errorbook_local";
+      localStorage.removeItem(lkey);
+      localStorage.setItem("__SUBJECT___errorbook_deleted_all","1");
+    }catch(e){}
+    location.reload();
   };
   $("btnExportLocal").onclick=function(){
     try{
