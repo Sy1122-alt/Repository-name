@@ -463,10 +463,11 @@ def clean_topic_title(raw):
 
 
 
+
 # ============================================================
 # 站长错题 LaTeX 化（构建期转换，参考正常题标准形式）
 
-SUP = {'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','ⁿ':'n','ⁱ':'i','⁺':'+','⁻':'-'}
+SUP = {'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','ⁿ':'n','ⁱ':'i','⁺':'+','⁻':'-','ˣ':'x'}
 SUB = {'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9','ₙ':'n','ₓ':'x'}
 FULL = str.maketrans({'０':'0','１':'1','２':'2','３':'3','４':'4','５':'5','６':'6','７':'7','８':'8','９':'9','／':'/','．':'.'})
 
@@ -539,9 +540,11 @@ def _match_brace_back(s, pos):
         i -= 1
     return -1
 
-def _func_scan(tok):
+def _func_scan(tok, allow_lim=True):
     m = re.search(r'([A-Za-z]+)(\d*)$', tok)
     if m and m.group(1).lower() in FUNCS:
+        if not allow_lim and m.group(1).lower() == 'lim':
+            return None
         return m.group(1).lower(), m.group(2)
     return None
 
@@ -562,12 +565,12 @@ def _atom_left(s, pos):
             kk -= 1
         tok = s[kk+1:k]
         if tok:
-            fs = _func_scan(tok)
+            fs = _func_scan(tok, False)
             if fs:
                 if kk >= 0 and s[kk] == '\\':
                     return (kk, j + 1)
                 return (kk + 1, j + 1)
-            if re.fullmatch(r'[0-9a-zA-Z]+', tok):
+            if re.fullmatch(r'[0-9a-zA-Z]+', tok) and tok.lower() not in FUNCS:
                 return (kk + 1, j + 1)
         return (k, j + 1)
     if c == ']':
@@ -580,6 +583,23 @@ def _atom_left(s, pos):
         if k >= 0 and k > 0 and s[k-1] == '^':
             kk = k - 2
             while kk >= 0 and _is_an(s[kk]):
+                kk -= 1
+            return (kk + 1, j + 1)
+        if k >= 5 and s[k-5:k] == '\\sqrt':
+            kk = k - 5
+            if kk > 0 and (s[kk-1].isdigit() or _is_an(s[kk-1])):
+                kk2 = kk - 1
+                while kk2 >= 0 and (s[kk2].isdigit() or _is_an(s[kk2])):
+                    kk2 -= 1
+                return (kk2 + 1, j + 1)
+            return (kk, j + 1)
+        return None
+    if c == '\x00':
+        m = re.search(r'\x00S\d+\x00$', s[:j+1])
+        if m:
+            start = m.start()
+            kk = start - 1
+            while kk >= 0 and (s[kk].isdigit() or _is_an(s[kk])):
                 kk -= 1
             return (kk + 1, j + 1)
         return None
@@ -622,7 +642,7 @@ def _atom_right(s, pos):
         while kk >= 0 and _is_an(s[kk]):
             kk -= 1
         tok = s[kk+1:j]
-        if tok and _func_scan(tok):
+        if tok and _func_scan(tok, False):
             return (kk + 1, k + 1)
         return (j, k + 1)
     if c == '[':
@@ -630,8 +650,21 @@ def _atom_right(s, pos):
         if k < 0:
             return None
         return (j, k + 1)
+    if c == '\x00':
+        m = re.match(r'\x00S\d+\x00', s[j:])
+        if m:
+            return (j, j + len(m.group(0)))
+        return None
     if c == '\\':
         m = re.match(r'\\([A-Za-z]+)', s[j:])
+        if m:
+            name = m.group(1).lower()
+            if name == 'sqrt':
+                kk = j + len(m.group(0))
+                if kk < n and s[kk] == '{':
+                    end = _match_brace(s, kk)
+                    if end >= 0:
+                        return (j, end + 1)
         if m and m.group(1).lower() in FUNCS:
             kk = j + len(m.group(0))
             while kk < n and s[kk] in ' \t':
@@ -652,7 +685,7 @@ def _atom_right(s, pos):
             k += 1
         tok = s[j:k]
         if k < n and s[k] == '(':
-            fs = _func_scan(tok)
+            fs = _func_scan(tok, False)
             if fs:
                 k2 = _match_paren(s, k)
                 if k2 >= 0:
@@ -894,7 +927,8 @@ def latexify_text(s):
                lambda m: m.group(1) + '_{' + ''.join(SUB[c] for c in m.group()[1:]) + '}', s)
     # lim(...) → \lim_{...}
     s = re.sub(r'lim\(([^()]*)\)',
-               lambda m: r'\lim_{' + m.group(1).replace('→∞', r'\to\infty').replace('→', r'\to ') + '}', s)
+               lambda m: r'\lim_{' + m.group(1).replace('→∞', r'\to\infty').replace('→', r'\to ') + '}'
+               if ('→' in m.group(1) or '∞' in m.group(1)) else 'lim(' + m.group(1) + ')', s)
     # log2( ln2( → \log_{2}(
     s = re.sub(r'(?<![a-zA-Z])(log|ln)(\d+)\(', r'\\\1_{\2}(', s)
     # 根号：√(...)（嵌套反复）→ \sqrt{...}，再 √x
@@ -2574,6 +2608,8 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
 .stat .l{font-size:11px;color:var(--sub);}
 .stat.hot{border-color:var(--accent);}
 .toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.sel-group{display:flex;gap:6px;flex-wrap:nowrap;min-width:0;}
+.sel-group select{flex:0 1 auto;min-width:0;max-width:46vw;}
 .sel-group{display:flex;gap:6px;flex-wrap:nowrap;min-width:0;}
 .sel-group select{flex:0 1 auto;min-width:0;max-width:46vw;}
 .sel-group{display:flex;gap:6px;flex-wrap:nowrap;min-width:0;}
