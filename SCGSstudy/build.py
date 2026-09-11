@@ -1108,7 +1108,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
 .reason-tools select,.reason-tools button{font-size:12px;padding:6px 8px;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--text);}
 .reason-tools button{cursor:pointer;background:rgba(155,187,244,0.16);border-color:var(--accent);font-weight:600;}
 .similar{border-top:1px solid var(--border);margin-top:10px;padding-top:10px;font-size:12px;color:var(--sub);}
-.similar a{display:block;color:var(--accent-d);text-decoration:none;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.similar a{display:block;color:var(--accent-d);text-decoration:none;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;min-width:0;}
 .toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
 .toolbar select,.toolbar button{font-size:13px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);cursor:pointer;}
 .toolbar button.primary{background:var(--accent-d);color:#fff;border-color:var(--accent-d);font-weight:600;}
@@ -1160,7 +1160,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
   .btns button{min-height:44px;font-size:14px;}
   .nav button{min-height:44px;font-size:14px;}
   .reason-tools select,.reason-tools button{min-height:40px;font-size:13px;}
-  .similar a{min-height:40px;display:inline-flex;align-items:center;padding:8px 10px;}
+  .similar a{min-height:40px;display:block;padding:8px 10px;}
   .qtext{font-size:16px;}
 }
 </style>
@@ -1201,6 +1201,7 @@ __KATEX_CSS__
     <button id="btnReset">重置进度</button>
     <button id="btnExportLocal">导出本地错题</button>
     <button id="btnClearAll" style="background:#EA6668;color:#fff;">删除所有错题</button>
+    <button id="btnRestoreDeleted" style="display:none;">恢复已删错题</button>
   </div>
 
   <div id="card"></div>
@@ -1221,6 +1222,11 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
   var ALL = (window.__DATA__||[]).slice();
   // 本设备点过「删除所有错题」：不再加载题库错题（错题本.md 内容保留，仅本设备隐藏）
   try{ if(localStorage.getItem("__SUBJECT___errorbook_deleted_all")) ALL=[]; }catch(e){}
+  // 本设备删除过的单题（错题本.md 题库错题）
+  try{
+    var _delIds=JSON.parse(localStorage.getItem("__SUBJECT___errorbook_deleted")||"[]")||[];
+    if(_delIds.length) ALL=ALL.filter(function(it){ return _delIds.indexOf(String(it.id))<0; });
+  }catch(e){}
   var TIKU = (window.__TIKU_SIMPLE__||[]).slice();
   // 合并本地存储的错题（手机APK/离线环境自动存入的）
   try{
@@ -1321,6 +1327,13 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
   function escHtml(s){
     return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   }
+  function fracIt(x){
+    x=x.replace(/(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)/g,"\\frac{$1}{$2}");
+    x=x.replace(/\b([a-zA-Z])\/(\d+(?:\.\d+)?)\b/g,"\\frac{$1}{$2}");
+    x=x.replace(/\b(\d+(?:\.\d+)?)\/([a-zA-Z])\b/g,"\\frac{$1}{$2}");
+    x=x.replace(/\b([a-zA-Z])\/([a-zA-Z])\b/g,"\\frac{$1}{$2}");
+    return x;
+  }
   function renderMath(s){
     var t = escHtml(s).replace(/\\_/g,"_");
     // 保护反引号代码块（如Excel公式 $A$1、Shell $var），避免被KaTeX当数学公式
@@ -1341,15 +1354,25 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
     function unesc(x){ return x.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&quot;/g,'"'); }
     try{
       t = t.replace(/\$\$([\s\S]+?)\$\$/g, function(_,x){
-        return '<div class="math-inline" style="margin:6px 0;">'+katex.renderToString(unesc(x),{displayMode:true,throwOnError:false})+'</div>';
+        return '<div class="math-inline" style="margin:6px 0;">'+katex.renderToString(fracIt(unesc(x)),{displayMode:true,throwOnError:false})+'</div>';
       });
       t = t.replace(/\$([^$\n]+?)\$/g, function(_,x){
-        return '<span class="math-inline">'+katex.renderToString(unesc(x),{displayMode:false,throwOnError:false})+'</span>';
+        return '<span class="math-inline">'+katex.renderToString(fracIt(unesc(x)),{displayMode:false,throwOnError:false})+'</span>';
       });
     }catch(e){}
     return restoreXls(restore(t));
   }
 
+  function findSimilar(it0){
+    var ch=it0["章节"]||"";
+    var out=[], seen={};
+    function chMatch(c){ var cch=c["章节"]||""; return cch===ch || (ch&&cch.indexOf(ch)===0) || (ch&&ch.indexOf(cch)===0); }
+    function push(c){ if(!seen[c.id]){ seen[c.id]=1; out.push(c); } }
+    TIKU.forEach(function(c){ if(c.id!==it0.id && chMatch(c) && c["题型"]===it0["题型"]) push(c); });
+    TIKU.forEach(function(c){ if(c.id!==it0.id && chMatch(c)) push(c); });
+    if(!out.length) TIKU.forEach(function(c){ if(c.id!==it0.id && c["题型"]===it0["题型"]) push(c); });
+    return out.slice(0,3);
+  }
   var chapters=[], reasons=[];
   ALL.forEach(function(it){
     if(chapters.indexOf(it["章节"])<0) chapters.push(it["章节"]);
@@ -1444,7 +1467,7 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
       +'</div>';
     box.innerHTML=modeHint+
       '<div class="card">'
-      +'<div class="meta">'+meta+(String(it.id||"").indexOf("L-")===0?'<span style="margin-left:auto;display:flex;gap:6px;"><button id="btnDelAll" style="background:#999;color:#fff;border:none;border-radius:6px;padding:2px 10px;font-size:12px;cursor:pointer;">删除所有</button><button id="btnDel" style="background:#EA6668;color:#fff;border:none;border-radius:6px;padding:2px 10px;font-size:12px;cursor:pointer;">删除此题</button></span>':'')+'</div>'
+      +'<div class="meta">'+meta+'<span style="margin-left:auto;display:flex;gap:6px;"><button id="btnDelAll" style="background:#999;color:#fff;border:none;border-radius:6px;padding:2px 10px;font-size:12px;cursor:pointer;">删除所有</button><button id="btnDel" style="background:#EA6668;color:#fff;border:none;border-radius:6px;padding:2px 10px;font-size:12px;cursor:pointer;">删除此题</button></span></div>'
       +'<div class="qtext">'+renderMath(it["题目"])+'</div>'
       +optsHtml
       +'<div class="btns">'
@@ -1528,6 +1551,8 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
         event.preventDefault();
         var candidate=(it["同类题"]||[])[Number(link.getAttribute("data-similar"))];
         if(!candidate) return;
+        // 题库题进入后动态匹配同章节题，保证推荐连贯
+        if(!candidate["同类题"] || !candidate["同类题"].length) candidate["同类题"]=findSimilar(candidate);
         // 同类题来自题库，可能不在ALL里，直接加入list最前面
         list=[candidate].concat(list.filter(function(x){return x!==candidate;}));
         idx=0; revealed=false; show();
@@ -1559,13 +1584,20 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
     var p=$("btnPrev"); if(p) p.onclick=function(){ if(idx>0){idx--;revealed=false;show();} };
     var n=$("btnNext"); if(n) n.onclick=function(){ if(idx<list.length-1){idx++;revealed=false;show();} };
     var del=$("btnDel"); if(del) del.onclick=function(){
-      if(!confirm("确定删除这道错题？删除后需重新做题存入。")) return;
+      if(!confirm("确定删除这道错题？删除后需重新做题存入（题库错题删除后仅本设备不再显示）。")) return;
       try{
         var cur=list[idx];
-        var lkey="__SUBJECT___errorbook_local";
-        var arr=JSON.parse(localStorage.getItem(lkey)||"[]");
-        arr=arr.filter(function(x){ return x.id!==cur.id; });
-        localStorage.setItem(lkey,JSON.stringify(arr));
+        if(String(cur.id||"").indexOf("L-")===0){
+          var lkey="__SUBJECT___errorbook_local";
+          var arr=JSON.parse(localStorage.getItem(lkey)||"[]");
+          arr=arr.filter(function(x){ return x.id!==cur.id; });
+          localStorage.setItem(lkey,JSON.stringify(arr));
+        }else{
+          var delKey="__SUBJECT___errorbook_deleted";
+          var darr=JSON.parse(localStorage.getItem(delKey)||"[]")||[];
+          if(darr.indexOf(String(cur.id))<0) darr.push(String(cur.id));
+          localStorage.setItem(delKey,JSON.stringify(darr));
+        }
       }catch(e){}
       location.reload();
     };
@@ -1606,6 +1638,21 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
       setTimeout(function(){ self._arm=false; self.textContent="重置进度"; self.style.background=""; self.style.color=""; }, 3000);
     }
   };
+  var restoreDel=$("btnRestoreDeleted");
+  if(restoreDel){
+    try{
+      var _delNow=JSON.parse(localStorage.getItem("__SUBJECT___errorbook_deleted")||"[]")||[];
+      if(_delNow.length || localStorage.getItem("__SUBJECT___errorbook_deleted_all")) restoreDel.style.display="";
+    }catch(e){}
+    restoreDel.onclick=function(){
+      if(!confirm("恢复本设备已删除的错题？（将恢复单题删除与全部删除的记录）")) return;
+      try{
+        localStorage.removeItem("__SUBJECT___errorbook_deleted");
+        localStorage.removeItem("__SUBJECT___errorbook_deleted_all");
+      }catch(e){}
+      location.reload();
+    };
+  }
   var clearAll=$("btnClearAll"); if(clearAll) clearAll.onclick=function(){
     if(!confirm("确定删除所有错题？将同时清除本设备上的题库错题与本地错题（错题本.md 文件本身不动，仅本设备不再显示），此操作不可恢复！")) return;
     try{
@@ -1839,14 +1886,23 @@ def build_review(sub):
     items = parse_md(md)
     tiku_items = parse_tiku(d.parent / "题库.md", name)
     for item in items:
+        ch = item.get("章节") or ""
+        def ch_match(c):
+            cch = c.get("章节") or ""
+            return cch == ch or (ch and cch.startswith(ch)) or (ch and ch.startswith(cch))
         same_type = [candidate for candidate in tiku_items
-                     if candidate.get("章节") == item.get("章节")
+                     if ch_match(candidate)
                      and candidate.get("题型") == item.get("题型")
                      and candidate.get("题目") != item.get("题目")]
         same_chapter = [candidate for candidate in tiku_items
-                        if candidate.get("章节") == item.get("章节")
+                        if ch_match(candidate)
                         and candidate.get("题目") != item.get("题目")]
         matches = (same_type + [candidate for candidate in same_chapter if candidate not in same_type])[:3]
+        if not matches:
+            # fallback：同题型题
+            matches = [candidate for candidate in tiku_items
+                       if candidate.get("题型") == item.get("题型")
+                       and candidate.get("题目") != item.get("题目")][:3]
         item["同类题"] = matches
     mode = sub["mode"]
     katex_css = ""
@@ -1855,7 +1911,7 @@ def build_review(sub):
         katex_css = '<link rel="stylesheet" href="../../SCGSstudy/katex/katex.min.css">'
         katex_js = "../../SCGSstudy/katex/katex.min.js"
     # 题库精简数据（仅id+题目+选项），用于补全本地错题缺失的选项
-    tiku_simple = [{"id": t["id"], "题目": t["题目"], "选项": t["选项"]} for t in tiku_items]
+    tiku_simple = [{"id": t["id"], "题目": t["题目"], "选项": t["选项"], "章节": t.get("章节", "")} for t in tiku_items]
     html = (REVIEW_HTML
             .replace("__LABEL__", sub["label"])
             .replace("__COLOR__", sub["color"])
@@ -2134,6 +2190,13 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     }catch(e){}
     return done;
   }
+  function fracIt(x){
+    x=x.replace(/(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)/g,"\\frac{$1}{$2}");
+    x=x.replace(/\b([a-zA-Z])\/(\d+(?:\.\d+)?)\b/g,"\\frac{$1}{$2}");
+    x=x.replace(/\b(\d+(?:\.\d+)?)\/([a-zA-Z])\b/g,"\\frac{$1}{$2}");
+    x=x.replace(/\b([a-zA-Z])\/([a-zA-Z])\b/g,"\\frac{$1}{$2}");
+    return x;
+  }
   function renderMath(s){
     var t=escHtml(s);
     // 保护反引号代码块（如Excel公式 $A$1、Shell $var），避免被KaTeX当数学公式
@@ -2153,8 +2216,8 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     if(!MATH || typeof katex==="undefined") return restoreXls(restore(t));
     function unesc(x){ return x.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&quot;/g,'"'); }
     try{
-      t=t.replace(/\$\$([\s\S]+?)\$\$/g,function(_,x){ return '<div class="math-inline" style="margin:6px 0;">'+katex.renderToString(unesc(x),{displayMode:true,throwOnError:false})+'</div>'; });
-      t=t.replace(/\$([^$\n]+?)\$/g,function(_,x){ return '<span class="math-inline">'+katex.renderToString(unesc(x),{displayMode:false,throwOnError:false})+'</span>'; });
+      t=t.replace(/\$\$([\s\S]+?)\$\$/g,function(_,x){ return '<div class="math-inline" style="margin:6px 0;">'+katex.renderToString(fracIt(unesc(x)),{displayMode:true,throwOnError:false})+'</div>'; });
+      t=t.replace(/\$([^$\n]+?)\$/g,function(_,x){ return '<span class="math-inline">'+katex.renderToString(fracIt(unesc(x)),{displayMode:false,throwOnError:false})+'</span>'; });
     }catch(e){}
     return restoreXls(restore(t));
   }

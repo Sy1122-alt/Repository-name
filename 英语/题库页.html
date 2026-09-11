@@ -7330,7 +7330,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "The number of students in our school ______ increasing.",
+  "题目": "The number of books in the library ______ increasing.",
   "选项": [
    "is",
    "are",
@@ -8546,7 +8546,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "I don't know ______ he will come or not.",
+  "题目": "I wonder ______ she will come or not.",
   "选项": [
    "that",
    "whether",
@@ -9021,7 +9021,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "This is the best film ______ I have ever seen.",
+  "题目": "This is the most interesting book ______ I have ever read.",
   "选项": [
    "which",
    "that",
@@ -9097,7 +9097,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "He spent two hours ______ his homework.",
+  "题目": "She spent the whole morning ______ her room.",
   "选项": [
    "do",
    "to do",
@@ -9344,7 +9344,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "- How are you? - ______",
+  "题目": "- How is everything going? - ______",
   "选项": [
    "How are you?",
    "Fine, thanks.",
@@ -9420,7 +9420,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "- I'm sorry I'm late. - ______",
+  "题目": "- Sorry for keeping you waiting. - ______",
   "选项": [
    "You are welcome.",
    "That's right.",
@@ -9477,7 +9477,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "- What does your father do? - ______",
+  "题目": "- What does your uncle do? - ______",
   "选项": [
    "He is tall.",
    "He is a doctor.",
@@ -9686,7 +9686,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "This is the second time I ______ Beijing.",
+  "题目": "This is the third time I ______ Chengdu.",
   "选项": [
    "visit",
    "visited",
@@ -9705,7 +9705,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "The teacher told us that the earth ______ around the sun.",
+  "题目": "Our teacher told us that light ______ faster than sound.",
   "选项": [
    "moved",
    "moves",
@@ -9743,7 +9743,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "The question is easy ______.",
+  "题目": "The question is hard ______.",
   "选项": [
    "to answer",
    "to be answered",
@@ -9819,7 +9819,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "______ is known to all, the earth goes around the sun.",
+  "题目": "______ is reported, China has made great progress.",
   "选项": [
    "Which",
    "That",
@@ -9838,7 +9838,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "Many a student ______ made the same mistake.",
+  "题目": "Many a man ______ tried to climb the mountain.",
   "选项": [
    "has",
    "have",
@@ -9857,7 +9857,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "The number of students in our school ______ increasing.",
+  "题目": "The number of teachers in our school ______ forty.",
   "选项": [
    "is",
    "are",
@@ -10237,7 +10237,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "This is the factory ______ we visited last year.",
+  "题目": "This is the museum ______ we visited last year.",
   "选项": [
    "that",
    "where",
@@ -10579,7 +10579,7 @@ window.__TIKU__ = [
   "题型": "单选",
   "材料": "",
   "passage": "",
-  "题目": "The sun ______ in the east every morning.",
+  "题目": "The balloon ______ higher and higher into the sky.",
   "选项": [
    "rises",
    "raises",
@@ -16631,6 +16631,13 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     }catch(e){}
     return done;
   }
+  function fracIt(x){
+    x=x.replace(/(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)/g,"\\frac{$1}{$2}");
+    x=x.replace(/\b([a-zA-Z])\/(\d+(?:\.\d+)?)\b/g,"\\frac{$1}{$2}");
+    x=x.replace(/\b(\d+(?:\.\d+)?)\/([a-zA-Z])\b/g,"\\frac{$1}{$2}");
+    x=x.replace(/\b([a-zA-Z])\/([a-zA-Z])\b/g,"\\frac{$1}{$2}");
+    return x;
+  }
   function renderMath(s){
     var t=escHtml(s);
     // 保护反引号代码块（如Excel公式 $A$1、Shell $var），避免被KaTeX当数学公式
@@ -16650,8 +16657,8 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     if(!MATH || typeof katex==="undefined") return restoreXls(restore(t));
     function unesc(x){ return x.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&quot;/g,'"'); }
     try{
-      t=t.replace(/\$\$([\s\S]+?)\$\$/g,function(_,x){ return '<div class="math-inline" style="margin:6px 0;">'+katex.renderToString(unesc(x),{displayMode:true,throwOnError:false})+'</div>'; });
-      t=t.replace(/\$([^$\n]+?)\$/g,function(_,x){ return '<span class="math-inline">'+katex.renderToString(unesc(x),{displayMode:false,throwOnError:false})+'</span>'; });
+      t=t.replace(/\$\$([\s\S]+?)\$\$/g,function(_,x){ return '<div class="math-inline" style="margin:6px 0;">'+katex.renderToString(fracIt(unesc(x)),{displayMode:true,throwOnError:false})+'</div>'; });
+      t=t.replace(/\$([^$\n]+?)\$/g,function(_,x){ return '<span class="math-inline">'+katex.renderToString(fracIt(unesc(x)),{displayMode:false,throwOnError:false})+'</span>'; });
     }catch(e){}
     return restoreXls(restore(t));
   }
