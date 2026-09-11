@@ -505,6 +505,8 @@ window.__QUALITY__ = {
   var total=0, box=document.getElementById("dailyList");
   subjects.forEach(function(subject){
     var _added=0;
+    // 本设备点过「删除所有错题」：不再统计题库错题
+    try{ if(localStorage.getItem(subject.name+"_errorbook_deleted_all")) subject.items=[]; }catch(e){}
     // 合并本地存储的错题（手机APK/离线环境自动存入的）
     try{
       var _local=JSON.parse(localStorage.getItem(subject.name+"_errorbook_local")||"[]");

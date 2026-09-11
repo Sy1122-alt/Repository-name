@@ -1218,6 +1218,8 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
   "use strict";
   var MATH = __MATH_MODE__;
   var ALL = (window.__DATA__||[]).slice();
+  // 本设备点过「删除所有错题」：不再加载题库错题（错题本.md 内容保留，仅本设备隐藏）
+  try{ if(localStorage.getItem("__SUBJECT___errorbook_deleted_all")) ALL=[]; }catch(e){}
   var TIKU = (window.__TIKU_SIMPLE__||[]).slice();
   // 合并本地存储的错题（手机APK/离线环境自动存入的）
   try{
@@ -1395,6 +1397,12 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
   function show(){
     var box=$("card");
     if(!list.length){
+      var _deleted="";
+      try{ _deleted=localStorage.getItem("__SUBJECT___errorbook_deleted_all")||""; }catch(e){}
+      if(_deleted && !ALL.length){
+        box.innerHTML='<div class="empty">已删除所有错题（仅本设备不再显示，错题本.md 未改动）。<br>要彻底删除，请清空《错题本.md》中的该科错题后重新运行 build.py。<br><a href="javascript:void(0)" onclick="localStorage.removeItem(\'__SUBJECT___errorbook_deleted_all\');location.reload();" style="color:var(--accent);text-decoration:underline;">恢复本设备的题库错题</a></div>';
+        return;
+      }
       if($("btnDue") && $("btnDue").classList.contains("on")){
         box.innerHTML='<div class="empty">今日没有到期的错题。<br>其余 '+ALL.length+' 题错题已安排后续复习。<br><a href="javascript:void(0)" onclick="document.getElementById(\'btnOrder\').click()" style="color:var(--accent);text-decoration:underline;">查看全部错题</a></div>';
       } else {
@@ -1561,10 +1569,11 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
       location.reload();
     };
     var delAll=$("btnDelAll"); if(delAll) delAll.onclick=function(){
-      if(!confirm("确定删除所有本地错题？此操作不可恢复！")) return;
+      if(!confirm("确定删除所有错题？将同时清除本设备上的题库错题与本地错题（错题本.md 文件本身不动，仅本设备不再显示），此操作不可恢复！")) return;
       try{
         var lkey="__SUBJECT___errorbook_local";
         localStorage.removeItem(lkey);
+        localStorage.setItem("__SUBJECT___errorbook_deleted_all","1");
       }catch(e){}
       location.reload();
     };
@@ -2781,6 +2790,8 @@ window.__QUALITY__ = __QUALITY_JSON__;
   var total=0, box=document.getElementById("dailyList");
   subjects.forEach(function(subject){
     var _added=0;
+    // 本设备点过「删除所有错题」：不再统计题库错题
+    try{ if(localStorage.getItem(subject.name+"_errorbook_deleted_all")) subject.items=[]; }catch(e){}
     // 合并本地存储的错题（手机APK/离线环境自动存入的）
     try{
       var _local=JSON.parse(localStorage.getItem(subject.name+"_errorbook_local")||"[]");
