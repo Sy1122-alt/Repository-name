@@ -462,6 +462,7 @@ def clean_topic_title(raw):
 
 
 
+
 # ============================================================
 # 站长错题 LaTeX 化（构建期转换，参考正常题标准形式）
 
@@ -491,9 +492,213 @@ def _match_brace(s, start):
                 return i
     return -1
 
+def _is_an(c):
+    return ('0' <= c <= '9') or ('a' <= c <= 'z') or ('A' <= c <= 'Z') or c == '_'
+
+FUNCS = {'arcsin','arccos','arctan','sin','cos','tan','cot','sec','csc','ln','lg','log','lim','exp','max','min','f','g','h'}
+
+def _match_par_back(s, pos):
+    depth = 0
+    i = pos
+    while i >= 0:
+        c = s[i]
+        if c == ')':
+            depth += 1
+        elif c == '(':
+            depth -= 1
+            if depth == 0:
+                return i
+        i -= 1
+    return -1
+
+def _match_brk_back(s, pos):
+    depth = 0
+    i = pos
+    while i >= 0:
+        c = s[i]
+        if c == ']':
+            depth += 1
+        elif c == '[':
+            depth -= 1
+            if depth == 0:
+                return i
+        i -= 1
+    return -1
+
+def _match_brace_back(s, pos):
+    depth = 0
+    i = pos
+    while i >= 0:
+        c = s[i]
+        if c == '}':
+            depth += 1
+        elif c == '{':
+            depth -= 1
+            if depth == 0:
+                return i
+        i -= 1
+    return -1
+
+def _func_scan(tok):
+    m = re.search(r'([A-Za-z]+)(\d*)$', tok)
+    if m and m.group(1).lower() in FUNCS:
+        return m.group(1).lower(), m.group(2)
+    return None
+
+def _atom_left(s, pos):
+    """/ 左侧原子，返回 (start,end)；pos 是 / 索引"""
+    j = pos - 1
+    while j >= 0 and s[j] in ' \t':
+        j -= 1
+    if j < 0:
+        return None
+    c = s[j]
+    if c == ')':
+        k = _match_par_back(s, j)
+        if k < 0:
+            return None
+        kk = k - 1
+        while kk >= 0 and _is_an(s[kk]):
+            kk -= 1
+        tok = s[kk+1:k]
+        if tok:
+            fs = _func_scan(tok)
+            if fs:
+                if kk >= 0 and s[kk] == '\\':
+                    return (kk, j + 1)
+                return (kk + 1, j + 1)
+            if re.fullmatch(r'[0-9a-zA-Z]+', tok):
+                return (kk + 1, j + 1)
+        return (k, j + 1)
+    if c == ']':
+        k = _match_brk_back(s, j)
+        if k < 0:
+            return None
+        return (k, j + 1)
+    if c == '}':
+        k = _match_brace_back(s, j)
+        if k >= 0 and k > 0 and s[k-1] == '^':
+            kk = k - 2
+            while kk >= 0 and _is_an(s[kk]):
+                kk -= 1
+            return (kk + 1, j + 1)
+        return None
+    if c.isdigit():
+        k = j
+        while k >= 0 and ((s[k] >= '0' and s[k] <= '9') or s[k] == '.'):
+            k -= 1
+        if k >= 0 and s[k] == '^':
+            kk = k - 1
+            while kk >= 0 and _is_an(s[kk]):
+                kk -= 1
+            return (kk + 1, j + 1)
+        return (k + 1, j + 1)
+    if c.isalpha() or c == 'π':
+        k = j
+        while k >= 0 and _is_an(s[k]):
+            k -= 1
+        if k >= 0 and s[k] == '^':
+            kk = k - 1
+            while kk >= 0 and _is_an(s[kk]):
+                kk -= 1
+            return (kk + 1, j + 1)
+        return (k + 1, j + 1)
+    return None
+
+def _atom_right(s, pos):
+    """/ 右侧原子，返回 (start,end)；pos 是 / 后一字符索引"""
+    j = pos
+    n = len(s)
+    while j < n and s[j] in ' \t':
+        j += 1
+    if j >= n:
+        return None
+    c = s[j]
+    if c == '(':
+        k = _match_paren(s, j)
+        if k < 0:
+            return None
+        kk = j - 1
+        while kk >= 0 and _is_an(s[kk]):
+            kk -= 1
+        tok = s[kk+1:j]
+        if tok and _func_scan(tok):
+            return (kk + 1, k + 1)
+        return (j, k + 1)
+    if c == '[':
+        k = _match_paren(s, j, '[', ']')
+        if k < 0:
+            return None
+        return (j, k + 1)
+    if c == '\\':
+        m = re.match(r'\\([A-Za-z]+)', s[j:])
+        if m and m.group(1).lower() in FUNCS:
+            kk = j + len(m.group(0))
+            while kk < n and s[kk] in ' \t':
+                kk += 1
+            if kk < n and (s[kk].isalpha() or s[kk] == 'π'):
+                kk2 = kk
+                while kk2 < n and (_is_an(s[kk2]) or s[kk2] in '_{}'):
+                    kk2 += 1
+                return (j, kk2)
+            return (j, j + len(m.group(0)))
+        return None
+    if c.isdigit():
+        m = re.match(r'\d+(?:\.\d+)?', s[j:])
+        return (j, j + len(m.group(0)))
+    if c.isalpha() or c == 'π':
+        k = j
+        while k < n and _is_an(s[k]):
+            k += 1
+        tok = s[j:k]
+        if k < n and s[k] == '(':
+            fs = _func_scan(tok)
+            if fs:
+                k2 = _match_paren(s, k)
+                if k2 >= 0:
+                    return (j, k2 + 1)
+        if tok.lower() in FUNCS and k < n and s[k] == ' ':
+            kk = k + 1
+            while kk < n and _is_an(s[kk]):
+                kk += 1
+            k = kk
+        if k < n and s[k] == '^':
+            kk = k + 1
+            if kk < n and s[kk] == '{':
+                mm = re.match(r'\{[^{}]*\}', s[kk:])
+                if mm:
+                    return (j, kk + len(mm.group(0)))
+            else:
+                mm = re.match(r'[0-9a-zA-Z+-]+', s[kk:])
+                if mm:
+                    return (j, kk + len(mm.group(0)))
+        return (j, k)
+    return None
+
+def _frac_scan(s):
+    """通用原子除式：原子/原子 → \frac{原子}{原子}"""
+    n = len(s)
+    subs = []
+    i = 0
+    while i < n:
+        if s[i] == '/':
+            left = _atom_left(s, i)
+            if left:
+                ls, le = left
+                right = _atom_right(s, i + 1)
+                if right:
+                    rs, re_ = right
+                    subs.append((ls, re_, '\\frac{' + s[ls:le] + '}{' + s[rs:re_] + '}'))
+                    i = re_
+                    continue
+        i += 1
+    for start, end, rep in reversed(subs):
+        s = s[:start] + rep + s[end:]
+    return s
+
 def _num_over_paren_index(s):
     while True:
-        m = re.search(r'(?<![0-9a-zA-Z/])(\d+(?:\.\d+)?)/([\[(])', s)
+        m = re.search(r'(?<![0-9a-zA-Z/^])(\d+(?:\.\d+)?)/([\[(])', s)
         if not m:
             return s
         num = m.group(1)
@@ -508,7 +713,7 @@ def _num_over_paren_index(s):
 
 def _num_over_func_index(s):
     while True:
-        m = re.search(r'(?<![0-9a-zA-Z/])(\d+(?:\.\d+)?)/([a-z]+[0-9]*\()', s)
+        m = re.search(r'(?<![0-9a-zA-Z/^])(\d+(?:\.\d+)?)/([a-z]+[0-9]*\()', s)
         if not m:
             return s
         num = m.group(1)
@@ -586,14 +791,15 @@ def convert_fracs(s):
         s = re.sub(r'(\([^()]*\))/(\([^()]*\))', r'\\frac{\1}{\2}', s)
         s = _num_over_paren_index(s)
         s = re.sub(r'(\([^()]*\))/(\d+(?:\.\d+)?)(?![0-9a-zA-Z/])', r'\\frac{\1}{\2}', s)
-        s = re.sub(r'(?<![0-9a-zA-Z/])(\d+(?:\.\d+)?)/(\d+(?:\.\d+)?)(?![0-9a-zA-Z/])', r'\\frac{\1}{\2}', s)
-        s = re.sub(r'(?<![0-9a-zA-Z/])([0-9]*[a-z]\d*)/(\d+(?:\.\d+)?)(?![0-9a-zA-Z/])', r'\\frac{\1}{\2}', s)
-        s = re.sub(r'(?<![0-9a-zA-Z/])(\d+(?:\.\d+)?)/([a-z])(?![0-9a-zA-Z/])', r'\\frac{\1}{\2}', s)
+        s = re.sub(r'(?<![0-9a-zA-Z/^])(\d+(?:\.\d+)?)/(\d+(?:\.\d+)?)(?![0-9a-zA-Z/])', r'\\frac{\1}{\2}', s)
+        s = re.sub(r'(?<![0-9a-zA-Z/^])([0-9]*[a-z]\d*)/(\d+(?:\.\d+)?)(?![0-9a-zA-Z/])', r'\\frac{\1}{\2}', s)
+        s = re.sub(r'(?<![0-9a-zA-Z/^])(\d+(?:\.\d+)?)/([a-z])(?![0-9a-zA-Z/])', r'\\frac{\1}{\2}', s)
         s = _num_over_func_index(s)
-        s = re.sub(r'(?<![0-9a-zA-Z/])([0-9a-zA-Z][0-9a-zA-Z^+*\-.]{0,12})/(\([^()]*\))(?![0-9a-zA-Z])', r'\\frac{\1}{\2}', s)
+        s = re.sub(r'(?<![0-9a-zA-Z/^])([0-9a-zA-Z][0-9a-zA-Z^+*\-.]{0,12})/(\([^()]*\))(?![0-9a-zA-Z])', r'\\frac{\1}{\2}', s)
         s = re.sub(r'(\[[^\]\[]*\])\/(\[[^\]\[]*\])', r'\\frac{\1}{\2}', s)
-        s = re.sub(r'(?<![0-9a-zA-Z/])(\d+(?:\.\d+)?)/(\[[^\]\[]*\])', r'\\frac{\1}{\2}', s)
-        s = re.sub(r'(?<![0-9a-zA-Z/])π/(\d+(?:\.\d+)?)(?![0-9a-zA-Z/])', r'\\frac{\\pi}{\1}', s)
+        s = re.sub(r'(?<![0-9a-zA-Z/^])(\d+(?:\.\d+)?)/(\[[^\]\[]*\])', r'\\frac{\1}{\2}', s)
+        s = re.sub(r'(?<![0-9a-zA-Z/^])π/(\d+(?:\.\d+)?)(?![0-9a-zA-Z/])', r'\\frac{\\pi}{\1}', s)
+        s = _frac_scan(s)
         if s == s0:
             break
     return s
@@ -653,6 +859,7 @@ def _math_sym(m):
     t = t.replace('π', r'\pi ')
     t = t.replace('<', r'\lt ').replace('>', r'\gt ')
     t = re.sub(r'(?<![\\a-zA-Z])(arcsin|arccos|arctan|ln|log)(\d+)', r'\\\1_{\2}', t)
+    t = re.sub(r'(?<![\\a-zA-Z])(arcsin|arccos|arctan|ln|log|sin|cos|tan)(?=\d)', r'\\\1', t)
     t = re.sub(r'(?<![\\a-zA-Z])(arcsin|arccos|arctan|ln|log|sin|cos|tan)\b', r'\\\1', t)
     return '$' + t + '$'
 
@@ -732,6 +939,8 @@ def latexify_text(s):
         s = s.replace('\x00S%d\x00' % idx, v)
     # ^(expr) → ^{expr}
     s = _power_paren_index(s)
+    # x^2 → x^{2}
+    s = re.sub(r'([0-9a-zA-Z])\^(\d)', r'\1^{\2}', s)
     # 轮1：命令片段整体包 $
     s = _wrap_cmd(s)
     # 轮1.5：已转义命令单独包 $
@@ -2365,6 +2574,8 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
 .stat .l{font-size:11px;color:var(--sub);}
 .stat.hot{border-color:var(--accent);}
 .toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.sel-group{display:flex;gap:6px;flex-wrap:nowrap;min-width:0;}
+.sel-group select{flex:0 1 auto;min-width:0;max-width:46vw;}
 .sel-group{display:flex;gap:6px;flex-wrap:nowrap;min-width:0;}
 .sel-group select{flex:0 1 auto;min-width:0;max-width:46vw;}
 .sel-group{display:flex;gap:6px;flex-wrap:nowrap;min-width:0;}
