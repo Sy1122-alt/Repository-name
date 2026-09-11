@@ -1395,8 +1395,16 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
   function show(){
     var box=$("card");
     if(!list.length){
-      box.innerHTML='<div class="empty">当前筛选/模式下没有题目。<br>往《错题本.md》追加错题并运行 build.py 重新生成，或换个模式。</div>';
+      if($("btnDue") && $("btnDue").classList.contains("on")){
+        box.innerHTML='<div class="empty">今日没有到期的错题。<br>其余 '+ALL.length+' 题错题已安排后续复习。<br><a href="javascript:void(0)" onclick="document.getElementById(\'btnOrder\').click()" style="color:var(--accent);text-decoration:underline;">查看全部错题</a></div>';
+      } else {
+        box.innerHTML='<div class="empty">当前筛选/模式下没有题目。<br>往《错题本.md》追加错题并运行 build.py 重新生成，或换个模式。</div>';
+      }
       return;
+    }
+    var modeHint="";
+    if($("btnDue") && $("btnDue").classList.contains("on") && list.length<ALL.length){
+      modeHint='<div style="margin:8px 0 10px;padding:8px 10px;background:rgba(250,173,20,0.1);border:1px solid rgba(250,173,20,0.3);border-radius:8px;font-size:12px;color:#8C6D1F;">今日到期 <b>'+list.length+'</b> 题 · 共 <b>'+ALL.length+'</b> 题错题（其余已安排后续复习）。<a href="javascript:void(0)" onclick="document.getElementById(\'btnOrder\').click()" style="color:var(--accent);text-decoration:underline;">查看全部</a></div>';
     }
     var it=list[idx];
     var answered=false;
@@ -1425,7 +1433,7 @@ window.__TIKU_SIMPLE__ = __TIKU_SIMPLE_JSON__;
     var similarHtml='<div class="similar"><div>再来一道同章节题</div>'
       +((it["同类题"]||[]).length?(it["同类题"]||[]).map(function(candidate,n){return '<a href="#" data-similar="'+n+'">'+renderMath(candidate.id+' · '+(candidate["题目"]||"未命名"))+'</a>';}).join(""):'<span>当前题库暂无可推荐的同章节题。</span>')
       +'</div>';
-    box.innerHTML=
+    box.innerHTML=modeHint+
       '<div class="card">'
       +'<div class="meta">'+meta+(String(it.id||"").indexOf("L-")===0?'<span style="margin-left:auto;display:flex;gap:6px;"><button id="btnDelAll" style="background:#999;color:#fff;border:none;border-radius:6px;padding:2px 10px;font-size:12px;cursor:pointer;">删除所有</button><button id="btnDel" style="background:#EA6668;color:#fff;border:none;border-radius:6px;padding:2px 10px;font-size:12px;cursor:pointer;">删除此题</button></span>':'')+'</div>'
       +'<div class="qtext">'+renderMath(it["题目"])+'</div>'
@@ -2831,7 +2839,7 @@ window.__QUALITY__ = __QUALITY_JSON__;
     var focus=Object.keys(chapters).sort(function(a,b){ return chapters[b]-chapters[a]; })[0]||"暂无到期题";
     var card=document.createElement("a");
     card.className="sc daily-card"; card.href=subject.rel+"?mode=due"; card.style.setProperty("--c",subject.color);
-    card.innerHTML='<div class="sc-name">'+subject.label+' · 今日到期</div><div class="daily-count">'+dueItems.length+' 题</div><div class="daily-focus">优先：'+focus+'</div>';
+    card.innerHTML='<div class="sc-name">'+subject.label+' · 今日到期</div><div class="daily-count">'+(dueItems.length?dueItems.length+' 题':'暂无到期')+'</div><div class="daily-focus">优先：'+focus+'</div>';
     box.appendChild(card);
   });
   document.getElementById("dailyTotal").textContent=total;

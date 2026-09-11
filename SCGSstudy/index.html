@@ -565,7 +565,7 @@ window.__QUALITY__ = {
     var focus=Object.keys(chapters).sort(function(a,b){ return chapters[b]-chapters[a]; })[0]||"暂无到期题";
     var card=document.createElement("a");
     card.className="sc daily-card"; card.href=subject.rel+"?mode=due"; card.style.setProperty("--c",subject.color);
-    card.innerHTML='<div class="sc-name">'+subject.label+' · 今日到期</div><div class="daily-count">'+dueItems.length+' 题</div><div class="daily-focus">优先：'+focus+'</div>';
+    card.innerHTML='<div class="sc-name">'+subject.label+' · 今日到期</div><div class="daily-count">'+(dueItems.length?dueItems.length+' 题':'暂无到期')+'</div><div class="daily-focus">优先：'+focus+'</div>';
     box.appendChild(card);
   });
   document.getElementById("dailyTotal").textContent=total;
