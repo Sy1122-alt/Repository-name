@@ -2644,23 +2644,6 @@ def build_tiku(sub, base_qid):
 
 def build_index(per_subject, tiku_info):
     """生成统一入口 index.html（含各科统计 + 刷题入口）。"""
-    cards = []
-    for sub in SUBJECTS:
-        info = per_subject[sub["name"]]
-        cards.append("""
-  <a class="sc" href="__REL__" style="--c:__COLOR__;">
-    <div class="sc-icon">__ICON__</div>
-    <div class="sc-name">__LABEL__</div>
-    <div class="sc-desc">__DESC__</div>
-    <div class="sc-stat" id="stat-__SUBJECT__">题数 __TOTAL__ · 待复习 __REVIEW__</div>
-  </a>""".replace("__REL__", info["rel"])
-            .replace("__COLOR__", sub["color"])
-            .replace("__ICON__", sub["icon"])
-            .replace("__LABEL__", sub["label"])
-            .replace("__DESC__", sub["desc"])
-            .replace("__SUBJECT__", sub["name"])
-            .replace("__TOTAL__", str(info["total"]))
-            .replace("__REVIEW__", str(info["review"])))
     tiku_cards = []
     for sub in SUBJECTS:
         t = tiku_info[sub["name"]]
@@ -2698,7 +2681,6 @@ def build_index(per_subject, tiku_info):
     <div class="sc-stat">导出 / 复制 W- 格式</div>
   </a>"""
     html = (INDEX_HTML
-            .replace("__CARDS__", "\n".join(cards))
             .replace("__TIKU_CARDS__", "\n".join(tiku_cards))
             .replace("__WORD_CARDS__", word_cards)
             .replace("__DAILY_JSON__", js_safe(daily_data))
@@ -2761,12 +2743,9 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
 <div class="wrap">
   <h1>学习平台</h1>
   <div style="background:rgba(250,173,20,0.12);border:1px solid rgba(250,173,20,0.35);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:#8C6D1F;line-height:1.7;">📌 学习数据（错题 / 复习进度 / 单词标记）保存在<b>本设备浏览器</b>中：清理浏览器缓存、更换设备或使用无痕模式会导致进度丢失。建议定期在「复习页 / 生词本」中使用<b>导出</b>功能备份。</div>
-  <div class="h2">今日学习</div>
+  <div class="h2">今日学习 · 错题复习</div>
   <div class="daily-total">今天需要复习 <b id="dailyTotal">0</b> 题</div>
   <div class="grid" id="dailyList"></div>
-  <div class="h2">错题复习</div>
-  <div class="grid">__CARDS__
-  </div>
   <div class="h2">题库刷题（做错 → 一键入篮 → 自动存入错题本）</div>
   <div class="grid">__TIKU_CARDS__
   </div>
@@ -2801,34 +2780,25 @@ window.__QUALITY__ = __QUALITY_JSON__;
   }
   var total=0, box=document.getElementById("dailyList");
   subjects.forEach(function(subject){
+    var _added=0;
     // 合并本地存储的错题（手机APK/离线环境自动存入的）
     try{
       var _local=JSON.parse(localStorage.getItem(subject.name+"_errorbook_local")||"[]");
-      if(_local.length){
-        var _added=0;
-        _local.forEach(function(le){
-          // 按id去重：不同题目即使答案相同也保留
-          var dup=subject.items.find(function(it){ return it.id===le.id; });
-          if(dup) return;
-          // 本地错题无选项时，从题库按题目内容相似度补全选项
-          if(!le["选项"] || !le["选项"].length){
-            var qShort=(le["题目"]||"").replace(/\s/g,"").slice(0,25);
-            var match=subject.items.find(function(it){
-              var itShort=(it["题目"]||"").replace(/\s/g,"").slice(0,25);
-              return itShort&&qShort&&(itShort.indexOf(qShort)>=0||qShort.indexOf(itShort)>=0);
-            });
-            if(match&&match["选项"]&&match["选项"].length) le["选项"]=match["选项"].slice();
-          }
-          subject.items.push(le); _added++;
-        });
-        // 更新错题复习卡片的数字
-        var statEl=document.getElementById("stat-"+subject.name);
-        if(statEl&&_added){
-          var baseTotal=subject.items.length;
-          var baseReview=subject.items.filter(function(it){return it["状态"]!=="已掌握";}).length;
-          statEl.textContent="题数 "+baseTotal+" · 待复习 "+baseReview+"（含本地"+_added+"题）";
+      _local.forEach(function(le){
+        // 按id去重：不同题目即使答案相同也保留
+        var dup=subject.items.find(function(it){ return it.id===le.id; });
+        if(dup) return;
+        // 本地错题无选项时，从题库按题目内容相似度补全选项
+        if(!le["选项"] || !le["选项"].length){
+          var qShort=(le["题目"]||"").replace(/\s/g,"").slice(0,25);
+          var match=subject.items.find(function(it){
+            var itShort=(it["题目"]||"").replace(/\s/g,"").slice(0,25);
+            return itShort&&qShort&&(itShort.indexOf(qShort)>=0||qShort.indexOf(itShort)>=0);
+          });
+          if(match&&match["选项"]&&match["选项"].length) le["选项"]=match["选项"].slice();
         }
-      }
+        subject.items.push(le); _added++;
+      });
     }catch(e){}
     var saved={};
     try{ saved=JSON.parse(localStorage.getItem(subject.name+"_cuowuji_v2")||"{}")||{}; }catch(e){}
@@ -2837,9 +2807,13 @@ window.__QUALITY__ = __QUALITY_JSON__;
     var chapters={};
     dueItems.forEach(function(item){ var chapter=item["章节"]||"未分类"; chapters[chapter]=(chapters[chapter]||0)+(Number(item["错误次数"])||0)+1; });
     var focus=Object.keys(chapters).sort(function(a,b){ return chapters[b]-chapters[a]; })[0]||"暂无到期题";
+    var totalN=subject.items.length;
+    var reviewN=subject.items.filter(function(it){return it["状态"]!=="已掌握";}).length;
+    var dueTxt=dueItems.length?dueItems.length+' 题':'暂无到期';
+    var info='错题 '+totalN+' · 待复习 '+reviewN+(totalN&&_added?'（含本地'+_added+'题）':'')+' · 优先：'+focus;
     var card=document.createElement("a");
-    card.className="sc daily-card"; card.href=subject.rel+"?mode=due"; card.style.setProperty("--c",subject.color);
-    card.innerHTML='<div class="sc-name">'+subject.label+' · 今日到期</div><div class="daily-count">'+(dueItems.length?dueItems.length+' 题':'暂无到期')+'</div><div class="daily-focus">优先：'+focus+'</div>';
+    card.className="sc daily-card"; card.href=subject.rel; card.style.setProperty("--c",subject.color);
+    card.innerHTML='<div class="sc-name">'+subject.label+' · 今日到期</div><div class="daily-count">'+dueTxt+'</div><div class="daily-focus">'+info+'</div>';
     box.appendChild(card);
   });
   document.getElementById("dailyTotal").textContent=total;
