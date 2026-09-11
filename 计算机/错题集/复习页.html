@@ -120,7 +120,6 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
     <button id="btnDue">今日应复习</button>
     <button id="btnReset">重置进度</button>
     <button id="btnExportLocal">导出本地错题</button>
-    <button id="btnClearAll" style="background:#EA6668;color:#fff;">删除所有错题</button>
     <button id="btnRestoreDeleted" style="display:none;">恢复已删错题</button>
   </div>
 
@@ -10821,6 +10820,8 @@ window.__TIKU_SIMPLE__ = [
     if(!MATH || typeof katex==="undefined") return restoreXls(restore(t));
     function unesc(x){ return x.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&quot;/g,'"'); }
     try{
+      // 裸分数（未写$的 数字/数字）自动包成数学块，渲染为分数横线（排除4位年份等长数字）
+      t = t.replace(/(?<![\d/])(\d{1,3}(?:\.\d+)?)\/(\d{1,3}(?:\.\d+)?)(?![\d/])/g, "$$\\frac{$1}{$2}$$");
       t = t.replace(/\$\$([\s\S]+?)\$\$/g, function(_,x){
         return '<div class="math-inline" style="margin:6px 0;">'+katex.renderToString(fracIt(unesc(x)),{displayMode:true,throwOnError:false})+'</div>';
       });
@@ -10935,7 +10936,7 @@ window.__TIKU_SIMPLE__ = [
       +'</div>';
     box.innerHTML=modeHint+
       '<div class="card">'
-      +'<div class="meta">'+meta+'<span style="margin-left:auto;display:flex;gap:6px;"><button id="btnDelAll" style="background:#999;color:#fff;border:none;border-radius:6px;padding:2px 10px;font-size:12px;cursor:pointer;">删除所有</button><button id="btnDel" style="background:#EA6668;color:#fff;border:none;border-radius:6px;padding:2px 10px;font-size:12px;cursor:pointer;">删除此题</button></span></div>'
+      +'<div class="meta">'+meta+'<span style="margin-left:auto;display:flex;gap:6px;"><button id="btnDel" style="background:#EA6668;color:#fff;border:none;border-radius:6px;padding:2px 10px;font-size:12px;cursor:pointer;">删除此题</button></span></div>'
       +'<div class="qtext">'+renderMath(it["题目"])+'</div>'
       +optsHtml
       +'<div class="btns">'
@@ -11069,15 +11070,6 @@ window.__TIKU_SIMPLE__ = [
       }catch(e){}
       location.reload();
     };
-    var delAll=$("btnDelAll"); if(delAll) delAll.onclick=function(){
-      if(!confirm("确定删除所有错题？将同时清除本设备上的题库错题与本地错题（错题本.md 文件本身不动，仅本设备不再显示），此操作不可恢复！")) return;
-      try{
-        var lkey="计算机_errorbook_local";
-        localStorage.removeItem(lkey);
-        localStorage.setItem("计算机_errorbook_deleted_all","1");
-      }catch(e){}
-      location.reload();
-    };
   }
   function reload(){ list=filtered(); idx=0; revealed=false; show(); renderStats(); }
   function setMode(btn){
@@ -11121,15 +11113,6 @@ window.__TIKU_SIMPLE__ = [
       location.reload();
     };
   }
-  var clearAll=$("btnClearAll"); if(clearAll) clearAll.onclick=function(){
-    if(!confirm("确定删除所有错题？将同时清除本设备上的题库错题与本地错题（错题本.md 文件本身不动，仅本设备不再显示），此操作不可恢复！")) return;
-    try{
-      var lkey="计算机_errorbook_local";
-      localStorage.removeItem(lkey);
-      localStorage.setItem("计算机_errorbook_deleted_all","1");
-    }catch(e){}
-    location.reload();
-  };
   $("btnExportLocal").onclick=function(){
     try{
       var _lkey="计算机_errorbook_local";

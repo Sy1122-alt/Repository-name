@@ -68,6 +68,8 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
 .basket .actions .exp{background:var(--accent-d);color:#fff;border-color:var(--accent-d);font-weight:600;}
 .expout{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
 .expout textarea{width:100%;min-height:150px;font-family:Consolas,monospace;font-size:12px;border:1px solid var(--border);border-radius:8px;padding:10px;background:#FBFBF8;color:var(--text);}
+  .similar{border-top:1px solid var(--border);margin-top:10px;padding-top:10px;font-size:12px;color:var(--sub);}
+  .similar a{display:block;color:var(--accent-d);text-decoration:none;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;min-width:0;}
 #toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#33475C;color:#fff;font-size:13px;padding:10px 18px;border-radius:10px;max-width:88vw;box-shadow:0 4px 16px rgba(0,0,0,0.18);z-index:99;display:none;line-height:1.5;}
 .empty{text-align:center;color:var(--sub);font-size:13px;padding:30px 10px;background:var(--card);border:1px dashed var(--border);border-radius:14px;}
 .hint{font-size:11.5px;color:var(--sub);margin-top:12px;line-height:1.7;}
@@ -79,6 +81,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px;}
   .btns button{min-height:44px;font-size:14px;}
   .nav button{min-height:44px;font-size:14px;}
   .basket .actions button{min-height:44px;}
+  .similar a{min-height:40px;padding:8px 10px;}
   .qtext{font-size:16px;}
 }
 </style>
@@ -22095,6 +22098,8 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     if(!MATH || typeof katex==="undefined") return restoreXls(restore(t));
     function unesc(x){ return x.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&quot;/g,'"'); }
     try{
+      // 裸分数（未写$的 数字/数字）自动包成数学块，渲染为分数横线（排除4位年份等长数字）
+      t=t.replace(/(?<![\d/])(\d{1,3}(?:\.\d+)?)\/(\d{1,3}(?:\.\d+)?)(?![\d/])/g, "$$\\frac{$1}{$2}$$");
       t=t.replace(/\$\$([\s\S]+?)\$\$/g,function(_,x){ return '<div class="math-inline" style="margin:6px 0;">'+katex.renderToString(fracIt(unesc(x)),{displayMode:true,throwOnError:false})+'</div>'; });
       t=t.replace(/\$([^$\n]+?)\$/g,function(_,x){ return '<span class="math-inline">'+katex.renderToString(fracIt(unesc(x)),{displayMode:false,throwOnError:false})+'</span>'; });
     }catch(e){}
@@ -22200,6 +22205,15 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     else if(m==="basket")$("btnBasket").classList.add("on");
     reload();
   }
+  function findSimilar(it0){
+    var t0=it0["专题"]||"", k0=it0["考点"]||"";
+    var out=[], seen={};
+    function push(c){ if(!seen[c.id]){ seen[c.id]=1; out.push(c); } }
+    ALL.forEach(function(c){ if(c.id!==it0.id && c["专题"]===t0 && c["考点"]===k0) push(c); });
+    ALL.forEach(function(c){ if(c.id!==it0.id && c["专题"]===t0) push(c); });
+    if(!out.length) ALL.forEach(function(c){ if(c.id!==it0.id && c["题型"]===it0["题型"]) push(c); });
+    return out.slice(0,3);
+  }
   function pool(){
     var t=$("selTopic").value;
     var kd=$("selKaodian")?$("selKaodian").value:"";
@@ -22288,8 +22302,21 @@ try{var _sync=JSON.parse(localStorage.getItem("errorbook_sync")||"null");if(_syn
     html+='<button id="btnSkip">跳过</button>';
     html+='<button id="btnAITeach">AI 讲题</button>';
     html+='</div>';
+    var similar=findSimilar(it);
+    html+='<div class="similar"><div>再来一道同专题题</div>'
+      +(similar.length?similar.map(function(c,n){return '<a href="#" data-similar="'+n+'">'+renderMath(c.id+' · '+(c["题目"]||"未命名"))+'</a>';}).join(""):'<span>暂无同专题题。</span>')
+      +'</div>';
     html+='<div class="nav"><button id="btnPrev">‹ 上一题</button><span style="font-size:12px;color:var(--sub);align-self:center;">'+(idx+1)+' / '+list.length+'</span><button id="btnNext">下一题 ›</button></div>';
     box.innerHTML=html;
+    box.querySelectorAll("a[data-similar]").forEach(function(link){
+      link.addEventListener("click",function(e){
+        e.preventDefault();
+        var cand=similar[Number(link.getAttribute("data-similar"))];
+        if(!cand) return;
+        list=[cand].concat(list.filter(function(x){return x.id!==cand.id;}));
+        idx=0; revealed=false; show();
+      });
+    });
     // 英语刷题：点击单词加入生词本
     if(IS_EN){
       box.querySelectorAll(".word-clickable").forEach(function(el){
