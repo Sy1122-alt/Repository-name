@@ -1,5 +1,5 @@
 # 排除大文件和不需要公开的内容
-ErrorBookApp/
+学习平台/ErrorBookApp/
 node_modules/
 tmp_*/
 official/
@@ -13,15 +13,17 @@ Thumbs.db
 _backup_errorbook/
 *.bak
 *.backup
-SCGSstudy/.cf_token
-SCGSstudy/_tmp_*
-SCGSstudy/_test_*
+
+# 密钥类：无论放在哪一层都不许提交
+.cf_token
+学习平台/SCGSstudy/.cf_token
+学习平台/SCGSstudy/_tmp_*
+学习平台/SCGSstudy/_test_*
 
 _apk_extract/
 _apk_extract2/
 _zhibo_pages/
 _zhibo_answers/
-_backup_errorbook/
 _computer_moni.pdf
 _computer_moni_pages/
 
@@ -29,6 +31,12 @@ _yy_moni_pages/
 _selfcheck/
 
 # 错题本为个人刷题数据，永不提交（本地保留）
-计算机/错题集/错题本.md
-高数/错题集/错题本.md
-英语/错题集/错题本.md
+学习平台/计算机/错题集/错题本.md
+学习平台/高数/错题集/错题本.md
+学习平台/英语/错题集/错题本.md
+
+# 管理密钥：仅本机保留，不得入库
+学习平台/SCGSstudy/.admin_key
+
+# 本地工作记录，不公开
+.workbuddy/
